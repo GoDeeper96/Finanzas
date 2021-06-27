@@ -21,32 +21,7 @@ import MyButton from '../../UI/ButtonComponent'
 import MyButtonSpecial from '../../UI/ButtonSpecial'
 import ImageSelector from '../../UI/ImageSelector'
 import DateTimePicker from '@react-native-community/datetimepicker';
-const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE'
-const formReducer = (state,action)=>
-{
-    if(action.type===FORM_INPUT_UPDATE)
-    {
-        const UpdatedValues ={
-            ...state.inputValues,
-            [action.input]:action.value
-        };
-        const UpdatedValidities ={
-            ...state.inputValidities,
-            [action.input]:action.isValid
-        }
-        let updatedFormValidation = true;
-        for(const key in UpdatedValidities)
-        {
-            updatedFormValidation = updatedFormValidation && UpdatedValidities[key];
-        }
-        return{
-            formIsValid:updatedFormValidation,
-            inputValidities:UpdatedValidities,
-            inputValues:UpdatedValues,          
-        }
-    }
-    return state;
-}
+
 const DiasAño =[
     '360',
     '365'
@@ -118,11 +93,96 @@ const EditProductScreen = props =>{
     const [MotivoF,setMotivoF] = useState('');
     const [SelectedImage, setSelectedImage] = useState();
     const dispatch=useDispatch();
-    const [FechaGiro, setFechaGiro] = useState(new Date("03/25/2015"));
-    const [FechaVen, setFechaVen] = useState(new Date("03/25/2015"));
+    
     const [showFechaGiro, setShowFechaGiro] = useState(false);
     const [showFechaVen, setShowFechaVen] = useState(false);
     
+
+
+
+
+
+    
+    // DATOS DE CLASE
+    const [titulo,         SetTitulo]= useState('')
+    const [descripcion,    SetDescripcion]= useState('')
+    const [FechaGiro,      setFechaGiro] = useState(new Date("03/25/2015"));
+    const [FechaVen,       setFechaVen] = useState(new Date("03/25/2015"));
+    const [plazot,         SetPlazot]= useState(0)
+    const [tasa,           SetTasa]= useState(0)
+    const [gastoInicial,   SetGastoInicial]= useState(0)
+    const [gastoFinal,     SetGastoFinal]= useState(0)
+    const [retencion,      SetRetencion]= useState(0)
+    const [valorNominal,   SetValorNominal]= useState(0)
+    const [capitalizacion, SetCapitalizacion]= useState(0)
+
+    //Calcular periodo
+    const periodo = Math.round((FechaVen-fechaGiro) / (1000 * 60 * 60 * 24));
+    //Calcular tasa
+    let t=0;
+    if(pT==="Mensual"){
+        SetPlazoT(30);
+    }
+    if(pT=="Bimestral"){
+        SetPlazoT(60);
+    }
+    if(pT=="Trimestral"){
+        SetPlazoT(90);
+    }
+    if(pT=="Cuatrimestral"){
+        SetPlazoT(120)
+    }
+    if(pT=="Semestral"){
+        SetPlazoT(180)
+    }
+    if(pT=="Anual"){
+        SetPlazoT(360)
+    }
+    if(TipoTasa=="Tasa Nominal"){
+        if(pT==="Mensual"){
+            SetCapitalizacion(30);
+        }
+        if(pT=="Bimestral"){
+            SetCapitalizacion(60);
+        }
+        if(pT=="Trimestral"){
+            SetCapitalizacion(90);
+        }
+        if(pT=="Cuatrimestral"){
+            SetCapitalizacion(120)
+        }
+        if(pT=="Semestral"){
+            SetCapitalizacion(180)
+        }
+        if(pT=="Diario"){
+            SetCapitalizacion(1)
+        }
+        let m = plazot/capitalizacion;
+        let n = periodo/capitalizacion;
+        t = Math.pow(1+(tasa/m),n)-1;
+    }
+    if(TipoTasa=="Tasa Efectiva"){
+        t = Math.pow((1+tasa),periodo/plazot)-1;
+        t = parseFloat(t.toPrecision(7));
+    }
+    //Calcular Tasa descuento
+    let tasadescuento = t/(t+1.00);
+    tasadescuento = parseFloat(tasadescuento.toFixed(7));
+    //Calcular Descuento
+    let descuento = valorNominal*(tasadescuento);
+    descuento = parseFloat(descuento.toFixed(2));
+    //Valor Neto
+    let valorNeto=valorNominal-descuento;
+    valorNeto = parseFloat(valorNeto.toFixed(2))
+    //Valor a Recibir
+    let valorRecibido=valorNeto-gastoInicial-retencion;
+    valorRecibido = parseFloat(valorRecibido.toFixed(2))
+    //Valor a Entregar
+    let valorEntregado=valorNominal+gastoFinal-retencion;
+    valorEntregado = parseFloat(valorEntregado.toFixed(2))
+    //TCEA
+    let TCEA=Math.pow(( valorEntregado/valorRecibido), 360/periodo) - 1;
+
   const onChangeFechaGiro = (event, selectedDate) => {
     const currentDate = selectedDate || FechaGiro;
     setShowFechaGiro(Platform.OS === 'ios');
@@ -147,36 +207,7 @@ const EditProductScreen = props =>{
     const imageTakenHandler = imagePath =>{
         setSelectedImage(imagePath);
     }
-    const [formState, dispatchFormState]=useReducer(formReducer,{
-         inputValues:{
-             titulo:editedLetra?editedLetra.titulo:'',
-             imageUrl:editedLetra?editedLetra.imageUrl:'',
-             descripcion:editedLetra?editedLetra.descripcion:'',
-             plazot:editedLetra?editedLetra.plazot:'',
-             tasa:editedLetra?editedLetra.tasa:'',
-             fechaDescuento:editedLetra?editedLetra.fechaDescuento:'',
-             gastoInicial:editedLetra?editedLetra.gastoInicial:'',
-             gastoFinal:editedLetra?editedLetra.gastoFinal:'',
-             fechaEmision:editedLetra?editedLetra.fechaEmision:'',
-             retencion:editedLetra?editedLetra.retencion:'',
-             valorNominal:editedLetra?editedLetra.valorNominal:'',
-         },
-        inputValidities:{
-            titulo:editedLetra?true:false,
-            imageUrl:editedLetra?true:false,
-            descripcion:editedLetra?true:false,
-            plazot:editedLetra?true:false,
-            tasa:editedLetra?true:false,
-            fechaDescuento:editedLetra?true:false,
-            gastoInicial:editedLetra?true:false,
-            gastoFinal:editedLetra?true:false,
-            fechaEmision:editedLetra?true:false,
-            retencion:editedLetra?true:false,
-            valorNominal:editedLetra?true:false,
-        },
-         formIsValid:editedLetra?true:false 
-        });
-
+    
     useEffect(()=>{
         if(error){
             Alert.alert('An error ocurred',
@@ -204,36 +235,188 @@ const EditProductScreen = props =>{
         SetIsError(null);
         SetIsloading(true);
         
+        let periodo;
+        let t=0;
+        let m;
+        let n;
+        let tasadescuento;
+        let descuento;
+        let valorNeto;
+        let valorRecibido;
+        let valorEntregado;
+        let TCEA;
         try {
+    
             if(editedLetra){
-            
+            //
+                //Calcular periodo
+                periodo = Math.round((FechaVen-fechaGiro) / (1000 * 60 * 60 * 24));
+                //Calcular tasa
+                t=0;
+                if(pT==="Mensual"){
+                    SetPlazoT(30);
+                }
+                if(pT=="Bimestral"){
+                    SetPlazoT(60);
+                }
+                if(pT=="Trimestral"){
+                    SetPlazoT(90);
+                }
+                if(pT=="Cuatrimestral"){
+                    SetPlazoT(120)
+                }
+                if(pT=="Semestral"){
+                    SetPlazoT(180)
+                }
+                if(pT=="Anual"){
+                    SetPlazoT(360)
+                }
+                if(TipoTasa=="Tasa Nominal"){
+                    if(pT==="Mensual"){
+                        SetCapitalizacion(30);
+                    }
+                    if(pT=="Bimestral"){
+                        SetCapitalizacion(60);
+                    }
+                    if(pT=="Trimestral"){
+                        SetCapitalizacion(90);
+                    }
+                    if(pT=="Cuatrimestral"){
+                        SetCapitalizacion(120)
+                    }
+                    if(pT=="Semestral"){
+                        SetCapitalizacion(180)
+                    }
+                    if(pT=="Diario"){
+                        SetCapitalizacion(1)
+                    }
+                    m = plazot/capitalizacion;
+                    n = periodo/capitalizacion;
+                    t = Math.pow(1+(tasa/m),n)-1;
+                }
+                if(TipoTasa=="Tasa Efectiva"){
+                    t = Math.pow((1+tasa),periodo/plazot)-1;
+                    t = parseFloat(t.toPrecision(7));
+                }
+                //Calcular Tasa descuento
+                tasadescuento = t/(t+1.00);
+                tasadescuento = parseFloat(tasadescuento.toFixed(7));
+                //Calcular Descuento
+                descuento = valorNominal*(tasadescuento);
+                descuento = parseFloat(descuento.toFixed(2));
+                //Valor Neto
+                valorNeto=valorNominal-descuento;
+                valorNeto = parseFloat(valorNeto.toFixed(2))
+                //Valor a Recibir
+                valorRecibido=valorNeto-gastoInicial-retencion;
+                valorRecibido = parseFloat(valorRecibido.toFixed(2))
+                //Valor a Entregar
+                valorEntregado=valorNominal+gastoFinal-retencion;
+                valorEntregado = parseFloat(valorEntregado.toFixed(2))
+                //TCEA
+                TCEA=Math.pow(( valorEntregado/valorRecibido), 360/periodo) - 1;
+
+
+            //
                 await dispatch(letrasActions.updateLetra(
                     letrId,
-                    formState.inputValues.titulo,
-                    formState.inputValues.imageUrl,
-                    formState.inputValues.descripcion,
-                    formState.inputValues.plazot,
-                    formState.inputValues.tasa,
-                    formState.inputValues.fechaDescuento,
-                    formState.inputValues.gastoInicial,
-                    formState.inputValues.gastoFinal,
-                    formState.inputValues.fechaEmision,
-                    formState.inputValues.retencion,
-                    formState.inputValues.valorNominal,))
+                    titulo,        
+                    descripcion,   
+                    FechaGiro,     
+                    FechaVen,      
+                    plazot,        
+                    tasa,          
+                    gastoInicial,  
+                    gastoFinal,    
+                    retencion,     
+                    valorNominal,  
+                    capitalizacion))
+
+                    // var1=var1+var2;
+
             }
             else{
+                //     
+                        //Calcular periodo
+                periodo = Math.round((FechaVen-fechaGiro) / (1000 * 60 * 60 * 24));
+                //Calcular tasa
+                 t=0;
+                if(pT==="Mensual"){
+                    SetPlazoT(30);
+                }
+                if(pT=="Bimestral"){
+                    SetPlazoT(60);
+                }
+                if(pT=="Trimestral"){
+                    SetPlazoT(90);
+                }
+                if(pT=="Cuatrimestral"){
+                    SetPlazoT(120)
+                }
+                if(pT=="Semestral"){
+                    SetPlazoT(180)
+                }
+                if(pT=="Anual"){
+                    SetPlazoT(360)
+                }
+                if(TipoTasa=="Tasa Nominal"){
+                    if(pT==="Mensual"){
+                        SetCapitalizacion(30);
+                    }
+                    if(pT=="Bimestral"){
+                        SetCapitalizacion(60);
+                    }
+                    if(pT=="Trimestral"){
+                        SetCapitalizacion(90);
+                    }
+                    if(pT=="Cuatrimestral"){
+                        SetCapitalizacion(120)
+                    }
+                    if(pT=="Semestral"){
+                        SetCapitalizacion(180)
+                    }
+                    if(pT=="Diario"){
+                        SetCapitalizacion(1)
+                    }
+                    m = plazot/capitalizacion;
+                    n = periodo/capitalizacion;
+                    t = Math.pow(1+(tasa/m),n)-1;
+                }
+                if(TipoTasa=="Tasa Efectiva"){
+                    t = Math.pow((1+tasa),periodo/plazot)-1;
+                    t = parseFloat(t.toPrecision(7));
+                }
+                //Calcular Tasa descuento
+                tasadescuento = t/(t+1.00);
+                tasadescuento = parseFloat(tasadescuento.toFixed(7));
+                //Calcular Descuento
+                descuento = valorNominal*(tasadescuento);
+                descuento = parseFloat(descuento.toFixed(2));
+                //Valor Neto
+                valorNeto=valorNominal-descuento;
+                valorNeto = parseFloat(valorNeto.toFixed(2))
+                //Valor a Recibir
+                valorRecibido=valorNeto-gastoInicial-retencion;
+                valorRecibido = parseFloat(valorRecibido.toFixed(2))
+                //Valor a Entregar
+                valorEntregado=valorNominal+gastoFinal-retencion;
+                valorEntregado = parseFloat(valorEntregado.toFixed(2))
+                //TCEA
+                TCEA=Math.pow(( valorEntregado/valorRecibido), 360/periodo) - 1;
+                    
+                // 
                 await dispatch(letrasActions.createLetra(
-                    formState.inputValues.titulo,
-                    formState.inputValues.imageUrl,
-                    formState.inputValues.descripcion,
-                    formState.inputValues.plazot,
-                    formState.inputValues.tasa,
-                    formState.inputValues.fechaDescuento,
-                    formState.inputValues.gastoInicial,
-                    formState.inputValues.gastoFinal,
-                    formState.inputValues.fechaEmision,
-                    formState.inputValues.retencion,
-                    formState.inputValues.valorNominal));
+                    titulo,        
+                    descripcion,   
+                    FechaGiro,     
+                    FechaVen,      
+                    plazot,        
+                    tasa,          
+                    gastoInicial,  
+                    gastoFinal,    
+                    retencion,     
+                    valorNominal,  
+                    capitalizacion));
             }
             props.navigation.goBack();
         } catch (err) {
@@ -277,8 +460,30 @@ const EditProductScreen = props =>{
             input:inputIdentifier
         })
     },[dispatchFormState]);
-    const Please = () =>{
-        console.log("works")
+    
+    const onChangeValorNominal = (vnominal) =>{
+        SetValorNominal(vnominal)
+    }
+    const onChangeRetencion = (retencion) =>{
+        SetRetencion(rete)
+    }
+    const onChangeGastoInic = (gastoInic) =>{
+        
+    }
+    const onChangeGastoFinal = (gastoInic) =>{
+        
+    }
+    const onChangeTitulo = (titulo) =>{
+        
+    }
+    const onChangeDescripcionLetra = (DescLetra) =>{
+        
+    }
+    const onChangeTasa = (Tasa) =>{
+        
+    }
+    const onChangePlazoTasa = (PlazoTasa) =>{
+        
     }
     if(isLoading)
     {   
@@ -317,30 +522,32 @@ const EditProductScreen = props =>{
             )}
             
              
-                  <Input
+                <Input
                 id='Vnominal'
                 label='Valor Nominal:'
                 errorText='X'
                 keyboardType='default'
                 autoCapitalize='sentences'
                 autoCorrect
-                returnKeyType='next' 
-                onInputChange ={InputChangeHandler}
-                initialValue={editedLetra?editedLetra.title:''}
-                initiallyValid ={!!editedLetra}
+                returnKeyType='next'
+                value = {valorNominal}
+                onChangeHandler={onChangeValorNominal}
+                // initialValue={editedLetra?editedLetra.title:''}
+                // initiallyValid ={!!editedLetra}
                 required
                 />
                 <Input
                 id='Retencion'
                 label='Retencion:'
-                errorText='X'
+
                 keyboardType='default'
                 autoCapitalize='sentences'
                 autoCorrect
                 returnKeyType='next' 
-                onInputChange ={InputChangeHandler}
-                initialValue={editedLetra?editedLetra.title:''}
-                initiallyValid ={!!editedLetra}
+                value = {retencion}
+                onChangeHandler ={onChangeRetencion}
+                // initialValue={editedLetra?editedLetra.title:''}
+                // initiallyValid ={!!editedLetra}
                 required
                 />
                 <Card style={styles.card}>
@@ -368,19 +575,12 @@ const EditProductScreen = props =>{
                                 }}
                                 id='VNumerico'
                                 label ='Valor Numerico:'
-                                errorText='X'
                                 keyboardType='decimal-pad'
                                 returnKeyType='next'   
-                                onInputChange ={InputChangeHandler}
-                                initialValue={editedLetra?editedLetra.gastoFinal:''}
-                                initiallyValid ={!!editedLetra}
-                                required
-                                
-                                />    
-                                
-                                {/* <View style={styles.btncontainer}>
-                        <Button color={Colors.accent} title='Agregar Motivo' onPress={()=>AgregaMotivos(MotivoF)}/>
-                        </View>                           */}
+                                value={gastoFinal}
+                                onChangeHandler ={onChangeGastoInic}
+                                required/>    
+                        
                         </ScrollView>
                         
                     </Card>
@@ -434,14 +634,13 @@ const EditProductScreen = props =>{
                             Visible={true}
                             id='VNumerico'
                             label = 'Valor Numerico:'
-                            errorText='X'
                             keyboardType='decimal-pad'
                             returnKeyType='next'   
-                            onInputChange ={InputChangeHandler}
-                            initialValue={editedLetra?editedLetra.gastoInicial:''}
-                            initiallyValid ={!!editedLetra}
+                            value={gastoInicial}
+                            onChangeHandler ={gastoinic=>SetGastoInicial(gastoinic)}
+                            // initialValue={editedLetra?editedLetra.gastoInicial:''}
+                            // initiallyValid ={!!editedLetra}
                             required
-                            min={0.1}
                             />                              
                     </ScrollView>
                     {/* <View style={styles.btncontainer}>
@@ -475,30 +674,27 @@ const EditProductScreen = props =>{
          <View style={{justifyContent:'center',alignItems:'center'}}>
             <Text style={styles.HeaderInicial}>Datos iniciales</Text>
          </View>    
+                
                 <Input
+                //NO TOCAR
                 id='tituloLetra'
                 label='Titulo:'
-                errorText='X'
                 keyboardType='default'
                 autoCapitalize='sentences'
                 autoCorrect
                 returnKeyType='next' 
-                onInputChange ={InputChangeHandler}
-                initialValue={editedLetra?editedLetra.title:''}
-                initiallyValid ={!!editedLetra}
+                onChangeHandler ={texto=>SetTitulo(texto)}
+                value={titulo}
                 required
                 />
                 <Input
                 id='descripcionLetra'
                 label='Descripción:'
-                errorText='X'
                 keyboardType='default'
                 autoCapitalize='sentences'
                 autoCorrect
                 returnKeyType='next' 
-                onInputChange ={InputChangeHandler}
-                initialValue={editedLetra?editedLetra.title:''}
-                initiallyValid ={!!editedLetra}
+                onChangeHandler ={descripcion=>SetDescripcion(descripcion)}
                 required
                 />
                 
@@ -526,15 +722,16 @@ const EditProductScreen = props =>{
                     <Input
                             id='tasa'
                             label='Tasa:'
-                            errorText='X'
+                            // errorText='X'
                             keyboardType='default'
                             autoCapitalize='sentences'
                             autoCorrect
                             returnKeyType='next'
                             placeholder ='23.4344444' 
-                            onInputChange ={InputChangeHandler}
-                            initialValue={editedLetra?editedLetra.tasa:''}
-                            initiallyValid ={!!editedLetra}
+                            onChangeHandler ={tasa=>SetTasa(tasa)}
+                            value = {tasa}
+                            // initialValue={editedLetra?editedLetra.tasa:''}
+                            // initiallyValid ={!!editedLetra}
                             required
                             />
                    
@@ -554,12 +751,13 @@ const EditProductScreen = props =>{
                             <Input
                             id='NumPeriodoTasa'
                             label = 'Valor:'
-                            errorText='X'
+                            // errorText='X'
                             keyboardType='default'
                             returnKeyType='next' 
-                            onInputChange ={InputChangeHandler}
-                            initialValue={editedLetra?editedLetra.imageUrl:''}
-                            initiallyValid ={!!editedLetra}
+                            onChangeHandler ={plazotasa=>SetPlazot(plazotasa)}
+                            value = {plazot}
+                            // initialValue={editedLetra?editedLetra.imageUrl:''}
+                            // initiallyValid ={!!editedLetra}
                             required
                             />       
                     </ScrollView>
@@ -617,3 +815,58 @@ const styles = StyleSheet.create({
 
 export default EditProductScreen;
 
+// const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE'
+// const formReducer = (state,action)=>
+// {
+//     if(action.type===FORM_INPUT_UPDATE)
+//     {
+//         const UpdatedValues ={
+//             ...state.inputValues,
+//             [action.input]:action.value
+//         };
+//         const UpdatedValidities ={
+//             ...state.inputValidities,
+//             [action.input]:action.isValid
+//         }
+//         let updatedFormValidation = true;
+//         for(const key in UpdatedValidities)
+//         {
+//             updatedFormValidation = updatedFormValidation && UpdatedValidities[key];
+//         }
+//         return{
+//             formIsValid:updatedFormValidation,
+//             inputValidities:UpdatedValidities,
+//             inputValues:UpdatedValues,          
+//         }
+//     }
+//     return state;
+// }
+// const [formState, dispatchFormState]=useReducer(formReducer,{
+//     inputValues:{
+//         titulo:editedLetra?editedLetra.titulo:'',
+//         imageUrl:editedLetra?editedLetra.imageUrl:'',
+//         descripcion:editedLetra?editedLetra.descripcion:'',
+//         plazot:editedLetra?editedLetra.plazot:'',
+//         tasa:editedLetra?editedLetra.tasa:'',
+//         fechaDescuento:editedLetra?editedLetra.fechaDescuento:'',
+//         gastoInicial:editedLetra?editedLetra.gastoInicial:'',
+//         gastoFinal:editedLetra?editedLetra.gastoFinal:'',
+//         fechaEmision:editedLetra?editedLetra.fechaEmision:'',
+//         retencion:editedLetra?editedLetra.retencion:'',
+//         valorNominal:editedLetra?editedLetra.valorNominal:'',
+//     },
+//    inputValidities:{
+//        titulo:editedLetra?true:false,
+//        imageUrl:editedLetra?true:false,
+//        descripcion:editedLetra?true:false,
+//        plazot:editedLetra?true:false,
+//        tasa:editedLetra?true:false,
+//        fechaDescuento:editedLetra?true:false,
+//        gastoInicial:editedLetra?true:false,
+//        gastoFinal:editedLetra?true:false,
+//        fechaEmision:editedLetra?true:false,
+//        retencion:editedLetra?true:false,
+//        valorNominal:editedLetra?true:false,
+//    },
+//     formIsValid:editedLetra?true:false 
+//    });

@@ -2,126 +2,126 @@ import React,{useReducer,useEffect,useState} from 'react';
 import {Picker} from '@react-native-picker/picker'
 import {View, Button,Text,TextInput,TouchableOpacity,Modal,StyleSheet, Alert} from 'react-native';
 import Colors from '../constants/Colors'
-const INPUT_CHANGE = 'INPUT_CHANGE'
-const INPUT_BLUR = 'INPUT_BLUR'
-const INCREMENT = 'INCREMENT'
-const inputReducer = (state,action) =>
-{
-    switch (action.type) {
-        case INPUT_CHANGE:
-            console.log(state,action);
-            return {
+// const INPUT_CHANGE = 'INPUT_CHANGE'
+// const INPUT_BLUR = 'INPUT_BLUR'
+// const INCREMENT = 'INCREMENT'
+// const inputReducer = (state,action) =>
+// {
+//     switch (action.type) {
+//         case INPUT_CHANGE:
+//             console.log(state,action);
+//             return {
                 
-                ...state,
-                value:action.value,
-                isValid:action.isValid
-            }
-        case INPUT_BLUR:
-            console.log(state,action);
-            return {
-                ...state,
-                touched:true
-            }
-        case INCREMENT:
-            console.log(state,action)
-            return {
-                ...state,
-                value:state.value+1,
-            }
-        default:
-            return state;
-    }
-}   
+//                 ...state,
+//                 value:action.value,
+//                 isValid:action.isValid
+//             }
+//         case INPUT_BLUR:
+//             console.log(state,action);
+//             return {
+//                 ...state,
+//                 touched:true
+//             }
+//         case INCREMENT:
+//             console.log(state,action)
+//             return {
+//                 ...state,
+//                 value:state.value+1,
+//             }
+//         default:
+//             return state;
+//     }
+// }   
 
 
 const Input = props =>{
-    const {onInputChange,id} = props;
-    const [check,SetCheck] = useState(false);
-    const [ PrevValue,SetPrevValue] = useState();
-    const [inputState,dispatch] = useReducer(inputReducer,{
-        value:props.initialValue ? props.initialValue:'',
-        isValid:props.initiallyValid,
-        touched:false,  
-    })
-    useEffect(()=>{
-        if(inputState.touched) {
-            onInputChange(id,inputState.value,inputState.isValid);
-        }
-    },[inputState,onInputChange,id])
+    // const {onInputChange,id} = props;
+    // const [check,SetCheck] = useState(false);
+    // const [ PrevValue,SetPrevValue] = useState();
+    // const [inputState,dispatch] = useReducer(inputReducer,{
+    //     value:props.initialValue ? props.initialValue:'',
+    //     isValid:props.initiallyValid,
+    //     touched:false,  
+    // })
+    // useEffect(()=>{
+    //     if(inputState.touched) {
+    //         onInputChange(id,inputState.value,inputState.isValid);
+    //     }
+    // },[inputState,onInputChange,id])
 
-    const textChangeHandler=text=>{
-        const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        let isValid = true;
+    // const textChangeHandler=text=>{
+    //     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    //     let isValid = true;
         
-        // if(typeof text === 'number')
-        // {
-        //     
-        // }
-            SetPrevValue(text);
-            if( /../.test(text)||/,,/.test(text))
-            {
-                isValid = false;
-            }
-            if(props.pT==='Diario')
-            {
-                text = 1;
-            }
-            if(props.pT==='Quincenal')
-            {
-                text = 15;
-            }
-            if(props.pT==='Mensual')
-            {
-                text = 30;
-            }
-            if(props.pT==='Bimestral')
-            {
-                text = 60;
-            }
-            if(props.pT==='Trimestral')
-            {
-                text = 90;
-            }
-            if(props.pT==='Cuatrimestral')
-            {
-                text = 120;
-            }
-            if(props.pT==='Semestral')
-            {
-                text = 180;
-            }
-            if(props.pT==='Anual')
-            {
-                text = 360;
-            }
-            if (props.required && text.trim().length === 0) {
-            isValid = false;
-            }
-            if (props.email && !emailRegex.test(text.toLowerCase())) {
-            isValid = false;
-            }
-            if (props.min != null && +text < props.min) {
-            isValid = false;
-            }
-            if (props.max != null && +text > props.max) {
-            isValid = false;
-            }
-            if (props.minLength != null && text.length < props.minLength) {
-            isValid = false;
-            }
-            dispatch({type:INPUT_CHANGE,value:text, isValid:isValid})
+    //     // if(typeof text === 'number')
+    //     // {
+    //     //     
+    //     // }
+    //         SetPrevValue(text);
+    //         if( /../.test(text)||/,,/.test(text))
+    //         {
+    //             isValid = false;
+    //         }
+    //         if(props.pT==='Diario')
+    //         {
+    //             text = 1;
+    //         }
+    //         if(props.pT==='Quincenal')
+    //         {
+    //             text = 15;
+    //         }
+    //         if(props.pT==='Mensual')
+    //         {
+    //             text = 30;
+    //         }
+    //         if(props.pT==='Bimestral')
+    //         {
+    //             text = 60;
+    //         }
+    //         if(props.pT==='Trimestral')
+    //         {
+    //             text = 90;
+    //         }
+    //         if(props.pT==='Cuatrimestral')
+    //         {
+    //             text = 120;
+    //         }
+    //         if(props.pT==='Semestral')
+    //         {
+    //             text = 180;
+    //         }
+    //         if(props.pT==='Anual')
+    //         {
+    //             text = 360;
+    //         }
+    //         if (props.required && text.trim().length === 0) {
+    //         isValid = false;
+    //         }
+    //         if (props.email && !emailRegex.test(text.toLowerCase())) {
+    //         isValid = false;
+    //         }
+    //         if (props.min != null && +text < props.min) {
+    //         isValid = false;
+    //         }
+    //         if (props.max != null && +text > props.max) {
+    //         isValid = false;
+    //         }
+    //         if (props.minLength != null && text.length < props.minLength) {
+    //         isValid = false;
+    //         }
+    //         dispatch({type:INPUT_CHANGE,value:text, isValid:isValid})
            
         
-    }
-    const LostFocusHandler = () =>
-    {
-        dispatch({
-            type:INPUT_BLUR
-        })
-    }
+    // }
+    // const LostFocusHandler = () =>
+    // {
+    //     dispatch({
+    //         type:INPUT_BLUR
+    //     })
+    // }
     const IncrementHandler = () =>
     {
-        dispatch({type:INCREMENT})
+       
     }
     // const IfValueHandler = () =>
     // {
@@ -155,9 +155,9 @@ const Input = props =>{
                 borderColor:!inputState.isValid&& inputState.touched ?'red':'#D3D5D7'
             }}
             ButtonVisible={props.Visible}
-            value={inputState.value} 
-            onBlur={LostFocusHandler}
-            onChangeText={textChangeHandler}/>
+            value={props.value} 
+            // onBlur={LostFocusHandler}
+            onChangeText={props.onChangeHandler}/>
             </View>
             {props.Visible?
              <View style={styles.btncontainer}>

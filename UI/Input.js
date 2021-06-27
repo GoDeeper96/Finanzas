@@ -21,7 +21,6 @@ const inputReducer = (state,action) =>
     }
 }   
 
-
 const Input = props =>{
     const {onInputChange,id} = props;
     const [inputState,dispatch] = useReducer(inputReducer,{
