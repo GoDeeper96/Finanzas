@@ -401,7 +401,7 @@ const EditProductScreen = props =>{
                 //TCEA
                 TCEA=Math.pow(( valorEntregado/valorRecibido), 360/periodo) - 1;
                     
-                // 
+                // AQUI :V
                 await dispatch(letrasActions.createLetra(
                     titulo,        
                     descripcion,   
@@ -414,7 +414,9 @@ const EditProductScreen = props =>{
                     retencion,     
                     valorNominal,  
                     capitalizacion));
+                // await dispatch(resultadosActions.createLetra())
             }
+            
             props.navigation.goBack();
         } catch (err) {
             SetIsError(err.message);
@@ -670,7 +672,7 @@ const EditProductScreen = props =>{
                     items = {valorUnidad}
                     />             
              </ScrollView>
-             <Button color={Colors.primary} title="VER RESULTADOS" onPress={Reconstruct}/>   
+             <Button color={Colors.primary} title="VER RESULTADOS" onPress={submitHandler}/>   
              </KeyboardAvoidingView>)
     }
     if(IsNexted)

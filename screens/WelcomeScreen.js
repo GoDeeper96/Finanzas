@@ -30,11 +30,11 @@ const WelcomeScreen = props => {
     style={styles.container}
     visible={true}>
         <WelcomeFade>
-            Nombre de usuario
+            :v
         </WelcomeFade>
         <View style={styles.btn}>
             { FadeIsGone?(
-            <MainButton onPress={startLoading}> Continuar</MainButton>
+            <MainButton onPress={startLoading}> Continua xd</MainButton>
         ):null}
         </View>
     </LinearGradient>

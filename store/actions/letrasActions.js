@@ -20,8 +20,9 @@ export const fetchLetras = () =>
             loadedLetras.push(
                 new Letra(
                 letra,
+                resData[letra].idLetra,
                 resData[letra].idUsuario,
-                resData[letra].idUsuario,
+                resData[letra].titulo,
                 resData[letra].imageUrl,
                 resData[letra].descripcion,
                 resData[letra].plazot,
@@ -30,7 +31,6 @@ export const fetchLetras = () =>
                 resData[letra].gastoInicial,
                 resData[letra].gastoFinal,
                 resData[letra].fechaEmision,
-                resData[letra].fechaPago,
                 resData[letra].retencion,
                 resData[letra].valorNominal,      
                 )
@@ -78,7 +78,8 @@ export const createLetra =
     gastoFinal,
     fechaEmision,
     retencion,
-    valorNominal) =>
+    valorNominal,
+    capitalizacion) =>
 {
     //https://mealsapp-d838a-default-rtdb.firebaseio.com/products.json?auth=${token}
     return async (dispatch,getState)=>{
@@ -92,18 +93,18 @@ export const createLetra =
              'Content-Type':'application/json'
          },
          body:JSON.stringify({
-             titulo,
-             descripcion,
-             imageUrl,
-             plazot,
-             tasa,
-             fechaDescuento,
-             gastoInicial,
-             gastoFinal,
-             fechaEmision,
-             retencion,
-             valorNominal,
-             idUsuario:userId
+            idUsuario: userId,
+            titulo,
+            imageUrl,
+            descripcion,
+            plazot,
+            tasa,
+            fechaDescuento,
+            gastoInicial,
+            gastoFinal,
+            fechaEmision,
+            retencion,
+            valorNominal
          })
      });
      const resData = await response.json();
@@ -112,9 +113,10 @@ export const createLetra =
         type:CREATE_LETRA,
         LetraData:{
         idLetra:resData.name,
+        idUsuario: userId,
         titulo,
-        descripcion,
         imageUrl,
+        descripcion,
         plazot,
         tasa,
         fechaDescuento,
@@ -123,7 +125,7 @@ export const createLetra =
         fechaEmision,
         retencion,
         valorNominal,
-        idUsuario:userId
+        capitalizacion
       }
     }
     ); 
@@ -134,8 +136,8 @@ export const createLetra =
 export const updateLetra = (
     id,
     titulo,
-    descripcion,
     imageUrl,
+    descripcion,
     plazot,
     tasa,
     fechaDescuento,
@@ -158,8 +160,8 @@ export const updateLetra = (
              },
              body:JSON.stringify({
                 titulo,
-                descripcion,
                 imageUrl,
+                descripcion,
                 plazot,
                 tasa,
                 fechaDescuento,
@@ -167,7 +169,7 @@ export const updateLetra = (
                 gastoFinal,
                 fechaEmision,
                 retencion,
-                valorNominal,
+                valorNominal
              })
          });
          if(!res.ok){
@@ -178,8 +180,8 @@ export const updateLetra = (
         lid:id,
         LetraData:{
             titulo,
-            descripcion,
             imageUrl,
+            descripcion,
             plazot,
             tasa,
             fechaDescuento,
@@ -187,7 +189,7 @@ export const updateLetra = (
             gastoFinal,
             fechaEmision,
             retencion,
-            valorNominal
+            valorNomina
         }
     });
         

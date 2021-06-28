@@ -16,28 +16,18 @@ const DetalleLetraScreen = props =>{
         <ScrollView>
             <Card>
                 <View style={styles.rw}>
-                <Text style={styles.prc}>${selectedLetras.price.toFixed(2)}</Text>
-                <Text style={styles.desc}>{selectedLetras.description}</Text>
-                </View>
-                <View style={styles.rw}>
-                <Text style={styles.prc}>${selectedLetras.price.toFixed(2)}</Text>
-                <Text style={styles.desc}>{selectedLetras.description}</Text>
-                </View>
-                <View style={styles.rw}>
-                <Text style={styles.prc}>${selectedLetras.price.toFixed(2)}</Text>
-                <Text style={styles.desc}>{selectedLetras.description}</Text>
-                </View >
-                <View style={styles.rw}>
-                <Text style={styles.prc}>${selectedLetras.price.toFixed(2)}</Text>
-                <Text style={styles.desc}>{selectedLetras.description}</Text>
-                </View>
-                <View style={styles.rw}>
-                <Text style={styles.prc}>${selectedLetras.price.toFixed(2)}</Text>
-                <Text style={styles.desc}>{selectedLetras.description}</Text>
-                </View>
-                <View style={styles.rw}>
-                <Text style={styles.prc}>${selectedLetras.price.toFixed(2)}</Text>
-                <Text style={styles.desc}>{selectedLetras.description}</Text>
+                <Text style={styles.prc}>${selectedLetras.titulo}</Text>
+                <Text style={styles.desc}>{selectedLetras.descripcion}</Text>
+                <Text style={styles.prc}>${selectedLetras.retencion}</Text>
+                <Text style={styles.desc}>{selectedLetras.plazot}</Text>
+                <Text style={styles.prc}>${selectedLetras.tasa}</Text>
+                <Text style={styles.desc}>{selectedLetras.fechaDescuento}</Text>
+                <Text style={styles.prc}>${selectedLetras.gastoInicial}</Text>
+                <Text style={styles.desc}>{selectedLetras.gastoFinal}</Text>
+                <Text style={styles.desc}>{selectedLetras.fechaEmision}</Text>
+                <Text style={styles.desc}>{selectedLetras.retencion}</Text>
+                <Text style={styles.desc}>{selectedLetras.valorNominal}</Text>
+                <Text style={styles.desc}>{selectedLetras.capitalizacion}</Text>
                 </View>
             </Card> 
             <Button title="Ver Resultados" onPress={()=>{LlevameAListaResultados}}/>

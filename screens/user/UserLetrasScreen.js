@@ -36,16 +36,16 @@ const UserLetrasScreen = props =>{
             setIsLoading(false);
         })
     },[dispatch,loadLetras])
-    const selectItemHandler = (id,title) =>{
+    const selectItemHandler = (id,titulo) =>{
         props.navigation.navigate('DetalleLetra',{
             letraId: id,
-            letraTitle: title
+            letraTitulo: titulo
         })
     }
     const editLetrasHandler = (id) =>
     {
         props.navigation.navigate('EditarLetras',{
-            productId: id
+            letraId: id
         })
     }
     const deleteHandler = (id)=>
@@ -65,9 +65,9 @@ const UserLetrasScreen = props =>{
     }
     return (<FlatList data={userLetras} keyExtractor={item=>item.id} 
     renderItem={itemData => <LetraItem image={itemData.item.imageUrl} 
-    title={itemData.item.title}
-    price={itemData.item.price}>
-         <Button color={Colors.primary} title="Ver" onPress={()=>{selectItemHandler(itemData.item.id,itemData.item.title)}}/>
+    title={itemData.item.titulo}
+    price={itemData.item.retencion}>
+         <Button color={Colors.primary} title="Ver" onPress={()=>{selectItemHandler(itemData.item.id,itemData.item.titulo)}}/>
         <Button color={Colors.primary} title="Editar" onPress={()=>{editLetrasHandler(itemData.item.id)}}/>
         <Button color={Colors.primary} title="Eliminar" onPress={deleteHandler.bind(this,itemData.item.id)}/>
     </LetraItem>}/>);                                 
