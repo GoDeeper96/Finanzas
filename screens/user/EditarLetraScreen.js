@@ -141,6 +141,7 @@ const EditProductScreen = props =>{
 
     const [retencion,      SetRetencion]= useState(0)
     const [valorNominal,   SetValorNominal]= useState(0)
+
     const [capitalizacion, SetCapitalizacion]= useState(0)
 
     const [GastoArrayInicial,SetGastoArrayInicial] = useState([]);
@@ -155,6 +156,11 @@ const EditProductScreen = props =>{
         setVisibleForInicial(true);
         console.log(GastoArrayInicial);
     }
+    // const array1 = [];
+
+
+    // GastoArrayInicial.map(item=>console.log(item.valor));
+    // GastoArrayFinal.map(item=>console.log(item.valor));
     const addGastoFinal = ()=>{
         SetGastoArrayFinal([...GastoArrayFinal,{
             MotivoGastoInicial:MotivoGastoFinal,
@@ -217,16 +223,16 @@ const EditProductScreen = props =>{
       }
     const submitHandler = useCallback(async () =>
     {   
-        if(!formState.formIsValid)
-        {
-            Alert.alert('wrong input!','please check errors in the form',
-            [
-                {text:'Ok'}
-            ]);
-            return;
-        }
-        SetIsError(null);
-        SetIsloading(true);
+        // if(!formState.formIsValid)
+        // {
+        //     Alert.alert('wrong input!','please check errors in the form',
+        //     [
+        //         {text:'Ok'}
+        //     ]);
+        //     return;
+        // }
+        // SetIsError(null);
+        // SetIsloading(true);
         
         let periodo;
         let t=0;
@@ -238,6 +244,21 @@ const EditProductScreen = props =>{
         let valorRecibido;
         let valorEntregado;
         let TCEA;
+
+        let arrayGastosI = []
+        let sumArrayI = 0
+        arrayGastosI = GastoArrayInicial.map(item=>item.valor);
+        for(let x   in arrayGastosI){
+            sumArrayI = sumArrayI + arrayGastosI[x]   
+        }
+        
+        let arrayGastosF = []
+        let sumArrayF = 0
+        arrayGastosF = GastoArrayFinal.map(item=>item.valor);
+        for(let x   in arrayGastosF){
+            sumArrayF = sumArrayF + arrayGastosF[x]   
+        }
+
         try {
     
             if(editedLetra){
@@ -319,8 +340,8 @@ const EditProductScreen = props =>{
                     FechaVen,      
                     plazot,        
                     tasa,          
-                    gastoInicial,  
-                    gastoFinal,    
+                    sumArrayI,  
+                    sumArrayF,    
                     retencion,     
                     valorNominal,  
                     capitalizacion))
@@ -388,8 +409,8 @@ const EditProductScreen = props =>{
                     FechaVen,      
                     plazot,        
                     tasa,          
-                    gastoInicial,  
-                    gastoFinal,    
+                    sumArrayI,  
+                    sumArrayF,    
                     retencion,     
                     valorNominal,  
                     capitalizacion));
@@ -408,7 +429,31 @@ const EditProductScreen = props =>{
     const AgregaMotivos = () =>{
         
     }
+    
+
+
     const Reconstruct = () => {
+        let arrayGastosI = []
+        let sumArrayI = 0
+        arrayGastosI = GastoArrayInicial.map(item=>item.valor);
+        for(let x   in arrayGastosI){
+            sumArrayI = sumArrayI + arrayGastosI[x]   
+        }
+        
+        let arrayGastosF = []
+        let sumArrayF = 0
+        arrayGastosF = GastoArrayFinal.map(item=>item.valor);
+        for(let x   in arrayGastosF){
+            sumArrayF = sumArrayF + arrayGastosF[x]   
+        }
+   
+
+
+
+
+        GastoArrayInicial.map(item=>console.log(`\nvalor : ${item.valor}`));
+        
+        GastoArrayFinal.map(item=>console.log(`\nvalor : ${item.valor}`));
         console.log(
         `titulo:${titulo}`,
         `\ndescripcion:${descripcion}`,
@@ -420,7 +465,8 @@ const EditProductScreen = props =>{
         `\nGastoInicial:${GastoArrayInicial}`,
         `\nretencion:${retencion}`,
         `\nvalorNominal:${valorNominal}`,
-        `\nvalorNominal:${pT}`)
+        `\nvalorNominal:${pT}`,
+        `\ncapitalizacion:${capitalizacion}`)
         // try {
         //   submitHandler();  
         //   props.navigation.navigate('Resultados');
@@ -777,6 +823,14 @@ const EditProductScreen = props =>{
                             value = {tasa}
                             required
                             />
+                            {TipoTasa==='Tasa Nominal'?  
+                             <TextInput
+                            label="Capitalizacion"
+                            placeholder='35'
+                            value={capitalizacion}
+                            onChangeText={capitalizacion=>SetCapitalizacion(capitalizacion)}
+                            /> 
+                             :null}
                    
                     </ScrollView>
                 </Card> 
