@@ -409,7 +409,18 @@ const EditProductScreen = props =>{
         
     }
     const Reconstruct = () => {
-        console.log(titulo)
+        console.log(
+        `titulo:${titulo}`,
+        `\ndescripcion:${descripcion}`,
+        `\nfechaGiro:${FechaGiro}`,
+        `\nfechaVen:${FechaVen}`,
+        `\nplazot:${plazot}`,
+        `\ntasa:${tasa}`,
+        `\nGastoFinal:${GastoArrayFinal}`,
+        `\nGastoInicial:${GastoArrayInicial}`,
+        `\nretencion:${retencion}`,
+        `\nvalorNominal:${valorNominal}`,
+        `\nvalorNominal:${pT}`)
         // try {
         //   submitHandler();  
         //   props.navigation.navigate('Resultados');
@@ -437,6 +448,7 @@ const EditProductScreen = props =>{
     //         input:inputIdentifier
     //     })
     // },[dispatchFormState]);
+
     const AlDeseleccionarInput = ()=>{
 
     }
@@ -444,7 +456,7 @@ const EditProductScreen = props =>{
         SetValorNominal(vnominal)
     }
     const onChangeRetencion = (retencion) =>{
-        SetRetencion(rete)
+        SetRetencion(retencion)
     }
     const onChangeGastoInic = (gastoInic) =>{
         SetGastoInicial(gastoInic)
@@ -612,7 +624,7 @@ const EditProductScreen = props =>{
                     items = {valorUnidad}
                     />             
              </ScrollView>
-             <Button color={Colors.primary} title="VER RESULTADOS" onPress={()=>{}}/>   
+             <Button color={Colors.primary} title="VER RESULTADOS" onPress={Reconstruct}/>   
              </KeyboardAvoidingView>)
     }
     if(IsNexted)
