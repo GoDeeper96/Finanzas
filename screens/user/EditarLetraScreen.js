@@ -3,13 +3,15 @@ import {View,
         Text, 
         Platform,
         StyleSheet,
-        TextInput,
+        // TextInput,
         Button,
         Alert,
         KeyboardAvoidingView,
+        TouchableOpacity,
         ActivityIndicator} from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Card from '../../UI/Card'
+import { TextInput } from 'react-native-paper';
 import {HeaderButtons,Item}from 'react-navigation-header-buttons'
 import HeaderButton from '../../UI/HeaderButton'
 import {useSelector,useDispatch} from 'react-redux'
@@ -21,7 +23,7 @@ import MyButton from '../../UI/ButtonComponent'
 import MyButtonSpecial from '../../UI/ButtonSpecial'
 import ImageSelector from '../../UI/ImageSelector'
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import Fancy from '../../UI/fancyAlert'
 const DiasAño =[
     '360',
     '365'
@@ -35,7 +37,7 @@ const PlazoTasas = [
     'Cuatrimestral',
     'Semestral',
     'Anual',
-
+    'Especial',
 ]
 const motivos = [
     'Portes',
@@ -83,14 +85,20 @@ const EditProductScreen = props =>{
     const [modalOpenDaños,setModalOpenDaños] = useState(false);
     const [Daños,setDaños] = useState('');
     const [modalOpenMotivo,setModalOpenMotivo] = useState(false);
-    const [Motivo,setMotivo] = useState('');
+    
     const [modalOpenTipoTasa,setmodalOpenTipoTasa] = useState(false);
     const [TipoTasa,setTipoTasa] = useState('');
     const [modalOpenValorE,setModalOpenValorE] = useState(false);
-    const [ValorE,setValorE] = useState('');
+
+
+    const [UnidadInicialValor,setUnidadInicialValor] = useState('');
+    const [UnidadFinalValor,setUnidadFinalValor] = useState('');
 
     const [modalOpenMotivoF,setModalOpenMotivoF] = useState(false);
-    const [MotivoF,setMotivoF] = useState('');
+
+    const [MotivoGastoFinal,setMotivoFinal] = useState('');
+    const [MotivoGastoInicial,setMotivoInicial] = useState('');
+
     const [SelectedImage, setSelectedImage] = useState();
     const dispatch=useDispatch();
     
@@ -98,11 +106,28 @@ const EditProductScreen = props =>{
     const [showFechaVen, setShowFechaVen] = useState(false);
     
 
+    const [visibleForInicial, setVisibleForInicial] = React.useState(false);
+    const toggleAlertInicial = React.useCallback(() => {
+        setVisibleForInicial(false);
+            SetGastoInicial(0);
+            setMotivoInicial('');
+            setUnidadInicialValor('');
+        
+    }, [visibleForInicial,gastoInicial,MotivoGastoInicial,UnidadInicialValor]);
+
+    const [visibleForFinal, setVisibleForFinal] = React.useState(false);
+    const toggleAlertFinal = React.useCallback(() => {
+        setVisibleForFinal(false);
+        SetGastoFinal(0);
+        setMotivoFinal('');
+        setUnidadFinalValor('');      
+    }, [visibleForFinal,gastoFinal,MotivoGastoFinal,UnidadFinalValor]);
+   
+      
 
 
-
-
-    
+    //VALIDACIONES PARA TECLADO
+    const [editable,SetEditable]=useState(true);
     // DATOS DE CLASE
     const [titulo,         SetTitulo]= useState('')
     const [descripcion,    SetDescripcion]= useState('')
@@ -110,78 +135,46 @@ const EditProductScreen = props =>{
     const [FechaVen,       setFechaVen] = useState(new Date("03/25/2015"));
     const [plazot,         SetPlazot]= useState(0)
     const [tasa,           SetTasa]= useState(0)
+
     const [gastoInicial,   SetGastoInicial]= useState(0)
     const [gastoFinal,     SetGastoFinal]= useState(0)
+
     const [retencion,      SetRetencion]= useState(0)
     const [valorNominal,   SetValorNominal]= useState(0)
     const [capitalizacion, SetCapitalizacion]= useState(0)
 
+    const [GastoArrayInicial,SetGastoArrayInicial] = useState([]);
+    const [GastoArrayFinal,SetGastoArrayFinal] = useState([]);
+    const addGastoInicial = ()=>{
+        SetGastoArrayInicial([...GastoArrayInicial,{
+            MotivoGastoInicial:MotivoGastoInicial,
+            TipoValor:UnidadInicialValor,
+            valor:parseInt(isNaN(gastoInicial)?0:gastoInicial)
+        }])
+        
+        setVisibleForInicial(true);
+        console.log(GastoArrayInicial);
+    }
+    const addGastoFinal = ()=>{
+        SetGastoArrayFinal([...GastoArrayFinal,{
+            MotivoGastoInicial:MotivoGastoFinal,
+            TipoValor:UnidadFinalValor,
+            valor:parseInt(isNaN(gastoFinal)?0:gastoFinal)
+        }])
+        
+        setVisibleForFinal(true);
+        console.log(GastoArrayFinal);
+    }
+    // const addGastoFinal = ()=>{
+    //     SetGastoArrayFinal([...GastoArrayFinal,{
+    //         MotivoGastoFinal:MotivoF,
+    //         TipoValor:valorUnidad,
+    //         valor:parseInt(GastoArrayFinal)
+    //     }])
+    //     console.log(GastoArrayFinal);
+    // }
     //Calcular periodo
-    const periodo = Math.round((FechaVen-fechaGiro) / (1000 * 60 * 60 * 24));
-    //Calcular tasa
-    let t=0;
-    if(pT==="Mensual"){
-        SetPlazoT(30);
-    }
-    if(pT=="Bimestral"){
-        SetPlazoT(60);
-    }
-    if(pT=="Trimestral"){
-        SetPlazoT(90);
-    }
-    if(pT=="Cuatrimestral"){
-        SetPlazoT(120)
-    }
-    if(pT=="Semestral"){
-        SetPlazoT(180)
-    }
-    if(pT=="Anual"){
-        SetPlazoT(360)
-    }
-    if(TipoTasa=="Tasa Nominal"){
-        if(pT==="Mensual"){
-            SetCapitalizacion(30);
-        }
-        if(pT=="Bimestral"){
-            SetCapitalizacion(60);
-        }
-        if(pT=="Trimestral"){
-            SetCapitalizacion(90);
-        }
-        if(pT=="Cuatrimestral"){
-            SetCapitalizacion(120)
-        }
-        if(pT=="Semestral"){
-            SetCapitalizacion(180)
-        }
-        if(pT=="Diario"){
-            SetCapitalizacion(1)
-        }
-        let m = plazot/capitalizacion;
-        let n = periodo/capitalizacion;
-        t = Math.pow(1+(tasa/m),n)-1;
-    }
-    if(TipoTasa=="Tasa Efectiva"){
-        t = Math.pow((1+tasa),periodo/plazot)-1;
-        t = parseFloat(t.toPrecision(7));
-    }
-    //Calcular Tasa descuento
-    let tasadescuento = t/(t+1.00);
-    tasadescuento = parseFloat(tasadescuento.toFixed(7));
-    //Calcular Descuento
-    let descuento = valorNominal*(tasadescuento);
-    descuento = parseFloat(descuento.toFixed(2));
-    //Valor Neto
-    let valorNeto=valorNominal-descuento;
-    valorNeto = parseFloat(valorNeto.toFixed(2))
-    //Valor a Recibir
-    let valorRecibido=valorNeto-gastoInicial-retencion;
-    valorRecibido = parseFloat(valorRecibido.toFixed(2))
-    //Valor a Entregar
-    let valorEntregado=valorNominal+gastoFinal-retencion;
-    valorEntregado = parseFloat(valorEntregado.toFixed(2))
-    //TCEA
-    let TCEA=Math.pow(( valorEntregado/valorRecibido), 360/periodo) - 1;
+   
 
   const onChangeFechaGiro = (event, selectedDate) => {
     const currentDate = selectedDate || FechaGiro;
@@ -250,26 +243,26 @@ const EditProductScreen = props =>{
             if(editedLetra){
             //
                 //Calcular periodo
-                periodo = Math.round((FechaVen-fechaGiro) / (1000 * 60 * 60 * 24));
+                periodo = Math.round((FechaVen-FechaGiro) / (1000 * 60 * 60 * 24));
                 //Calcular tasa
                 t=0;
                 if(pT==="Mensual"){
-                    SetPlazoT(30);
+                    SetPlazot(30);
                 }
                 if(pT=="Bimestral"){
-                    SetPlazoT(60);
+                    SetPlazot(60);
                 }
                 if(pT=="Trimestral"){
-                    SetPlazoT(90);
+                    SetPlazot(90);
                 }
                 if(pT=="Cuatrimestral"){
-                    SetPlazoT(120)
+                    SetPlazot(120)
                 }
                 if(pT=="Semestral"){
-                    SetPlazoT(180)
+                    SetPlazot(180)
                 }
                 if(pT=="Anual"){
-                    SetPlazoT(360)
+                    SetPlazot(360)
                 }
                 if(TipoTasa=="Tasa Nominal"){
                     if(pT==="Mensual"){
@@ -338,27 +331,10 @@ const EditProductScreen = props =>{
             else{
                 //     
                         //Calcular periodo
-                periodo = Math.round((FechaVen-fechaGiro) / (1000 * 60 * 60 * 24));
+                periodo = Math.round((FechaVen-FechaGiro) / (1000 * 60 * 60 * 24));
                 //Calcular tasa
                  t=0;
-                if(pT==="Mensual"){
-                    SetPlazoT(30);
-                }
-                if(pT=="Bimestral"){
-                    SetPlazoT(60);
-                }
-                if(pT=="Trimestral"){
-                    SetPlazoT(90);
-                }
-                if(pT=="Cuatrimestral"){
-                    SetPlazoT(120)
-                }
-                if(pT=="Semestral"){
-                    SetPlazoT(180)
-                }
-                if(pT=="Anual"){
-                    SetPlazoT(360)
-                }
+                
                 if(TipoTasa=="Tasa Nominal"){
                     if(pT==="Mensual"){
                         SetCapitalizacion(30);
@@ -425,7 +401,7 @@ const EditProductScreen = props =>{
        
         SetIsloading(false);
        
-    },[dispatch,letrId,formState]);
+    },[dispatch,letrId,titulo,descripcion,FechaGiro,FechaVen,plazot,tasa,gastoInicial,gastoFinal,retencion,valorNominal,capitalizacion]);
     const RecognizeYourChild = (TipoTasa) =>{
         
     }
@@ -433,12 +409,13 @@ const EditProductScreen = props =>{
         
     }
     const Reconstruct = () => {
-        try {
-          submitHandler();  
-          props.navigation.navigate('Resultados');
-        } catch (error) {
-            console.log(error);
-        }
+        console.log(titulo)
+        // try {
+        //   submitHandler();  
+        //   props.navigation.navigate('Resultados');
+        // } catch (error) {
+        //     console.log(error);
+        // }
     }
 
     const validateInitialData = () =>{
@@ -451,16 +428,18 @@ const EditProductScreen = props =>{
         SetIsFinal(true);
        console.log(IsFinal);
     }
-    const InputChangeHandler = useCallback((inputIdentifier,inputValue,inputValidity) => {
+    // const InputChangeHandler = useCallback((inputIdentifier,inputValue,inputValidity) => {
 
-        dispatchFormState({
-            type:FORM_INPUT_UPDATE,
-            value:inputValue,
-            isValid : inputValidity,
-            input:inputIdentifier
-        })
-    },[dispatchFormState]);
-    
+    //     dispatchFormState({
+    //         type:FORM_INPUT_UPDATE,
+    //         value:inputValue,
+    //         isValid : inputValidity,
+    //         input:inputIdentifier
+    //     })
+    // },[dispatchFormState]);
+    const AlDeseleccionarInput = ()=>{
+
+    }
     const onChangeValorNominal = (vnominal) =>{
         SetValorNominal(vnominal)
     }
@@ -468,23 +447,42 @@ const EditProductScreen = props =>{
         SetRetencion(rete)
     }
     const onChangeGastoInic = (gastoInic) =>{
-        
+        SetGastoInicial(gastoInic)
     }
-    const onChangeGastoFinal = (gastoInic) =>{
-        
+    const onChangeGastoFinal = (gastoFinal) =>{
+        SetGastoFinal(gastoFinal)
     }
     const onChangeTitulo = (titulo) =>{
-        
+        SetTitulo(titulo)
     }
     const onChangeDescripcionLetra = (DescLetra) =>{
-        
+        SetDescripcion(DescLetra)
     }
     const onChangeTasa = (Tasa) =>{
-        
+        SetTasa(Tasa)
     }
-    const onChangePlazoTasa = (PlazoTasa) =>{
-        
+    const onChangePlazoTasa = () =>{
+        if(pT==="Mensual"){
+            SetPlazot(30);
+        }
+        if(pT==="Bimestral"){
+            SetPlazot(60);
+        }
+        if(pT==="Trimestral"){
+            SetPlazot(90);
+        }
+        if(pT==="Cuatrimestral"){
+            SetPlazot(120)
+        }
+        if(pT==="Semestral"){
+            SetPlazot(180)
+        }
+        if(pT==="Anual"){
+            SetPlazot(360)
+        }
+
     }
+    
     if(isLoading)
     {   
         return(
@@ -497,6 +495,13 @@ const EditProductScreen = props =>{
         return(
             <KeyboardAvoidingView style={{flex:1}} behavior="padding" keyboardVerticalOffset={-100}>
             <ScrollView style={{margin:10}}>
+            <Fancy
+            visible={visibleForFinal}
+            MotivoGasto={MotivoGastoFinal}
+            TipoValor={UnidadFinalValor}
+            ValorAgregado={gastoFinal}
+            toggle={toggleAlertFinal}
+            />
              <View style={{justifyContent:'center',alignItems:'center',marginVertical:5}}>
                 <Text style={styles.HeaderFinales}>Datos Finales</Text>
              </View>
@@ -525,29 +530,29 @@ const EditProductScreen = props =>{
                 <Input
                 id='Vnominal'
                 label='Valor Nominal:'
-                errorText='X'
-                keyboardType='default'
+                editable={true}
+                keyboardType='decimal-pad'
+                // onEndEditing={}
+                // onSubmitEditing={}
                 autoCapitalize='sentences'
                 autoCorrect
                 returnKeyType='next'
                 value = {valorNominal}
                 onChangeHandler={onChangeValorNominal}
-                // initialValue={editedLetra?editedLetra.title:''}
-                // initiallyValid ={!!editedLetra}
                 required
                 />
                 <Input
                 id='Retencion'
                 label='Retencion:'
-
-                keyboardType='default'
+                editable={true}
+                keyboardType='decimal-pad'
+                // onEndEditing={}
+                // onSubmitEditing={}
                 autoCapitalize='sentences'
                 autoCorrect
                 returnKeyType='next' 
                 value = {retencion}
                 onChangeHandler ={onChangeRetencion}
-                // initialValue={editedLetra?editedLetra.title:''}
-                // initiallyValid ={!!editedLetra}
                 required
                 />
                 <Card style={styles.card}>
@@ -558,13 +563,13 @@ const EditProductScreen = props =>{
             </Card>
                     <Card style={styles.card}>
                         <ScrollView>
-                            <MyButton value={MotivoF} HandlerOnPress={()=>setModalOpenMotivoF(!modalOpenMotivoF)}>Gastos Finales
+                            <MyButton value={MotivoGastoFinal} HandlerOnPress={()=>setModalOpenMotivoF(!modalOpenMotivoF)}>Gastos Finales
                             </MyButton>
                             <MyButtonSpecial style={{
                                 flexDirection:'row',
                                 justifyContent:'space-between',
     
-                            }} value={ValorE} HandlerOnPress={()=>setModalOpenValorE(!modalOpenValorE)}>Tipo de valor:
+                            }} value={UnidadFinalValor} HandlerOnPress={()=>setModalOpenValorE(!modalOpenValorE)}>Tipo de valor:
                             </MyButtonSpecial>
                                 <Input
                                 style={{
@@ -574,12 +579,18 @@ const EditProductScreen = props =>{
                                     color:'black',
                                 }}
                                 id='VNumerico'
+                                editable={true}
                                 label ='Valor Numerico:'
+                                // onEndEditing={}
+                                // onSubmitEditing={}
                                 keyboardType='decimal-pad'
                                 returnKeyType='next'   
                                 value={gastoFinal}
-                                onChangeHandler ={onChangeGastoInic}
-                                required/>    
+                                onChangeHandler ={onChangeGastoFinal}
+                                required/> 
+                                <View style={{marginTop:10}}>
+                            <Button color={Colors.accent} title='Agregar Motivo' onPress={addGastoFinal}/>
+                            </View>   
                         
                         </ScrollView>
                         
@@ -588,20 +599,20 @@ const EditProductScreen = props =>{
                     <MyCustomPicker
                     setModalOpen={setModalOpenMotivoF}
                     modalOpen={modalOpenMotivoF} 
-                    value={MotivoF} 
-                    setValue={setMotivoF}
+                    value={MotivoGastoFinal} 
+                    setValue={setMotivoFinal}
                     items = {motivosFinales}
                     />
                     </View>  
                     <MyCustomPicker
                     setModalOpen={setModalOpenValorE}
                     modalOpen={modalOpenValorE} 
-                    value={ValorE} 
-                    setValue={setValorE}
+                    value={UnidadFinalValor} 
+                    setValue={setUnidadFinalValor}
                     items = {valorUnidad}
                     />             
              </ScrollView>
-             <Button color={Colors.primary} title="VER RESULTADOS" onPress={()=>{Reconstruct}}/>   
+             <Button color={Colors.primary} title="VER RESULTADOS" onPress={()=>{}}/>   
              </KeyboardAvoidingView>)
     }
     if(IsNexted)
@@ -609,18 +620,25 @@ const EditProductScreen = props =>{
         return(
         <KeyboardAvoidingView style={{flex:1}} behavior="padding" keyboardVerticalOffset={100}>
         <ScrollView style={{margin:10}}>
-         <View style={{justifyContent:'center',alignItems:'center',marginVertical:5}}>
+        <Fancy
+        visible={visibleForInicial}
+        MotivoGasto={MotivoGastoInicial}
+        TipoValor={UnidadInicialValor}
+        ValorAgregado={gastoInicial}
+        toggle={toggleAlertInicial}
+        />
+         {/* <View style={{justifyContent:'center',alignItems:'center',marginVertical:5}}>
             <Text style={styles.HeaderFinales}>Datos Iniciales</Text>
-         </View>   
+         </View>    */}
                 <Card style={styles.card}>
                     <ScrollView>
-                        <MyButton value={Motivo} HandlerOnPress={()=>setModalOpenMotivo(!modalOpenMotivo)}>Motivo
+                        <MyButton value={MotivoGastoInicial} HandlerOnPress={()=>setModalOpenMotivo(!modalOpenMotivo)}>Gastos Iniciales
                         </MyButton>
                         <MyButtonSpecial style={{
                             flexDirection:'row',
                             justifyContent:'space-between',
 
-                        }} value={ValorE} HandlerOnPress={()=>setModalOpenValorE(!modalOpenValorE)}>Tipo de valor:
+                        }} value={UnidadInicialValor} HandlerOnPress={()=>setModalOpenValorE(!modalOpenValorE)}>Tipo de valor:
                         </MyButtonSpecial>
                             <Input
                             style={{
@@ -632,36 +650,38 @@ const EditProductScreen = props =>{
                                 width:'70%',
                             }}
                             Visible={true}
+                            editable={true}
                             id='VNumerico'
+                            // onEndEditing={}
+                            // onSubmitEditing={}
                             label = 'Valor Numerico:'
                             keyboardType='decimal-pad'
                             returnKeyType='next'   
                             value={gastoInicial}
-                            onChangeHandler ={gastoinic=>SetGastoInicial(gastoinic)}
-                            // initialValue={editedLetra?editedLetra.gastoInicial:''}
-                            // initiallyValid ={!!editedLetra}
+                            // IncrementarGasto={addGastoInicial}
+                            onChangeHandler ={onChangeGastoInic}
                             required
-                            />                              
+                            />  
+                            <View style={{marginTop:10}}>
+                            <Button color={Colors.accent} title='Agregar Motivo' onPress={addGastoInicial}/>
+                            </View>                            
                     </ScrollView>
-                    {/* <View style={styles.btncontainer}>
-                    <Button color={Colors.accent} title={'Agregar Motivo'}/>
-                    </View> */}
                 </Card>
                 <ImageSelector onImageTaken={imageTakenHandler}/> 
                 <View>    
                 <MyCustomPicker
                 setModalOpen={setModalOpenMotivo}
                 modalOpen={modalOpenMotivo} 
-                value={Motivo} 
-                setValue={setMotivo}
+                value={MotivoGastoInicial} 
+                setValue={setMotivoInicial}
                 items = {motivos}
                 />
                 </View>  
                 <MyCustomPicker
                 setModalOpen={setModalOpenValorE}
                 modalOpen={modalOpenValorE} 
-                value={ValorE} 
-                setValue={setValorE}
+                value={UnidadInicialValor} 
+                setValue={setUnidadInicialValor}
                 items = {valorUnidad}
                 />             
          </ScrollView>
@@ -682,19 +702,29 @@ const EditProductScreen = props =>{
                 keyboardType='default'
                 autoCapitalize='sentences'
                 autoCorrect
+                // editable={editable}
                 returnKeyType='next' 
-                onChangeHandler ={texto=>SetTitulo(texto)}
+                maxLength ={20}
+                onChangeHandler ={onChangeTitulo}
+                // onEndEditing={}
+                // onSubmitEditing={}
                 value={titulo}
                 required
                 />
                 <Input
                 id='descripcionLetra'
                 label='Descripción:'
+                // numberOfLines={1}
+                maxLength ={30}
                 keyboardType='default'
+                editable={true}
                 autoCapitalize='sentences'
                 autoCorrect
                 returnKeyType='next' 
-                onChangeHandler ={descripcion=>SetDescripcion(descripcion)}
+                onChangeHandler ={onChangeDescripcionLetra}
+                value={descripcion}
+                // onEndEditing={}
+                // onSubmitEditing={}
                 required
                 />
                 
@@ -722,16 +752,17 @@ const EditProductScreen = props =>{
                     <Input
                             id='tasa'
                             label='Tasa:'
-                            // errorText='X'
-                            keyboardType='default'
+                            keyboardType='decimal-pad'
                             autoCapitalize='sentences'
+                            editable={true}
                             autoCorrect
                             returnKeyType='next'
                             placeholder ='23.4344444' 
-                            onChangeHandler ={tasa=>SetTasa(tasa)}
+                            returnKeyType='next' 
+                            // onEndEditing={}
+                            // onSubmitEditing={}
+                            onChangeHandler ={onChangeTasa}
                             value = {tasa}
-                            // initialValue={editedLetra?editedLetra.tasa:''}
-                            // initiallyValid ={!!editedLetra}
                             required
                             />
                    
@@ -748,18 +779,30 @@ const EditProductScreen = props =>{
                     <ScrollView>
                     <MyButton value={pT} HandlerOnPress={()=>setModalOpenPT(!modalOpenPT)}>Seleccione Plazo de Tasa
                         </MyButton>
+                            {/* {pT!=='Especial'?
                             <Input
                             id='NumPeriodoTasa'
                             label = 'Valor:'
                             // errorText='X'
-                            keyboardType='default'
+                            editable={true}
+                            keyboardType='decimal-pad'
                             returnKeyType='next' 
-                            onChangeHandler ={plazotasa=>SetPlazot(plazotasa)}
+                            // onEndEditing={}
+                            // onSubmitEditing={}
+                            // onBlur={AlDeseleccionarInput}
+                            placeholder='asdas'
+                            onChangeHandler ={onChangePlazoTasa}
                             value = {plazot}
-                            // initialValue={editedLetra?editedLetra.imageUrl:''}
-                            // initiallyValid ={!!editedLetra}
                             required
-                            />       
+                            />:null} */}
+                             {pT==='Especial'?  
+                             <TextInput
+                            label="Periodo Especial"
+                            placeholder='35'
+                            value={plazot}
+                            onChangeText={plazodeTasa=>SetPlazot(plazodeTasa)}
+                            /> 
+                             :null}
                     </ScrollView>
                 </Card> 
                

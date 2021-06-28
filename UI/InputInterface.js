@@ -2,6 +2,133 @@ import React,{useReducer,useEffect,useState} from 'react';
 import {Picker} from '@react-native-picker/picker'
 import {View, Button,Text,TextInput,TouchableOpacity,Modal,StyleSheet, Alert} from 'react-native';
 import Colors from '../constants/Colors'
+
+
+
+const Input = props =>{
+
+    return(
+        <View style={styles.formControl}>
+            <View style={{...styles.formTextPut,...props.style}}>
+             <Text style={{...styles.label,...props.style}}>{props.label}</Text>
+             <TextInput 
+            {...props}
+            style={
+            {
+                width:'40%',
+                paddingHorizontal:2,
+                paddingVertical:5,
+                borderRadius:5,
+                borderWidth:1,
+                margin:5,
+                marginHorizontal:20,
+                backgroundColor:'#D3D5D7',
+                color:'black',
+                // !inputState.isValid&& inputState.touched ?'red':
+                borderColor:'#D3D5D7'
+            }}
+            ButtonVisible={props.Visible}
+            value={props.value} 
+            // onBlur={LostFocusHandler}
+            onChangeText={props.onChangeHandler}/>
+            </View>
+            {/* {props.Visible?
+             <View style={styles.btncontainer}>
+             <Button color={Colors.accent} title='Agregar Motivo' onPress={props.IncrementarGasto}/>
+            </View>
+             :null} */}
+        </View>
+    )
+};
+const styles = StyleSheet.create({
+
+    btncontainer:{
+        marginTop:10,
+    },
+    formTextPut:{
+       width:'100%',
+       flexDirection:'row',
+       justifyContent:'space-between'
+    },
+    formControl:{
+        width:'100%',
+        flexDirection:'column',
+        
+    },
+    label:{
+        fontFamily:'open-sans-bold',
+        marginVertical:12,
+        marginLeft:20,
+        color:'black',
+    },
+    errorContainer:{
+        marginVertical:5,
+    },
+    errorTxt:{
+        fontFamily:'open-sans',
+        color:'red',
+        fontSize:14,
+    }
+});
+
+export default Input;
+    // const IfValueHandler = () =>
+    // {
+    //     if(check)
+    //     {
+    //         console.log(PrevValue);
+    //         return inputState.value+prevValue
+
+    //     }
+    //     else{
+    //         return inputState.value
+    //     }
+    // }
+    // // const SumatoriaGastos = () =>{
+    // //     check = check + inputState.value;
+    // //     SetCheck(check);
+    // // }
+    // const DoSum = () =>{
+    //     SetValue(inputState.value)
+    //     if(inputState.value!==Value)
+    //     {
+    //     inputState.value = inputState.value+Value;
+    //     console.log("works?");
+    //     return inputState.value
+
+    //     }
+    //     else
+    //     {
+    //         return inputState.value
+    //     }
+        
+    // }
+    // input:{
+    //     width:'40%',
+    //     paddingHorizontal:2,
+    //     paddingVertical:5,
+    //     borderRadius:5,
+    //     borderWidth:1,
+    //     margin:5,
+    //     marginHorizontal:20,
+    //     backgroundColor:'#D3D5D7',
+    //     color:'black',
+    
+    // },
+            {/* {!inputState.isValid&& inputState.touched &&(
+            <View style={styles.errorContainer}>
+                <Text style={styles.errorTxt}>{props.errorText}</Text>
+            </View>)} */}
+{/* <MyButton>{props.Default}
+<MyCustomPicker 
+// onValueChange={props.onValueChange}
+modalOpen={props.modalOpen} 
+// setModalOpen={props.setModalOpen} 
+// value={props.One} 
+// setValue={props.setOne}
+/>
+</MyButton> */}
+
 // const INPUT_CHANGE = 'INPUT_CHANGE'
 // const INPUT_BLUR = 'INPUT_BLUR'
 // const INCREMENT = 'INCREMENT'
@@ -32,9 +159,6 @@ import Colors from '../constants/Colors'
 //             return state;
 //     }
 // }   
-
-
-const Input = props =>{
     // const {onInputChange,id} = props;
     // const [check,SetCheck] = useState(false);
     // const [ PrevValue,SetPrevValue] = useState();
@@ -119,127 +243,3 @@ const Input = props =>{
     //         type:INPUT_BLUR
     //     })
     // }
-    const IncrementHandler = () =>
-    {
-       
-    }
-    // const IfValueHandler = () =>
-    // {
-    //     if(check)
-    //     {
-    //         console.log(PrevValue);
-    //         return inputState.value+prevValue
-
-    //     }
-    //     else{
-    //         return inputState.value
-    //     }
-    // }
-    return(
-        <View style={styles.formControl}>
-            <View style={{...styles.formTextPut,...props.style}}>
-             <Text style={{...styles.label,...props.style}}>{props.label}</Text>
-             <TextInput 
-            {...props}
-            style={
-            {
-                width:'40%',
-                paddingHorizontal:2,
-                paddingVertical:5,
-                borderRadius:5,
-                borderWidth:1,
-                margin:5,
-                marginHorizontal:20,
-                backgroundColor:'#D3D5D7',
-                color:'black',
-                borderColor:!inputState.isValid&& inputState.touched ?'red':'#D3D5D7'
-            }}
-            ButtonVisible={props.Visible}
-            value={props.value} 
-            // onBlur={LostFocusHandler}
-            onChangeText={props.onChangeHandler}/>
-            </View>
-            {props.Visible?
-             <View style={styles.btncontainer}>
-             <Button color={Colors.accent} title='Agregar Motivo' onPress={IncrementHandler}/>
-            </View>
-             :null}
-        </View>
-    )
-};
-const styles = StyleSheet.create({
-
-    btncontainer:{
-        marginTop:10,
-    },
-    formTextPut:{
-       width:'100%',
-       flexDirection:'row',
-       justifyContent:'space-between'
-    },
-    formControl:{
-        width:'100%',
-        flexDirection:'column',
-        
-    },
-    label:{
-        fontFamily:'open-sans-bold',
-        marginVertical:12,
-        marginLeft:20,
-        color:'black',
-    },
-    errorContainer:{
-        marginVertical:5,
-    },
-    errorTxt:{
-        fontFamily:'open-sans',
-        color:'red',
-        fontSize:14,
-    }
-});
-
-export default Input;
-    // // const SumatoriaGastos = () =>{
-    // //     check = check + inputState.value;
-    // //     SetCheck(check);
-    // // }
-    // const DoSum = () =>{
-    //     SetValue(inputState.value)
-    //     if(inputState.value!==Value)
-    //     {
-    //     inputState.value = inputState.value+Value;
-    //     console.log("works?");
-    //     return inputState.value
-
-    //     }
-    //     else
-    //     {
-    //         return inputState.value
-    //     }
-        
-    // }
-    // input:{
-    //     width:'40%',
-    //     paddingHorizontal:2,
-    //     paddingVertical:5,
-    //     borderRadius:5,
-    //     borderWidth:1,
-    //     margin:5,
-    //     marginHorizontal:20,
-    //     backgroundColor:'#D3D5D7',
-    //     color:'black',
-    
-    // },
-            {/* {!inputState.isValid&& inputState.touched &&(
-            <View style={styles.errorContainer}>
-                <Text style={styles.errorTxt}>{props.errorText}</Text>
-            </View>)} */}
-{/* <MyButton>{props.Default}
-<MyCustomPicker 
-// onValueChange={props.onValueChange}
-modalOpen={props.modalOpen} 
-// setModalOpen={props.setModalOpen} 
-// value={props.One} 
-// setValue={props.setOne}
-/>
-</MyButton> */}
