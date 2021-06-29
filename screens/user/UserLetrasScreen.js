@@ -1,5 +1,5 @@
 import React,{useState,useEffect,useCallback} from 'react';
-import { View,Text,FlatList,Platform,Button,Alert }from 'react-native'
+import { FlatList,Text,Platform,Button, ActivityIndicator,View,StyleSheet }from 'react-native'
 import {useSelector,useDispatch}from 'react-redux'
 import LetraItem  from '../../components/shop/LetraItem'
 import {HeaderButtons,Item}from 'react-navigation-header-buttons'
@@ -31,6 +31,8 @@ const UserLetrasScreen = props =>{
         }
     },[loadLetras])
     useEffect(()=>{
+        console.log("works")
+        console.log(userLetras);
         setIsLoading(true);
         loadLetras().then(()=>{
             setIsLoading(false);
@@ -57,19 +59,33 @@ const UserLetrasScreen = props =>{
             }}
         ])
     }
+    if(err){
+        return (
+        <View style={styles.ct}>
+            <Text>An error ocurred!</Text>
+            <Button title='Try again' onPress={loadProducts} color={Colors.primary}/>
+        </View>
+        );
+    }
+    if(isLoading)
+    {
+        return (<View style={styles.ct}>
+            <ActivityIndicator size='large' color={Colors.accent}/>
+        </View>);
+    }
     if(userLetras.length===0){
         console.log(userLetras.length)
         return(<View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
             <Text>No hay letras, quizá deberías agregar algunas?</Text>
         </View>)
     }
-    return (<FlatList data={userLetras} keyExtractor={item=>item.id} 
-    renderItem={itemData => <LetraItem image={itemData.item.imageUrl} 
-    title={itemData.item.titulo}
-    price={itemData.item.retencion}>
-         <Button color={Colors.primary} title="Ver" onPress={()=>{selectItemHandler(itemData.item.id,itemData.item.titulo)}}/>
-        <Button color={Colors.primary} title="Editar" onPress={()=>{editLetrasHandler(itemData.item.id)}}/>
-        <Button color={Colors.primary} title="Eliminar" onPress={deleteHandler.bind(this,itemData.item.id)}/>
+    return (<FlatList data={userLetras} keyExtractor={item=>item.idLetra} 
+    renderItem={itemData => <LetraItem image={itemData.item.SelectedImage} 
+    titulo={itemData.item.titulo}
+    valorNominal={itemData.item.valorNominal}>
+         <Button color={Colors.primary} title="Ver Letra" onPress={()=>{selectItemHandler(itemData.item.idLetra,itemData.item.titulo)}}/>
+        <Button color={Colors.primary} title="Editar" onPress={()=>{editLetrasHandler(itemData.item.idLetra)}}/>
+        <Button color={Colors.primary} title="Eliminar" onPress={deleteHandler.bind(this,itemData.item.idLetra)}/>
     </LetraItem>}/>);                                 
 };
 export const screenOptions = navData => {
@@ -85,5 +101,12 @@ export const screenOptions = navData => {
     </HeaderButtons>)
     }
 }
+const styles = StyleSheet.create({
+    ct:{
+        flex:1, 
+        justifyContent:'center',
+        alignItems:'center'
+    }
+})
 
 export default UserLetrasScreen;

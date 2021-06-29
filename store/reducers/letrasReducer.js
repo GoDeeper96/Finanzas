@@ -21,7 +21,7 @@ export default (state = initialState,action) =>{
                 action.lid,
                 state.userLetras[LetrasIndex].ownerId,
                 action.LetraData.titulo,
-                action.LetraData.imageUrl,
+                action.LetraData.SelectedImage,
                 action.LetraData.descripcion,
                 action.LetraData.plazot,
                 action.LetraData.tasa,
@@ -30,7 +30,8 @@ export default (state = initialState,action) =>{
                 action.LetraData.gastoFinal,
                 action.LetraData.fechaEmision,
                 action.LetraData.retencion,
-                action.LetraData.valorNominal)
+                action.LetraData.valorNominal,
+                action.LetraData.capitalizacion)
             const updatedUserLetra = [...state.userLetras];
             updatedUserLetra[LetrasIndex] = updatedLetra;
             const availableLetrasIndex = state.availableLetras.findIndex(
@@ -48,7 +49,7 @@ export default (state = initialState,action) =>{
             action.LetraData.id,
             action.LetraData.idUsuario,
             action.LetraData.titulo,
-            action.LetraData.imageUrl,
+            action.LetraData.SelectedImage,
             action.LetraData.descripcion,
             action.LetraData.plazot,
             action.LetraData.tasa,
@@ -57,7 +58,8 @@ export default (state = initialState,action) =>{
             action.LetraData.gastoFinal,
             action.LetraData.fechaEmision,
             action.LetraData.retencion,
-            action.LetraData.valorNominal);
+            action.LetraData.valorNominal,
+            action.LetraData.capitalizacion);
             return{
                 ...state,
                 availableLetras: state.availableLetras.concat(newLetra),

@@ -74,18 +74,20 @@ const EditProductScreen = props =>{
 
     const letrId = props.route.params? props.route.params.letraId:null;
     const editedLetra = useSelector(state=>state.letras.userLetras.find(letr=>letr.id===letrId))
-    const [isLoading,SetIsloading] = useState(false);
-    const [isFinished,SetIfFinished] = useState(false);
+    
+    
+    const dispatch=useDispatch();
     const [IsNexted, SetIsNexted] = useState(false);
     const [IsFinal, SetIsFinal] = useState(false);
-    const [selectedLanguage, setSelectedLanguage] = useState();
+
+    const [isLoading,SetIsloading] = useState(false);
     const [error,SetIsError] = useState();
+
     const [modalOpenPT,setModalOpenPT] = useState(false);
     const [pT,setpT] = useState('');
     const [modalOpenDaños,setModalOpenDaños] = useState(false);
     const [Daños,setDaños] = useState('');
     const [modalOpenMotivo,setModalOpenMotivo] = useState(false);
-    
     const [modalOpenTipoTasa,setmodalOpenTipoTasa] = useState(false);
     const [TipoTasa,setTipoTasa] = useState('');
     const [modalOpenValorE,setModalOpenValorE] = useState(false);
@@ -99,8 +101,10 @@ const EditProductScreen = props =>{
     const [MotivoGastoFinal,setMotivoFinal] = useState('');
     const [MotivoGastoInicial,setMotivoInicial] = useState('');
 
+
+
     const [SelectedImage, setSelectedImage] = useState();
-    const dispatch=useDispatch();
+   
     
     const [showFechaGiro, setShowFechaGiro] = useState(false);
     const [showFechaVen, setShowFechaVen] = useState(false);
@@ -156,11 +160,7 @@ const EditProductScreen = props =>{
         setVisibleForInicial(true);
         console.log(GastoArrayInicial);
     }
-    // const array1 = [];
 
-
-    // GastoArrayInicial.map(item=>console.log(item.valor));
-    // GastoArrayFinal.map(item=>console.log(item.valor));
     const addGastoFinal = ()=>{
         SetGastoArrayFinal([...GastoArrayFinal,{
             MotivoGastoInicial:MotivoGastoFinal,
@@ -171,15 +171,7 @@ const EditProductScreen = props =>{
         setVisibleForFinal(true);
         console.log(GastoArrayFinal);
     }
-    // const addGastoFinal = ()=>{
-    //     SetGastoArrayFinal([...GastoArrayFinal,{
-    //         MotivoGastoFinal:MotivoF,
-    //         TipoValor:valorUnidad,
-    //         valor:parseInt(GastoArrayFinal)
-    //     }])
-    //     console.log(GastoArrayFinal);
-    // }
-    //Calcular periodo
+
    
 
   const onChangeFechaGiro = (event, selectedDate) => {
@@ -334,14 +326,15 @@ const EditProductScreen = props =>{
             //
                 await dispatch(letrasActions.updateLetra(
                     letrId,
-                    titulo,        
-                    descripcion,   
-                    FechaGiro,     
-                    FechaVen,      
-                    plazot,        
-                    tasa,          
+                    titulo,  
+                    SelectedImage,
+                    descripcion,  
+                    plazot,   
+                    tasa, 
+                    FechaVen,                                          
                     sumArrayI,  
-                    sumArrayF,    
+                    sumArrayF, 
+                    FechaGiro,     
                     retencion,     
                     valorNominal,  
                     capitalizacion))
@@ -403,14 +396,15 @@ const EditProductScreen = props =>{
                     
                 // AQUI :V
                 await dispatch(letrasActions.createLetra(
-                    titulo,        
-                    descripcion,   
-                    FechaGiro,     
-                    FechaVen,      
+                    titulo,
+                    SelectedImage,
+                    descripcion,                              
                     plazot,        
-                    tasa,          
+                    tasa,    
+                    FechaVen,            
                     sumArrayI,  
-                    sumArrayF,    
+                    sumArrayF,  
+                    FechaGiro,   
                     retencion,     
                     valorNominal,  
                     capitalizacion));
@@ -542,7 +536,6 @@ const EditProductScreen = props =>{
         }
 
     }
-    
     if(isLoading)
     {   
         return(

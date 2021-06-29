@@ -3,7 +3,7 @@ class Letra {
        (idLetra,
         idUsuario,
         titulo,
-        imageUrl,
+        SelectedImage,
         descripcion,
         plazot,
         tasa,
@@ -18,7 +18,8 @@ class Letra {
         this.idLetra = idLetra; //nosetoca*
         this.idUsuario = idUsuario; //nosetoca*
         this.titulo = titulo; //nosetoca*
-        this.imageUrl = imageUrl; //nosetoca*
+        this.SelectedImage = SelectedImage; //nosetoca*
+        this.selectedLocation=selectedLocation;
         this.descripcion = descripcion; //nosetoca*
         this.plazot = plazot; //PLAZO DE TASA PERIODO
         this.tasa = tasa; //VALOR NUMERICO * 

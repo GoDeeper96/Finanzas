@@ -20,10 +20,9 @@ export const fetchLetras = () =>
             loadedLetras.push(
                 new Letra(
                 letra,
-                resData[letra].idLetra,
                 resData[letra].idUsuario,
                 resData[letra].titulo,
-                resData[letra].imageUrl,
+                resData[letra].SelectedImage,
                 resData[letra].descripcion,
                 resData[letra].plazot,
                 resData[letra].tasa,
@@ -32,7 +31,8 @@ export const fetchLetras = () =>
                 resData[letra].gastoFinal,
                 resData[letra].fechaEmision,
                 resData[letra].retencion,
-                resData[letra].valorNominal,      
+                resData[letra].valorNominal,
+                resData[letra].capitalizacion,            
                 )
             );
         }
@@ -69,7 +69,7 @@ export const createLetra =
     // id,
     // idUsuario,
     titulo,
-    imageUrl,
+    SelectedImage,
     descripcion,
     plazot,
     tasa,
@@ -95,7 +95,7 @@ export const createLetra =
          body:JSON.stringify({
             idUsuario: userId,
             titulo,
-            imageUrl,
+            SelectedImage,
             descripcion,
             plazot,
             tasa,
@@ -104,7 +104,8 @@ export const createLetra =
             gastoFinal,
             fechaEmision,
             retencion,
-            valorNominal
+            valorNominal,
+            capitalizacion
          })
      });
      const resData = await response.json();
@@ -115,7 +116,7 @@ export const createLetra =
         idLetra:resData.name,
         idUsuario: userId,
         titulo,
-        imageUrl,
+        SelectedImage,
         descripcion,
         plazot,
         tasa,
@@ -136,7 +137,7 @@ export const createLetra =
 export const updateLetra = (
     id,
     titulo,
-    imageUrl,
+    SelectedImage,
     descripcion,
     plazot,
     tasa,
@@ -160,7 +161,7 @@ export const updateLetra = (
              },
              body:JSON.stringify({
                 titulo,
-                imageUrl,
+                SelectedImage,
                 descripcion,
                 plazot,
                 tasa,
@@ -169,7 +170,8 @@ export const updateLetra = (
                 gastoFinal,
                 fechaEmision,
                 retencion,
-                valorNominal
+                valorNominal,
+                capitalizacion
              })
          });
          if(!res.ok){
@@ -180,7 +182,7 @@ export const updateLetra = (
         lid:id,
         LetraData:{
             titulo,
-            imageUrl,
+            SelectedImage,
             descripcion,
             plazot,
             tasa,
@@ -189,7 +191,8 @@ export const updateLetra = (
             gastoFinal,
             fechaEmision,
             retencion,
-            valorNomina
+            valorNominal,
+            capitalizacion
         }
     });
         

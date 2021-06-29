@@ -18,9 +18,17 @@ const LetraItem = props =>
                 <Image style={styles.img} source={{uri:props.image}}/>
             </View>
             <View style={styles.detailsInfo}>
-                <Text style={styles.titlest}>{props.title}</Text>
-                <Text style={styles.pricest}>${props.price.toFixed(2)}</Text>
-            </View>     
+                <Text style={styles.titlest}>{props.titulo}</Text>
+                <Text style={styles.pricest}>{props.valorNominal}</Text>
+                <Text style={styles.titlest}>{props.titulo}</Text>
+                <Text style={styles.pricest}>{props.valorNominal}</Text>
+            </View>   
+            <View style={styles.detailsInfo}>
+                <Text style={styles.titlest}>{props.titulo}</Text>
+                <Text style={styles.pricest}>{props.valorNominal}</Text>
+                <Text style={styles.titlest}>{props.titulo}</Text>
+                <Text style={styles.pricest}>{props.valorNominal}</Text>
+            </View> 
             <View style={styles.actions}> 
             {props.children}
                 {/* <Button color={Colors.primary} title="View Details" onPress={props.onViewDetail}/>
@@ -46,8 +54,10 @@ const styles = StyleSheet.create({
         overflow:'hidden'
     },  
     detailsInfo:{
+        flexDirection:'row',
+        justifyContent:'space-between',
         alignItems:'center',
-        height:'15%',
+        height:'9%',
         padding:10
     },
     titlest:{
