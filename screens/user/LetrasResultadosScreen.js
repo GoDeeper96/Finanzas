@@ -9,7 +9,7 @@ import Colors from '../../constants/Colors';
 const ResultadosScreen = props =>{
     // const orders= useSelector(state=>state.ordersa.orders);
     const letraId = props.route.params.letraId;
-    console.log("que paasdasdassoasdsaasdasdsa:"+letraId);
+    console.log("que paasdasdassoasdsaasdasdsaasdasdasdasdasds:"+letraId);
     const selectedResultados = useSelector(state =>
         state.resultados.availableResultados.filter(res => res.idLetra === letraId)
       );
@@ -65,8 +65,8 @@ export const screenOptions = navData => {
         headerTitle:'Resultados',
         headerLeft:()=>
         (<HeaderButtons HeaderButtonComponent={HeaderButton}>
-            <Item title='Resultados' iconName={Platform.OS==='android' ? 'md-menu':'ios-menu'} onPress={()=>
-            {navData.navigation.toggleDrawer();}
+            <Item title='Resultados' iconName={Platform.OS==='android' ? 'md-arrow-back':'ios-arrow-back-outline'} onPress={()=>
+            {navData.navigation.goBack()}
             }/>
         </HeaderButtons>)
     };

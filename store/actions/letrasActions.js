@@ -149,7 +149,8 @@ export const updateLetra = (
     gastoFinal,
     fechaEmision,
     retencion,
-    valorNominal,capitalizacion) =>
+    valorNominal,
+    capitalizacion) =>
 {
     //https://mealsapp-d838a-default-rtdb.firebaseio.com/products/${id}.json?auth=${token}
     return async (dispatch,getState)=>{

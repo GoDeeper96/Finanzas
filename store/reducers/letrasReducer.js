@@ -16,7 +16,8 @@ export default (state = initialState,action) =>{
                 userLetras:action.userLetras
             }
         case UPDATE_LETRA:
-            const LetrasIndex = state.userLetras.findIndex(letr=>letr.id ===action.lid);
+            const LetrasIndex = state.userLetras.findIndex(letr=>letr.idLetra ===action.lid);
+            console.log(LetrasIndex);
             const updatedLetra = new Letra(
                 action.lid,
                 state.userLetras[LetrasIndex].idUsuario,
@@ -35,7 +36,7 @@ export default (state = initialState,action) =>{
             const updatedUserLetra = [...state.userLetras];
             updatedUserLetra[LetrasIndex] = updatedLetra;
             const availableLetrasIndex = state.availableLetras.findIndex(
-                letr=>letr.id===action.lid
+                letr=>letr.idLetra===action.lid
             );
             const updatedAvailableLetras=[...state.availableLetras];
             updatedAvailableLetras[availableLetrasIndex] = updatedLetra;

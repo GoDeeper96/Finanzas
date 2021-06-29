@@ -336,7 +336,7 @@ const EditProductScreen = props =>{
         try {
             let id= await AsyncStorage.getItem('idLetra');
             await dispatch(ResultadosActions.createResultado(
-                id,
+                id?id:letrId,
                 SelectedImage,
                 res.periodo,
                 res.valorRecibido,
@@ -369,7 +369,7 @@ const EditProductScreen = props =>{
             sumArrayF = sumArrayF + arrayGastosF[x]   
         }
         try {
-    
+            console.log(editedLetra);
             if(editedLetra){
 
                 await dispatch(letrasActions.updateLetra(
