@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import {FlatList,Text,Platform,ActivityIndicator,StyleSheet,View} from 'react-native'
+import {FlatList,Text,Platform,ActivityIndicator,StyleSheet,View,Button} from 'react-native'
 import {useSelector,useDispatch }from 'react-redux';
 import {HeaderButtons,Item}from 'react-navigation-header-buttons'
 import HeaderButton from '../../UI/HeaderButton'
@@ -9,24 +9,26 @@ import Colors from '../../constants/Colors';
 const ResultadosScreen = props =>{
     // const orders= useSelector(state=>state.ordersa.orders);
     const letraId = props.route.params.letraId;
+    console.log("que paasdasdassoasdsaasdasdsa:"+letraId);
     const selectedResultados = useSelector(state =>
-        state.resultados.availableResutlados.find(res => res.id === letraId)
+        state.resultados.availableResultados.filter(res => res.idLetra === letraId)
       );
+    console.log(selectedResultados)
     const [isLoading,SetIsloading] = useState(false);
     const dispatch = useDispatch();
+
     useEffect(()=>{
         SetIsloading(true);
-        dispatch(ResultadosActions.fetchOrders()).then(
+        dispatch(ResultadosActions.fetchResultado()).then(
             ()=>{
                 SetIsloading(false);
             }
         );
         
     },[dispatch])
-    const DetalleResultado = (id,title) =>{
+    const DetalleResultado = (id) =>{
         props.navigation.navigate('ResultadoDetalleScreen',{
-            productId: id,
-            productTitle: title
+            ResultadoId: id,
         })
     }
     if(selectedResultados.length===0){
@@ -45,15 +47,13 @@ const ResultadosScreen = props =>{
     return (
         <FlatList 
         data={selectedResultados} 
-        keyExtractor={item=>item.id} 
-        onRefresh={loadProducts}
-        refreshing={isRefreshing}
+        keyExtractor={item=>item.idResultado} 
         renderItem={itemData=>
-        <ResultadosItem image={itemData.item.imageUrl} 
-        title={itemData.item.title}    
-        price={itemData.item.price}
-        onSelect={()=>{DetalleResultado(itemData.item.id,itemData.item.title)}}>                                                         
-           <Button color={Colors.primary} title="Ver detalles" onPress={()=>{ DetalleResultado(itemData.item.id,itemData.item.title)}}/>
+        <ResultadosItem imagen={itemData.item.LetraImageUrL} 
+        valorRecibido={itemData.item.valorRecibido}    
+        tcea={itemData.item.tcea}
+        onSelect={()=>{DetalleResultado(itemData.item.idResultado,itemData.item.title)}}>                                                         
+           <Button color={Colors.primary} title="Ver detalles" onPress={()=>{ DetalleResultado(itemData.item.idResultado)}}/>
            {/* <Button color={Colors.primary} title="To Cart" onPress={ ()=>{ dispatch(cartActions.addToCart(itemData.item))}}/> */}
         </ResultadosItem>}/>
     )
@@ -62,7 +62,7 @@ const ResultadosScreen = props =>{
 
 export const screenOptions = navData => {
     return {
-        headerTitle:'Carteras de Letras Descontadas',
+        headerTitle:'Resultados',
         headerLeft:()=>
         (<HeaderButtons HeaderButtonComponent={HeaderButton}>
             <Item title='Resultados' iconName={Platform.OS==='android' ? 'md-menu':'ios-menu'} onPress={()=>

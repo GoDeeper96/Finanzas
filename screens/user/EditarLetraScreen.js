@@ -16,6 +16,7 @@ import {HeaderButtons,Item}from 'react-navigation-header-buttons'
 import HeaderButton from '../../UI/HeaderButton'
 import {useSelector,useDispatch} from 'react-redux'
 import * as letrasActions from '../../store/actions/letrasActions'
+import * as ResultadosActions from '../../store/actions/ResultadosActions'
 import Input from '../../UI/InputInterface'
 import Colors from '../../constants/Colors'
 import MyCustomPicker from '../../UI/MyCustomPicker'
@@ -24,6 +25,8 @@ import MyButtonSpecial from '../../UI/ButtonSpecial'
 import ImageSelector from '../../UI/ImageSelector'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Fancy from '../../UI/fancyAlert'
+import FancyResultados from '../../UI/fancyResultados'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const DiasAño =[
     '360',
     '365'
@@ -75,9 +78,9 @@ const EditProductScreen = props =>{
     const letrId = props.route.params? props.route.params.letraId:null;
     const editedLetra = useSelector(state=>state.letras.userLetras.find(letr=>letr.idLetra===letrId))
     const userLetras = useSelector(state=>state.letras.userLetras)
-    console.log("here"+userLetras.map(x=>x.idLetra))
-    console.log(letrId);
-    console.log(editedLetra);
+    // console.log("here"+userLetras.map(x=>x.idLetra))
+    // console.log(letrId);
+    // console.log(editedLetra);
     const dispatch=useDispatch();
     const [IsNexted, SetIsNexted] = useState(false);
     const [IsFinal, SetIsFinal] = useState(false);
@@ -103,7 +106,7 @@ const EditProductScreen = props =>{
     const [MotivoGastoFinal,setMotivoFinal] = useState('');
     const [MotivoGastoInicial,setMotivoInicial] = useState('');
 
-
+    const [GoToPrincipal,SetGoToPrincipal] = useState(false);
 
     const [SelectedImage, setSelectedImage] = useState();
    
@@ -128,13 +131,30 @@ const EditProductScreen = props =>{
         setMotivoFinal('');
         setUnidadFinalValor('');      
     }, [visibleForFinal,gastoFinal,MotivoGastoFinal,UnidadFinalValor]);
-   
+    
+    const [visibleForResultados, setVisibleForResultados] = React.useState(false);
+    const toggleAlertResultados = React.useCallback(() => {
+        setVisibleForResultados(false);    
+        props.navigation.goBack();
+    }, [visibleForResultados]);
       
-
 
     //VALIDACIONES PARA TECLADO
     const [editable,SetEditable]=useState(true);
-    // DATOS DE CLASE
+    // DATOS DE CLASE RESULTADO
+    const [res,SetRes]=useState({
+            periodo:0,
+            valorRecibido:0,
+            TotalGastoInicial:0,
+            TotalGastoFinal:0,
+            tcea:0,
+            valorNeto:0,
+            descuento:0,
+            valorNominal:0,
+            capitalizacion:0,
+    });
+    const [IdLetra,SetIdLetra]=useState('');
+    // DATOS DE CLASE LETRA
     const [titulo,         SetTitulo]= useState('')
     const [descripcion,    SetDescripcion]= useState('')
     const [FechaGiro,      setFechaGiro] = useState(new Date("03/25/2015"));
@@ -149,6 +169,7 @@ const EditProductScreen = props =>{
     const [valorNominal,   SetValorNominal]= useState(0)
 
     const [capitalizacion, SetCapitalizacion]= useState(0)
+    const [HayResultados,SetHayResultados]= useState(false)
 
     const [GastoArrayInicial,SetGastoArrayInicial] = useState([]);
     const [GastoArrayFinal,SetGastoArrayFinal] = useState([]);
@@ -160,7 +181,7 @@ const EditProductScreen = props =>{
         }])
         
         setVisibleForInicial(true);
-        console.log(GastoArrayInicial);
+        // console.log(GastoArrayInicial);
     }
 
     const addGastoFinal = ()=>{
@@ -171,7 +192,7 @@ const EditProductScreen = props =>{
         }])
         
         setVisibleForFinal(true);
-        console.log(GastoArrayFinal);
+        // console.log(GastoArrayFinal);
     }
 
    
@@ -215,30 +236,18 @@ const EditProductScreen = props =>{
       function close() {
         pickerRef.current.blur();
       }
-    const submitHandler = useCallback(async () =>
-    {   
-        // if(!formState.formIsValid)
-        // {
-        //     Alert.alert('wrong input!','please check errors in the form',
-        //     [
-        //         {text:'Ok'}
-        //     ]);
-        //     return;
-        // }
-        // SetIsError(null);
-        // SetIsloading(true);
-        
-        let periodo;
+    const Algoritmo = () =>{
+         //Calcular periodo
+        let periodo=0;
         let t=0;
-        let m;
-        let n;
-        let tasadescuento;
-        let descuento;
-        let valorNeto;
-        let valorRecibido;
-        let valorEntregado;
-        let TCEA;
-
+        let m=0;
+        let n=0;
+        let tasadescuento=0;
+        let descuento=0;
+        let valorNeto=0;
+        let valorRecibido=0;
+        let valorEntregado=0;
+        let tcea=0;
         let arrayGastosI = []
         let sumArrayI = 0
         arrayGastosI = GastoArrayInicial.map(item=>item.valor);
@@ -252,80 +261,117 @@ const EditProductScreen = props =>{
         for(let x   in arrayGastosF){
             sumArrayF = sumArrayF + arrayGastosF[x]   
         }
-        console.log("here"+editedLetra)
+        periodo = Math.round((FechaVen-FechaGiro) / (1000 * 60 * 60 * 24));
+        //Calcular tasa
+        t=0;
+        if(TipoTasa=="Tasa Nominal"){
+            m = plazot/capitalizacion;
+            n = periodo/capitalizacion;
+            t = Math.pow(1+(tasa/m),n)-1;
+        }
+        if(pT==="Mensual"){
+            SetPlazot(30);
+        }
+        if(pT=="Bimestral"){
+            SetPlazot(60);
+        }
+        if(pT=="Trimestral"){
+            SetPlazot(90);
+        }
+        if(pT=="Cuatrimestral"){
+            SetPlazot(120)
+        }
+        if(pT=="Semestral"){
+            SetPlazot(180)
+        }
+        if(pT=="Anual"){
+            SetPlazot(360)
+        }
+        if(TipoTasa=="Tasa Efectiva"){
+            t = Math.pow((1+tasa),periodo/plazot)-1;
+            t = parseFloat(t.toPrecision(7));
+        }
+        //Calcular Tasa descuento
+        tasadescuento = t/(t+1.00);
+        tasadescuento = parseFloat(tasadescuento.toFixed(7));
+        //Calcular Descuento
+        descuento = valorNominal*(tasadescuento);
+        descuento = parseFloat(descuento.toFixed(2));
+        //Valor Neto
+        valorNeto=valorNominal-descuento;
+        valorNeto = parseFloat(valorNeto.toFixed(2))
+        //Valor a Recibir
+        valorRecibido=valorNeto-gastoInicial-retencion;
+        valorRecibido = parseFloat(valorRecibido.toFixed(2))
+        //Valor a Entregar
+        valorEntregado=valorNominal+gastoFinal-retencion;
+        valorEntregado = parseFloat(valorEntregado.toFixed(2))
+        //tcea
+        tcea=Math.pow(( valorEntregado/valorRecibido), 360/periodo) - 1;
+        SetRes({
+            periodo:periodo,
+            valorRecibido:valorRecibido,
+            TotalGastoInicial:sumArrayI,
+            TotalGastoFinal:sumArrayF,
+            tcea:tcea,
+            valorNeto:valorNeto,
+            descuento:descuento,
+            valorNominal:valorNominal,
+            capitalizacion:capitalizacion,
+        })
+        // ResultadosLetra ={
+        //     periodo:periodo,
+        //     valorRecibido:valorRecibido,
+        //     TotalGastoInicial:sumArrayI,
+        //     TotalGastoFinal:sumArrayF,
+        //     tcea:tcea,
+        //     valorNeto:valorNeto,
+        //     descuento:descuento,
+        //     valorNominal:valorNominal,
+        //     capitalizacion:capitalizacion,
+        // }
+    }
+    const loadData = async ()=>{
+      
+        try {
+            let id= await AsyncStorage.getItem('idLetra');
+            await dispatch(ResultadosActions.createResultado(
+                id,
+                SelectedImage,
+                res.periodo,
+                res.valorRecibido,
+                res.TotalGastoInicial,
+                res.TotalGastoFinal,
+                res.tcea,
+                res.valorNeto,
+                res.descuento,            
+                ))
+          
+        } catch (err) {
+          Alert.alert('OOPS','something went wrong');
+        }
+        AsyncStorage.clear();
+      }
+    const submitHandler = useCallback(async () =>
+    {   
+       
+        let arrayGastosI = []
+        let sumArrayI = 0
+        arrayGastosI = GastoArrayInicial.map(item=>item.valor);
+        for(let x   in arrayGastosI){
+            sumArrayI = sumArrayI + arrayGastosI[x]   
+        }
+        
+        let arrayGastosF = []
+        let sumArrayF = 0
+        arrayGastosF = GastoArrayFinal.map(item=>item.valor);
+        for(let x   in arrayGastosF){
+            sumArrayF = sumArrayF + arrayGastosF[x]   
+        }
         try {
     
             if(editedLetra){
-            //
-                //Calcular periodo
-                periodo = Math.round((FechaVen-FechaGiro) / (1000 * 60 * 60 * 24));
-                //Calcular tasa
-                t=0;
-                if(pT==="Mensual"){
-                    SetPlazot(30);
-                }
-                if(pT=="Bimestral"){
-                    SetPlazot(60);
-                }
-                if(pT=="Trimestral"){
-                    SetPlazot(90);
-                }
-                if(pT=="Cuatrimestral"){
-                    SetPlazot(120)
-                }
-                if(pT=="Semestral"){
-                    SetPlazot(180)
-                }
-                if(pT=="Anual"){
-                    SetPlazot(360)
-                }
-                if(TipoTasa=="Tasa Nominal"){
-                    if(pT==="Mensual"){
-                        SetCapitalizacion(30);
-                    }
-                    if(pT=="Bimestral"){
-                        SetCapitalizacion(60);
-                    }
-                    if(pT=="Trimestral"){
-                        SetCapitalizacion(90);
-                    }
-                    if(pT=="Cuatrimestral"){
-                        SetCapitalizacion(120)
-                    }
-                    if(pT=="Semestral"){
-                        SetCapitalizacion(180)
-                    }
-                    if(pT=="Diario"){
-                        SetCapitalizacion(1)
-                    }
-                    m = plazot/capitalizacion;
-                    n = periodo/capitalizacion;
-                    t = Math.pow(1+(tasa/m),n)-1;
-                }
-                if(TipoTasa=="Tasa Efectiva"){
-                    t = Math.pow((1+tasa),periodo/plazot)-1;
-                    t = parseFloat(t.toPrecision(7));
-                }
-                //Calcular Tasa descuento
-                tasadescuento = t/(t+1.00);
-                tasadescuento = parseFloat(tasadescuento.toFixed(7));
-                //Calcular Descuento
-                descuento = valorNominal*(tasadescuento);
-                descuento = parseFloat(descuento.toFixed(2));
-                //Valor Neto
-                valorNeto=valorNominal-descuento;
-                valorNeto = parseFloat(valorNeto.toFixed(2))
-                //Valor a Recibir
-                valorRecibido=valorNeto-gastoInicial-retencion;
-                valorRecibido = parseFloat(valorRecibido.toFixed(2))
-                //Valor a Entregar
-                valorEntregado=valorNominal+gastoFinal-retencion;
-                valorEntregado = parseFloat(valorEntregado.toFixed(2))
-                //TCEA
-                TCEA=Math.pow(( valorEntregado/valorRecibido), 360/periodo) - 1;
 
-                
-            //  
                 await dispatch(letrasActions.updateLetra(
                     letrId,
                     titulo,  
@@ -345,56 +391,7 @@ const EditProductScreen = props =>{
             }
             else{
                 //     
-                        //Calcular periodo
-                periodo = Math.round((FechaVen-FechaGiro) / (1000 * 60 * 60 * 24));
-                //Calcular tasa
-                 t=0;
-                
-                if(TipoTasa=="Tasa Nominal"){
-                    if(pT==="Mensual"){
-                        SetCapitalizacion(30);
-                    }
-                    if(pT=="Bimestral"){
-                        SetCapitalizacion(60);
-                    }
-                    if(pT=="Trimestral"){
-                        SetCapitalizacion(90);
-                    }
-                    if(pT=="Cuatrimestral"){
-                        SetCapitalizacion(120)
-                    }
-                    if(pT=="Semestral"){
-                        SetCapitalizacion(180)
-                    }
-                    if(pT=="Diario"){
-                        SetCapitalizacion(1)
-                    }
-                    m = plazot/capitalizacion;
-                    n = periodo/capitalizacion;
-                    t = Math.pow(1+(tasa/m),n)-1;
-                }
-                if(TipoTasa=="Tasa Efectiva"){
-                    t = Math.pow((1+tasa),periodo/plazot)-1;
-                    t = parseFloat(t.toPrecision(7));
-                }
-                //Calcular Tasa descuento
-                tasadescuento = t/(t+1.00);
-                tasadescuento = parseFloat(tasadescuento.toFixed(7));
-                //Calcular Descuento
-                descuento = valorNominal*(tasadescuento);
-                descuento = parseFloat(descuento.toFixed(2));
-                //Valor Neto
-                valorNeto=valorNominal-descuento;
-                valorNeto = parseFloat(valorNeto.toFixed(2))
-                //Valor a Recibir
-                valorRecibido=valorNeto-gastoInicial-retencion;
-                valorRecibido = parseFloat(valorRecibido.toFixed(2))
-                //Valor a Entregar
-                valorEntregado=valorNominal+gastoFinal-retencion;
-                valorEntregado = parseFloat(valorEntregado.toFixed(2))
-                //TCEA
-                TCEA=Math.pow(( valorEntregado/valorRecibido), 360/periodo) - 1;
-                    
+                 
                 // AQUI :V
                 await dispatch(letrasActions.createLetra(
                     titulo,
@@ -409,10 +406,15 @@ const EditProductScreen = props =>{
                     retencion,     
                     valorNominal,  
                     capitalizacion));
-                // await dispatch(resultadosActions.createLetra())
+
             }
+
+            loadData();
+            Algoritmo();
             
-            props.navigation.goBack();
+            setVisibleForResultados(true);
+            SetHayResultados(true);
+           
         } catch (err) {
             SetIsError(err.message);
         }
@@ -420,81 +422,21 @@ const EditProductScreen = props =>{
         SetIsloading(false);
        
     },[dispatch,letrId,titulo,descripcion,FechaGiro,FechaVen,plazot,tasa,gastoInicial,gastoFinal,retencion,valorNominal,capitalizacion]);
-    const RecognizeYourChild = (TipoTasa) =>{
-        
-    }
-    const AgregaMotivos = () =>{
-        
-    }
-    
 
 
-    const Reconstruct = () => {
-        let arrayGastosI = []
-        let sumArrayI = 0
-        arrayGastosI = GastoArrayInicial.map(item=>item.valor);
-        for(let x   in arrayGastosI){
-            sumArrayI = sumArrayI + arrayGastosI[x]   
-        }
-        
-        let arrayGastosF = []
-        let sumArrayF = 0
-        arrayGastosF = GastoArrayFinal.map(item=>item.valor);
-        for(let x   in arrayGastosF){
-            sumArrayF = sumArrayF + arrayGastosF[x]   
-        }
-   
-
-
-
-
-        GastoArrayInicial.map(item=>console.log(`\nvalor : ${item.valor}`));
-        
-        GastoArrayFinal.map(item=>console.log(`\nvalor : ${item.valor}`));
-        console.log(
-        `titulo:${titulo}`,
-        `\ndescripcion:${descripcion}`,
-        `\nfechaGiro:${FechaGiro}`,
-        `\nfechaVen:${FechaVen}`,
-        `\nplazot:${plazot}`,
-        `\ntasa:${tasa}`,
-        `\nGastoFinal:${GastoArrayFinal}`,
-        `\nGastoInicial:${GastoArrayInicial}`,
-        `\nretencion:${retencion}`,
-        `\nvalorNominal:${valorNominal}`,
-        `\nvalorNominal:${pT}`,
-        `\ncapitalizacion:${capitalizacion}`)
-        // try {
-        //   submitHandler();  
-        //   props.navigation.navigate('Resultados');
-        // } catch (error) {
-        //     console.log(error);
-        // }
-    }
-
+ 
     const validateInitialData = () =>{
         // SetIfFinished(true);
         SetIsNexted(true);
-       console.log(IsNexted);
+    //    console.log(IsNexted);
     }
     const validacionFinal = () =>{
         // SetIfFinished(true);
         SetIsFinal(true);
-       console.log(IsFinal);
+    //    console.log(IsFinal);
     }
-    // const InputChangeHandler = useCallback((inputIdentifier,inputValue,inputValidity) => {
 
-    //     dispatchFormState({
-    //         type:FORM_INPUT_UPDATE,
-    //         value:inputValue,
-    //         isValid : inputValidity,
-    //         input:inputIdentifier
-    //     })
-    // },[dispatchFormState]);
 
-    const AlDeseleccionarInput = ()=>{
-
-    }
     const onChangeValorNominal = (vnominal) =>{
         SetValorNominal(vnominal)
     }
@@ -537,6 +479,44 @@ const EditProductScreen = props =>{
         }
 
     }
+    // useEffect(()=>
+    // {
+    //     console.log("WHAT THE FUCK IS HAPPENING"+id);
+    //     if(IdLetra)
+    //     {
+    //         dispatch(ResultadosActions.createResultado(
+    //             IdLetra,
+    //             SelectedImage,
+    //             res.periodo,
+    //             res.valorRecibido,
+    //             res.TotalGastoInicial,
+    //             res.TotalGastoFinal,
+    //             res.tcea,
+    //             res.valorNeto,
+    //             res.descuento,            
+    //             ))
+    //     }
+    // },[SetIdLetra])
+    if(HayResultados)
+    { 
+        
+        return(
+            <FancyResultados
+            visible={visibleForResultados}
+            periodo={res.periodo}
+            valorRecibido={res.valorRecibido}
+            sumArrayI={res.TotalGastoInicial}
+            sumArrayF={res.TotalGastoFinal}
+            tcea={res.tcea}
+            valorNeto={res.valorNeto}
+            descuento={res.descuento}
+            valorNominal={res.valorNominal}
+            capitalizacion={res.capitalizacion}
+            toggle={toggleAlertResultados}
+            />
+        )
+
+    }
     if(isLoading)
     {   
         return(
@@ -556,6 +536,7 @@ const EditProductScreen = props =>{
             ValorAgregado={gastoFinal}
             toggle={toggleAlertFinal}
             />
+            
              <View style={{justifyContent:'center',alignItems:'center',marginVertical:5}}>
                 <Text style={styles.HeaderFinales}>Datos Finales</Text>
              </View>
@@ -841,22 +822,7 @@ const EditProductScreen = props =>{
                     <ScrollView>
                     <MyButton value={pT} HandlerOnPress={()=>setModalOpenPT(!modalOpenPT)}>Seleccione Plazo de Tasa
                         </MyButton>
-                            {/* {pT!=='Especial'?
-                            <Input
-                            id='NumPeriodoTasa'
-                            label = 'Valor:'
-                            // errorText='X'
-                            editable={true}
-                            keyboardType='decimal-pad'
-                            returnKeyType='next' 
-                            // onEndEditing={}
-                            // onSubmitEditing={}
-                            // onBlur={AlDeseleccionarInput}
-                            placeholder='asdas'
-                            onChangeHandler ={onChangePlazoTasa}
-                            value = {plazot}
-                            required
-                            />:null} */}
+                            
                              {pT==='Especial'?  
                              <TextInput
                             label="Periodo Especial"
@@ -975,3 +941,77 @@ export default EditProductScreen;
 //    },
 //     formIsValid:editedLetra?true:false 
 //    });
+
+   // const Reconstruct = () => {
+    //     let arrayGastosI = []
+    //     let sumArrayI = 0
+    //     arrayGastosI = GastoArrayInicial.map(item=>item.valor);
+    //     for(let x   in arrayGastosI){
+    //         sumArrayI = sumArrayI + arrayGastosI[x]   
+    //     }
+        
+    //     let arrayGastosF = []
+    //     let sumArrayF = 0
+    //     arrayGastosF = GastoArrayFinal.map(item=>item.valor);
+    //     for(let x   in arrayGastosF){
+    //         sumArrayF = sumArrayF + arrayGastosF[x]   
+    //     }
+
+    //     GastoArrayInicial.map(item=>console.log(`\nvalor : ${item.valor}`));
+        
+    //     GastoArrayFinal.map(item=>console.log(`\nvalor : ${item.valor}`));
+    //     console.log(
+    //     `titulo:${titulo}`,
+    //     `\ndescripcion:${descripcion}`,
+    //     `\nfechaGiro:${FechaGiro}`,
+    //     `\nfechaVen:${FechaVen}`,
+    //     `\nplazot:${plazot}`,
+    //     `\ntasa:${tasa}`,
+    //     `\nGastoFinal:${GastoArrayFinal}`,
+    //     `\nGastoInicial:${GastoArrayInicial}`,
+    //     `\nretencion:${retencion}`,
+    //     `\nvalorNominal:${valorNominal}`,
+    //     `\nvalorNominal:${pT}`,
+    //     `\ncapitalizacion:${capitalizacion}`)
+    //     // try {
+    //     //   submitHandler();  
+    //     //   props.navigation.navigate('Resultados');
+    //     // } catch (error) {
+    //     //     console.log(error);
+    //     // }
+    // }
+{/* {pT!=='Especial'?
+                            <Input
+                            id='NumPeriodoTasa'
+                            label = 'Valor:'
+                            // errorText='X'
+                            editable={true}
+                            keyboardType='decimal-pad'
+                            returnKeyType='next' 
+                            // onEndEditing={}
+                            // onSubmitEditing={}
+                            // onBlur={AlDeseleccionarInput}
+                            placeholder='asdas'
+                            onChangeHandler ={onChangePlazoTasa}
+                            value = {plazot}
+                            required
+                            />:null} */}
+                                // const InputChangeHandler = useCallback((inputIdentifier,inputValue,inputValidity) => {
+
+    //     dispatchFormState({
+    //         type:FORM_INPUT_UPDATE,
+    //         value:inputValue,
+    //         isValid : inputValidity,
+    //         input:inputIdentifier
+    //     })
+    // },[dispatchFormState]);
+            // if(!formState.formIsValid)
+        // {
+        //     Alert.alert('wrong input!','please check errors in the form',
+        //     [
+        //         {text:'Ok'}
+        //     ]);
+        //     return;
+        // }
+        // SetIsError(null);
+        // SetIsloading(true);

@@ -32,8 +32,8 @@ const UserLetrasScreen = props =>{
         }
     },[loadLetras])
     useEffect(()=>{
-        console.log("works")
-        console.log(userLetras);
+        // console.log("works")
+        // console.log(userLetras);
         setIsLoading(true);
         loadLetras().then(()=>{
             setIsLoading(false);

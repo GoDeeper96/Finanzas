@@ -1,6 +1,7 @@
 import React from 'react'
 import {ScrollView,View,Text,Image,Button,StyleSheet} from 'react-native'
 import {useSelector,useDispatch} from 'react-redux'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Colors from '../../constants/Colors'
 import Card from '../../UI/Card';
 const DetalleLetraScreen = props =>{
@@ -8,16 +9,66 @@ const DetalleLetraScreen = props =>{
     const selectedLetras = useSelector(state =>
         state.letras.availableLetras.find(letr => letr.idLetra === letraId)
       );
+     
+      
       const LlevameAListaResultados = ()=>{
           //LLEVA A RESULTADOS FIND SEGUN ID DE LETRA
+          props.navigation.navigate('Resultados',{
+            letraId: letraId
+        })
       }
       console.log("here"+selectedLetras)
     return (
-        <ScrollView style={styles.todo}>
-            <Card>
-                <View style={styles.rw}>
-                <Text style={styles.prc}>{selectedLetras.titulo}</Text>
-                <Text style={styles.desc}>{selectedLetras.descripcion}</Text>
+            <View style={styles.rw}>
+                <View style={{ flexDirection:'row'}}>
+                <Text style={styles.title}>Titulo:</Text>
+                <Text style={styles.val}>{selectedLetras.titulo}</Text>
+                </View>
+                <View style={{ flexDirection:'row'}}>
+                <Text style={styles.title}>Descripcion:</Text>
+                <Text style={styles.val}>{selectedLetras.descripcion}</Text>
+                </View>
+                <View style={{ flexDirection:'row'}}>
+                <Text style={styles.title}>Retencion:</Text>
+                <Text style={styles.val}>{selectedLetras.retencion}</Text>
+                </View>
+                <View style={{ flexDirection:'row'}}>
+                <Text style={styles.title}>Plazo tasa:</Text>
+                <Text style={styles.val}>{selectedLetras.plazot}</Text>
+                </View>
+                <View style={{ flexDirection:'row'}}>
+                <Text style={styles.title}>Tasa:</Text>
+                <Text style={styles.val}>{selectedLetras.tasa}</Text>
+                </View>
+                <View style={{ flexDirection:'row'}}>
+                <Text style={styles.title}>Fecha Descuento:</Text>
+                <Text style={styles.val}>{selectedLetras.fechaDescuento}</Text>
+                </View>
+                <View style={{ flexDirection:'row'}}>
+                <Text style={styles.title}>Gastos Iniciales:</Text>
+                <Text style={styles.val}>{selectedLetras.gastoInicial}</Text>
+                </View>
+                <View style={{ flexDirection:'row'}}>
+                <Text style={styles.title}>Gastos Finales:</Text>
+                <Text style={styles.val}>{selectedLetras.gastoFinal}</Text>
+                </View>
+                <View style={{ flexDirection:'row'}}>
+                <Text style={styles.title}>Fecha Emision:</Text>
+                <Text style={styles.val}>{selectedLetras.fechaEmision}</Text>
+                </View>
+                <View style={{ flexDirection:'row'}}>
+                <Text style={styles.title}>retencion:</Text>
+                <Text style={styles.val}>{selectedLetras.retencion}</Text>
+                </View>
+                <View style={{ flexDirection:'row'}}>
+                <Text style={styles.title}>Valor nominal:</Text>
+                <Text style={styles.val}>{selectedLetras.valorNominal}</Text>
+                </View>
+                <View style={{ flexDirection:'row'}}>
+                <Text style={styles.title}>Capitalizacion:</Text>
+                <Text style={styles.val}>{selectedLetras.capitalizacion}</Text>
+                </View>
+                {/* <Text style={styles.desc}>{selectedLetras.descripcion}</Text>
                 <Text style={styles.prc}>{selectedLetras.retencion}</Text>
                 <Text style={styles.desc}>{selectedLetras.plazot}</Text>
                 <Text style={styles.prc}>{selectedLetras.tasa}</Text>
@@ -27,11 +78,10 @@ const DetalleLetraScreen = props =>{
                 <Text style={styles.desc}>{selectedLetras.fechaEmision}</Text>
                 <Text style={styles.desc}>{selectedLetras.retencion}</Text>
                 <Text style={styles.desc}>{selectedLetras.valorNominal}</Text>
-                <Text style={styles.desc}>{selectedLetras.capitalizacion}</Text>
-                </View>
-            </Card> 
-            <Button title="Ver Resultados" onPress={()=>{LlevameAListaResultados}}/>
-        </ScrollView>
+                <Text style={styles.desc}>{selectedLetras.capitalizacion}</Text> */}
+
+                <Button title="Ver Resultados" onPress={()=>{LlevameAListaResultados()}}/>
+            </View>
     )
 
 };
@@ -43,26 +93,25 @@ export const screenOptions = navData=>{
 }
 
 const styles = StyleSheet.create({
-    todo:{
-        flex:1
-    },
     rw:{
+        alignContent:'center',
         flexDirection:'column',
         justifyContent:'space-between',
-
+        flex:1,
+        margin:15
     },
-    desc:
+    val:
     {
-        fontSize:18,
+        fontSize:16,
         textAlign:'center',
-        marginHorizontal:20,
-        fontFamily:'open-sans-bold'
+        fontFamily:'open-sans-bold',
+        marginHorizontal:5,
     },
-    prc:{
-        fontSize:20,
+    title:{
+        fontSize:16,
         color:'#888',
         textAlign:'center',
-        marginVertical:20,
+        marginHorizontal:5,
         fontFamily:'open-sans-bold'
     },
 

@@ -39,6 +39,19 @@ const App = (props) => {
         <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.MotivoGasto}</Text>
         <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.TipoValor}</Text>
         <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.ValorAgregado}</Text>
+        {/* {props.resultas?
+        <View>
+          <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.periodo}</Text>
+          <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.valorRecibido}</Text>
+          <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.sumArrayI}</Text>
+          <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.sumArrayF}</Text>
+          <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.TCEA}</Text>
+          <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.valorNeto}</Text>
+          <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.descuento}</Text>
+          <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.valorNominal}</Text>
+          <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.capitalizacion}</Text>
+        </View>
+        :null} */}
         {/* <MyButton value='Ok' HandlerOnPress={()=>{console.log("asdasd")}}/> */}
       </FancyAlert>
       

@@ -1,8 +1,8 @@
 class Resultado {
     constructor(
-        LetraImageUrL,
-        idLetra,
         idResultado,
+        idLetra,  
+        LetraImageUrL,
         dias,
         valorRecibido,
         costeInicial,

@@ -1,5 +1,5 @@
 import Letra from "../../models/Letra";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export const DELETE_LETRA = 'DELETE_LETRA';
 export const CREATE_LETRA = 'CREATE_LETRA';
 export const UPDATE_LETRA = 'UPDATE_LETRA';
@@ -109,6 +109,9 @@ export const createLetra =
          })
      });
      const resData = await response.json();
+     console.log("si sale en actions:"+resData.name);
+     await AsyncStorage.setItem('idLetra',resData.name);
+
     //  console.log(resData);
       dispatch({
         type:CREATE_LETRA,
@@ -130,7 +133,7 @@ export const createLetra =
       }
     }
     ); 
-
+    
     }
     
 }
@@ -146,7 +149,7 @@ export const updateLetra = (
     gastoFinal,
     fechaEmision,
     retencion,
-    valorNominal) =>
+    valorNominal,capitalizacion) =>
 {
     //https://mealsapp-d838a-default-rtdb.firebaseio.com/products/${id}.json?auth=${token}
     return async (dispatch,getState)=>{

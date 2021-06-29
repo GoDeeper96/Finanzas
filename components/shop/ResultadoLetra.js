@@ -17,11 +17,11 @@ const ResultadosItems = props =>
         <Touch onPress={props.onSelect} useForeground>
         <View>
             <View style={styles.imageSt}>
-                <Image style={styles.img} source={{uri:props.image}}/>
+                <Image style={styles.img} source={{uri:props.imagen}}/>
             </View>
             <View style={styles.detailsInfo}>
-                <Text style={styles.titlest}>{props.title}</Text>
-                <Text style={styles.pricest}>${props.price.toFixed(2)}</Text>
+                <Text style={styles.titlest}>{props.valorRecibido}</Text>
+                <Text style={styles.pricest}>${props.tcea}</Text>
             </View>     
             <View style={styles.actions}> 
             {props.children}

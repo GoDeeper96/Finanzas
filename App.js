@@ -4,6 +4,7 @@ import * as Font from 'expo-font'
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux'
 import letrasReducer from './store/reducers/letrasReducer'
+import ResultadosReducer from './store/reducers/ResultadosReducers'
 import ReduxThunk from 'redux-thunk'
 import AuthReducer from './store/reducers/auth'
 import AppNavigator from './navigation/AppNavigator'
@@ -19,6 +20,7 @@ const fetchFonts =()=>
 
 const rootReducer =combineReducers({
   letras: letrasReducer,
+  resultados:ResultadosReducer,
   // cart: cartReducer,
   // ordersa:ordersReducer,
   auth: AuthReducer
