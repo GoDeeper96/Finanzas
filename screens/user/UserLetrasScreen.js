@@ -95,9 +95,9 @@ const UserLetrasScreen = props =>{
     renderItem={itemData => <LetraItem image={itemData.item.SelectedImage} 
     titulo={itemData.item.titulo}
     valorNominal={itemData.item.valorNominal}>
-         <Button color={Colors.primary} title="Ver Letra" onPress={()=>{selectItemHandler(itemData.item.idLetra,itemData.item.titulo)}}/>
-        <Button color={Colors.primary} title="Editar" onPress={()=>{editLetrasHandler(itemData.item.idLetra)}}/>
-        <Button color={Colors.primary} title="Eliminar letra" onPress={deleteHandler.bind(this,itemData.item.idLetra)}/>
+         <Button color={Colors.primary} title="Detalles" onPress={()=>{selectItemHandler(itemData.item.idLetra,itemData.item.titulo)}}/>
+        <Button color={Colors.primary} title="Agregar" onPress={()=>{editLetrasHandler(itemData.item.idLetra)}}/>
+        <Button color={Colors.primary} title="Eliminar cartera" onPress={deleteHandler.bind(this,itemData.item.idLetra)}/>
     </LetraItem>}/>);                                 
 };
 export const screenOptions = navData => {

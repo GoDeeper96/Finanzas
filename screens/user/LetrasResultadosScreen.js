@@ -45,6 +45,7 @@ const ResultadosScreen = props =>{
         )
     }
     return (
+        <View style={{flex: 1}}>
         <FlatList 
         data={selectedResultados} 
         keyExtractor={item=>item.idResultado} 
@@ -56,6 +57,8 @@ const ResultadosScreen = props =>{
            <Button color={Colors.primary} title="Ver detalles" onPress={()=>{ DetalleResultado(itemData.item.idResultado)}}/>
            {/* <Button color={Colors.primary} title="To Cart" onPress={ ()=>{ dispatch(cartActions.addToCart(itemData.item))}}/> */}
         </ResultadosItem>}/>
+        <Button color={Colors.primary} title="Generar Cartera con resultados" onPress={()=>{ DetalleResultado(itemData.item.idResultado)}}/>
+        </View>
     )
 }
  
@@ -68,7 +71,13 @@ export const screenOptions = navData => {
             <Item title='Resultados' iconName={Platform.OS==='android' ? 'md-arrow-back':'ios-arrow-back-outline'} onPress={()=>
             {navData.navigation.goBack()}
             }/>
-        </HeaderButtons>)
+        </HeaderButtons>),
+         headerRight:()=>
+         (<HeaderButtons HeaderButtonComponent={HeaderButton}>
+             <Item title='hey' iconName={Platform.OS==='android' ? 'md-add':'ios-add'} onPress={()=>
+             {navData.navigation.navigate('CarteraResultadosScreen')}
+             }/>
+         </HeaderButtons>)
     };
     
 }

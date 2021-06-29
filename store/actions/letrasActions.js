@@ -137,6 +137,72 @@ export const createLetra =
     }
     
 }
+export const addLetra = (
+    titulo,
+    SelectedImage,
+    descripcion,
+    plazot,
+    tasa,
+    fechaDescuento,
+    gastoInicial,
+    gastoFinal,
+    fechaEmision,
+    retencion,
+    valorNominal,
+    capitalizacion) =>
+{
+    //https://mealsapp-d838a-default-rtdb.firebaseio.com/products/${id}.json?auth=${token}
+    return async (dispatch,getState)=>{
+        // console.log(getState);
+        const token = getState().auth.token;
+        const res = await fetch(
+            `https://finanzasapp-dff53-default-rtdb.firebaseio.com/letras/${id}.json?auth=${token}`
+            ,{
+             method:'PATCH', //PUT VA A SOBREESCRIBAR SOBRE LA NUEVA DATA, PATCH VA A ACTUALIZAD DONDE DGIAS QUE ACTUALICE
+             headers:{
+                 'Content-Type':'application/json'
+             },
+             body:JSON.stringify({
+                titulo,
+                SelectedImage,
+                descripcion,
+                plazot,
+                tasa,
+                fechaDescuento,
+                gastoInicial,
+                gastoFinal,
+                fechaEmision,
+                retencion,
+                valorNominal,
+                capitalizacion
+             })
+         });
+         if(!res.ok){
+            throw new Error('Something went wrong!')
+        }
+        dispatch({
+        type:UPDATE_LETRA,
+        lid:id,
+        LetraData:{
+            idLetra:resData.name,
+            titulo,
+            SelectedImage,
+            descripcion,
+            plazot,
+            tasa,
+            fechaDescuento,
+            gastoInicial,
+            gastoFinal,
+            fechaEmision,
+            retencion,
+            valorNominal,
+            capitalizacion
+        }
+    });
+        
+    }
+
+}
 export const updateLetra = (
     id,
     titulo,
