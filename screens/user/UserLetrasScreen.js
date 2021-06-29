@@ -6,6 +6,7 @@ import {HeaderButtons,Item}from 'react-navigation-header-buttons'
 import HeaderButton from '../../UI/HeaderButton'
 import Colors from '../../constants/Colors'
 import * as LetrasActions from '../../store/actions/letrasActions'
+import * as ResultadosActions from '../../store/actions/ResultadosActions'
 const UserLetrasScreen = props =>{
     const [isLoading,setIsLoading] = useState(false);
     const [isRefreshing,SetIsRefreshing] = useState(false);
@@ -57,8 +58,8 @@ const UserLetrasScreen = props =>{
         SetErr(null);
         SetIsRefreshing(true);
         try {
-
-            await dispatch(LetrasActions.deleteLetra(id))                   
+            await dispatch(LetrasActions.deleteLetra(id))  
+                       
             setIsLoading(true);
             loadLetras().then(()=>{
                 setIsLoading(false);
@@ -68,6 +69,7 @@ const UserLetrasScreen = props =>{
             SetErr(error.messsage)
         }
         SetIsRefreshing(false);
+        await dispatch(ResultadosActions.deleteResultados(id));      
     },[dispatch,setIsLoading,SetErr])
     if(err){
         return (
@@ -100,7 +102,7 @@ const UserLetrasScreen = props =>{
 };
 export const screenOptions = navData => {
     return {
-    headerTitle: 'Mis Letras',
+    headerTitle: 'Mis carteras',
     headerLeft:()=>(<HeaderButtons HeaderButtonComponent={HeaderButton}>
     <Item title='Menu' iconName={Platform.OS==='android' ? 'md-menu':'ios-menu'} onPress={()=>{
     navData.navigation.toggleDrawer()}}/>

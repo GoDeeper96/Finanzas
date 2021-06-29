@@ -2,7 +2,7 @@ import Resultado from "../../models/Resultado";
 
 export const CREATE_RESULTADO = 'CREATE_RESULTADO';
 export const SET_RESULTADO = 'SET_RESULTADO';
-
+export const DELETE_RESULTADO = 'DELETE_RESULTADO';
 export const fetchResultado = () =>
 {
     //https://mealsapp-d838a-default-rtdb.firebaseio.com/products.json
@@ -39,6 +39,23 @@ export const fetchResultado = () =>
             throw error;
         }
         
+    }
+}
+export const deleteResultados = letrasId =>{
+    //https://mealsapp-d838a-default-rtdb.firebaseio.com/products/${productId}.json?auth=${token}
+    return async (dispatch,getState) =>{
+        const token = getState().auth.token;
+        const userId = getState().auth.userId;
+        const res = await fetch(`https://finanzasapp-dff53-default-rtdb.firebaseio.com/resultados/${letrasId}.json?auth=${token}`,{
+        method:'DELETE'
+        });
+        console.log("que fue"+letrasId);
+        if(!res.ok){
+            throw new Error('Something went wrong!')
+        }
+        dispatch({
+            type:DELETE_RESULTADO,lid:letrasId
+        })
     }
 }
 export const createResultado = 

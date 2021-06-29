@@ -81,7 +81,7 @@ export const ShopNavigator = () =>{
             </View>)           
         }}>
        <ShopDrawer.Screen 
-        name="Mis letras"
+        name="Mis carteras"
         component={AdminNavigator} 
         options={
             {drawerIcon: props =>

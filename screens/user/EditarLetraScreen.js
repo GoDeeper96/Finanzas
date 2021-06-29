@@ -606,16 +606,18 @@ const EditProductScreen = props =>{
     
                             }} value={UnidadFinalValor} HandlerOnPress={()=>setModalOpenValorE(!modalOpenValorE)}>Tipo de valor:
                             </MyButtonSpecial>
+                            <View style={{ flexDirection:'row'}}>
                                 <Input
                                 style={{
                                     fontFamily:'open-sans-bold',
                                     marginVertical:12,
-                                    marginLeft:12,
+                                    marginLeft:3,
                                     color:'black',
                                 }}
                                 id='VNumerico'
                                 editable={true}
                                 label ='Valor Numerico:'
+                                TipoV={UnidadFinalValor}
                                 // onEndEditing={}
                                 // onSubmitEditing={}
                                 keyboardType='decimal-pad'
@@ -623,6 +625,7 @@ const EditProductScreen = props =>{
                                 value={gastoFinal}
                                 onChangeHandler ={onChangeGastoFinal}
                                 required/> 
+                                </View>
                                 <View style={{marginTop:10}}>
                             <Button color={Colors.accent} title='Agregar Motivo' onPress={addGastoFinal}/>
                             </View>   
@@ -653,7 +656,7 @@ const EditProductScreen = props =>{
     if(IsNexted)
     {
         return(
-        <KeyboardAvoidingView style={{flex:1}} behavior="padding" keyboardVerticalOffset={100}>
+        <KeyboardAvoidingView style={{flex:1}} behavior="padding" keyboardVerticalOffset={-180}>
         <ScrollView style={{margin:10}}>
         <Fancy
         visible={visibleForInicial}
@@ -675,11 +678,12 @@ const EditProductScreen = props =>{
 
                         }} value={UnidadInicialValor} HandlerOnPress={()=>setModalOpenValorE(!modalOpenValorE)}>Tipo de valor:
                         </MyButtonSpecial>
+                        <View style={{ flexDirection:'row'}}>
                             <Input
                             style={{
                                 fontFamily:'open-sans-bold',
                                 marginVertical:12,
-                                marginLeft:12,
+                                marginLeft:5,
                                 color:'black',
                                 flexDirection:'row',
                                 width:'70%',
@@ -689,6 +693,8 @@ const EditProductScreen = props =>{
                             id='VNumerico'
                             // onEndEditing={}
                             // onSubmitEditing={}
+                            TipoV={UnidadInicialValor}
+                            maxLength={8}
                             label = 'Valor Numerico:'
                             keyboardType='decimal-pad'
                             returnKeyType='next'   
@@ -696,7 +702,8 @@ const EditProductScreen = props =>{
                             // IncrementarGasto={addGastoInicial}
                             onChangeHandler ={onChangeGastoInic}
                             required
-                            />  
+                            />
+                            </View>
                             <View style={{marginTop:10}}>
                             <Button color={Colors.accent} title='Agregar Motivo' onPress={addGastoInicial}/>
                             </View>                            
@@ -797,6 +804,7 @@ const EditProductScreen = props =>{
                             // onEndEditing={}
                             // onSubmitEditing={}
                             onChangeHandler ={onChangeTasa}
+                            maxLength={8}
                             value = {tasa}
                             required
                             />
@@ -805,7 +813,9 @@ const EditProductScreen = props =>{
                             label="Capitalizacion"
                             placeholder='35'
                             value={capitalizacion}
+                            keyboardType='decimal-pad'
                             onChangeText={capitalizacion=>SetCapitalizacion(capitalizacion)}
+                            
                             /> 
                              :null}
                    

@@ -1,6 +1,6 @@
 
 import Resultado from '../../models/Resultado';
-import { CREATE_RESULTADO, SET_RESULTADO, } from '../actions/ResultadosActions';
+import { CREATE_RESULTADO, SET_RESULTADO,DELETE_RESULTADO } from '../actions/ResultadosActions';
 
 const initialState= {
     availableResultados: [],
@@ -30,6 +30,12 @@ export default (state = initialState,action) =>{
                 ...state,
                 availableResultados: state.availableResultados.concat(newResultado),
             };
+        case DELETE_RESULTADO:
+                return {
+                    ...state,
+                    availableResultados:state.availableResultados.filter(letra=>letra.idLetra!==action.lid),
+                    
+                };
     }
     return state;
 }

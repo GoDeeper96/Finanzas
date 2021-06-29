@@ -11,6 +11,12 @@ const Input = props =>{
         <View style={styles.formControl}>
             <View style={{...styles.formTextPut,...props.style}}>
              <Text style={{...styles.label,...props.style}}>{props.label}</Text>
+             {props.TipoV==='Dolares'?
+            <Text style={{color:'green',marginRight:-8,marginTop:12,fontSize:16}}>$</Text>  
+            :null}
+            {props.TipoV==='Soles'?
+            <Text style={{color:'green',marginRight:-8,marginTop:12,fontSize:14}}>S/.</Text>  
+            :null}
              <TextInput 
             {...props}
             style={
@@ -31,6 +37,9 @@ const Input = props =>{
             value={props.value} 
             // onBlur={LostFocusHandler}
             onChangeText={props.onChangeHandler}/>
+            {props.TipoV==='Porcentaje'?
+            <Text style={{color:'#FFC107',marginLeft:-18,marginTop:12,fontSize:14}}>%</Text>  
+            :null}
             </View>
             {/* {props.Visible?
              <View style={styles.btncontainer}>
