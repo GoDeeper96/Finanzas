@@ -6,13 +6,14 @@ import Card from '../../UI/Card';
 const DetalleLetraScreen = props =>{
     const letraId = props.route.params.letraId;
     const selectedLetras = useSelector(state =>
-        state.letras.availableLetras.find(letr => letr.id === letraId)
+        state.letras.availableLetras.find(letr => letr.idLetra === letraId)
       );
       const LlevameAListaResultados = ()=>{
           //LLEVA A RESULTADOS FIND SEGUN ID DE LETRA
       }
+      console.log("here"+selectedLetras)
     return (
-        <ScrollView>
+        <ScrollView style={styles.todo}>
             <Card>
                 <View style={styles.rw}>
                 <Text style={styles.prc}>{selectedLetras.titulo}</Text>
@@ -42,6 +43,9 @@ export const screenOptions = navData=>{
 }
 
 const styles = StyleSheet.create({
+    todo:{
+        flex:1
+    },
     rw:{
         flexDirection:'column',
         justifyContent:'space-between',

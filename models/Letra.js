@@ -19,7 +19,6 @@ class Letra {
         this.idUsuario = idUsuario; //nosetoca*
         this.titulo = titulo; //nosetoca*
         this.SelectedImage = SelectedImage; //nosetoca*
-        this.selectedLocation=selectedLocation;
         this.descripcion = descripcion; //nosetoca*
         this.plazot = plazot; //PLAZO DE TASA PERIODO
         this.tasa = tasa; //VALOR NUMERICO * 
