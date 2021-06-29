@@ -19,7 +19,7 @@ export default (state = initialState,action) =>{
             const LetrasIndex = state.userLetras.findIndex(letr=>letr.id ===action.lid);
             const updatedLetra = new Letra(
                 action.lid,
-                state.userLetras[LetrasIndex].ownerId,
+                state.userLetras[LetrasIndex].idUsuario,
                 action.LetraData.titulo,
                 action.LetraData.SelectedImage,
                 action.LetraData.descripcion,

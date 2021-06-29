@@ -1,5 +1,5 @@
 import React,{useState,useEffect,useCallback} from 'react';
-import { FlatList,Text,Platform,Button, ActivityIndicator,View,StyleSheet }from 'react-native'
+import { FlatList,Text,Platform,Button, ActivityIndicator,View,StyleSheet,Alert }from 'react-native'
 import {useSelector,useDispatch}from 'react-redux'
 import LetraItem  from '../../components/shop/LetraItem'
 import {HeaderButtons,Item}from 'react-navigation-header-buttons'
@@ -10,6 +10,7 @@ const UserLetrasScreen = props =>{
     const [isLoading,setIsLoading] = useState(false);
     const [isRefreshing,SetIsRefreshing] = useState(false);
     const [err,SetErr] = useState();
+    const[deleting,setDelete]=useState(false);
     // const products = useSelector(state=>state.products.availableProducts);
     const dispatch = useDispatch();
     const userLetras = useSelector(state=>state.letras.userLetras);
@@ -50,15 +51,24 @@ const UserLetrasScreen = props =>{
             letraId: id
         })
     }
-    const deleteHandler = (id)=>
+
+    const deleteHandler = useCallback(async(id)=>
     {
-        Alert.alert('Are you sure?','Do you really want to delete this item',[
-            {text:'No',style:'default'},
-            {text:'Yes',style:'destructive',onPress:()=>{
-                dispatch(LetrasActions.deletProduct(id))
-            }}
-        ])
-    }
+        SetErr(null);
+        SetIsRefreshing(true);
+        try {
+
+            await dispatch(LetrasActions.deleteLetra(id))                   
+            setIsLoading(true);
+            loadLetras().then(()=>{
+                setIsLoading(false);
+            })
+            setDelete(true);
+        } catch (error) {
+            SetErr(error.messsage)
+        }
+        SetIsRefreshing(false);
+    },[dispatch,setIsLoading,SetErr])
     if(err){
         return (
         <View style={styles.ct}>
@@ -85,7 +95,7 @@ const UserLetrasScreen = props =>{
     valorNominal={itemData.item.valorNominal}>
          <Button color={Colors.primary} title="Ver Letra" onPress={()=>{selectItemHandler(itemData.item.idLetra,itemData.item.titulo)}}/>
         <Button color={Colors.primary} title="Editar" onPress={()=>{editLetrasHandler(itemData.item.idLetra)}}/>
-        <Button color={Colors.primary} title="Eliminar" onPress={deleteHandler.bind(this,itemData.item.idLetra)}/>
+        <Button color={Colors.primary} title="Eliminar letra" onPress={deleteHandler.bind(this,itemData.item.idLetra)}/>
     </LetraItem>}/>);                                 
 };
 export const screenOptions = navData => {

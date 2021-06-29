@@ -47,7 +47,7 @@ export const fetchLetras = () =>
         
     }
 }
-export const deletLetra = letrasId =>{
+export const deleteLetra = letrasId =>{
     //https://mealsapp-d838a-default-rtdb.firebaseio.com/products/${productId}.json?auth=${token}
     return async (dispatch,getState) =>{
         const token = getState().auth.token;

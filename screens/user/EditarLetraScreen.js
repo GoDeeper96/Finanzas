@@ -73,9 +73,11 @@ const EditProductScreen = props =>{
     // const letrId = props.navigation.getParam('productId');
 
     const letrId = props.route.params? props.route.params.letraId:null;
-    const editedLetra = useSelector(state=>state.letras.userLetras.find(letr=>letr.id===letrId))
-    
-    
+    const editedLetra = useSelector(state=>state.letras.userLetras.find(letr=>letr.idLetra===letrId))
+    const userLetras = useSelector(state=>state.letras.userLetras)
+    console.log("here"+userLetras.map(x=>x.idLetra))
+    console.log(letrId);
+    console.log(editedLetra);
     const dispatch=useDispatch();
     const [IsNexted, SetIsNexted] = useState(false);
     const [IsFinal, SetIsFinal] = useState(false);
@@ -250,7 +252,7 @@ const EditProductScreen = props =>{
         for(let x   in arrayGastosF){
             sumArrayF = sumArrayF + arrayGastosF[x]   
         }
-
+        console.log("here"+editedLetra)
         try {
     
             if(editedLetra){
@@ -322,8 +324,8 @@ const EditProductScreen = props =>{
                 //TCEA
                 TCEA=Math.pow(( valorEntregado/valorRecibido), 360/periodo) - 1;
 
-
-            //
+                
+            //  
                 await dispatch(letrasActions.updateLetra(
                     letrId,
                     titulo,  
@@ -338,7 +340,6 @@ const EditProductScreen = props =>{
                     retencion,     
                     valorNominal,  
                     capitalizacion))
-
                     // var1=var1+var2;
 
             }
