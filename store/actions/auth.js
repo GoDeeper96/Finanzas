@@ -85,10 +85,10 @@ export const login = (email,password) =>
             const errorId = errorData.error.message;
             let msg = 'Something went wrong'
             if(errorId==='EMAIL_NOT_FOUND'){
-                msg='This email could not be found'
+                msg='Este email no existe'
             }else if(errorId==='INVALID_PASSWORD')
             {
-                msg='This password is not valid';
+                msg='Esta contraseña no es valida';
             }
             throw new Error(msg);
         }
