@@ -241,11 +241,65 @@ const EditProductScreen = props =>{
     //   useEffect(()=>{
     //     onChangePlazoTasa();
     //   },[setpT])
+    const toFixed = (x) => {
+        if (Math.abs(x) < 1.0) {
+          var e = parseInt(x.toString().split('e-')[1]);
+          if (e) {
+              x *= Math.pow(10,e-1);
+              x = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
+          }
+        } else {
+          var e = parseInt(x.toString().split('+')[1]);
+          if (e > 20) {
+              e -= 20;
+              x /= Math.pow(10,e);
+              x += (new Array(e+1)).join('0');
+          }
+        }
+        return x;
+      }
     const Algoritmo = () =>{
          //Calcular periodo
         //  console.log(pT);
         // 
-        
+        let otherplazo=0;
+        console.log(pT);
+        if(pT==="Mensual"){
+            SetPlazot(30);
+            otherplazo=30;
+            console.log("plazo:"+plazot)
+            console.log("plazo:"+otherplazo)
+        }
+        if(pT==="Bimestral"){
+            SetPlazot(60);
+            otherplazo=60;
+            console.log("plazo:"+plazot)
+            console.log("plazo:"+otherplazo)
+        }
+        if(pT==="Trimestral"){
+            SetPlazot(90);
+            otherplazo=90;
+            console.log("plazo:"+plazot)
+            console.log("plazo:"+otherplazo)
+        }
+        if(pT==="Cuatrimestral"){
+            SetPlazot(120)
+            otherplazo=120;
+            console.log("plazo:"+plazot)
+            console.log("plazo:"+otherplazo)
+        }
+        if(pT==="Semestral"){
+            SetPlazot(180)
+            otherplazo=180;
+            console.log("plazo:"+plazot)
+            console.log("plazo:"+otherplazo)
+        }
+        if(pT==="Anual"){
+            SetPlazot(360)
+            otherplazo=360;
+            console.log("plazo:"+plazot)
+            console.log("plazo:"+otherplazo)
+        }
         let periodo=0;
         let t=0;
         let m=0;
@@ -271,33 +325,18 @@ const EditProductScreen = props =>{
         }
         periodo = Math.round((FechaVen-FechaGiro) / (1000 * 60 * 60 * 24));
         //Calcular tasa
+        
         if(TipoTasa=="Tasa Nominal"){
-            m = plazot/capitalizacion;
+            m = otherplazo/capitalizacion;
             n = periodo/capitalizacion;
             t = Math.pow(1+(tasa/m),n)-1;
+            t = toFixed(t);
             console.log(m,n,t);
-            console.log(plazot+  " " +capitalizacion);
+            console.log(otherplazo+  " " +capitalizacion);
         }
-        // if(pT==="Mensual"){
-        //     SetPlazot(30);
-        // }
-        // if(pT==="Bimestral"){
-        //     SetPlazot(60);
-        // }
-        // if(pT==="Trimestral"){
-        //     SetPlazot(90);
-        // }
-        // if(pT==="Cuatrimestral"){
-        //     SetPlazot(120)
-        // }
-        // if(pT==="Semestral"){
-        //     SetPlazot(180)
-        // }
-        // if(pT==="Anual"){
-        //     SetPlazot(360)
-        // }
         if(TipoTasa==="Tasa Efectiva"){
-            t = Math.pow((1+tasa),periodo/plazot)-1;
+            t = Math.pow((1+tasa),periodo/otherplazo)-1;
+            t = toFixed(t);
             t = parseFloat(t.toPrecision(7));
         }
         //Calcular Tasa descuento
