@@ -236,8 +236,16 @@ const EditProductScreen = props =>{
       function close() {
         pickerRef.current.blur();
       }
+    //   console.log(pT);
+      
+    //   useEffect(()=>{
+    //     onChangePlazoTasa();
+    //   },[setpT])
     const Algoritmo = () =>{
          //Calcular periodo
+        //  console.log(pT);
+        // 
+        
         let periodo=0;
         let t=0;
         let m=0;
@@ -263,31 +271,32 @@ const EditProductScreen = props =>{
         }
         periodo = Math.round((FechaVen-FechaGiro) / (1000 * 60 * 60 * 24));
         //Calcular tasa
-        t=0;
         if(TipoTasa=="Tasa Nominal"){
             m = plazot/capitalizacion;
             n = periodo/capitalizacion;
             t = Math.pow(1+(tasa/m),n)-1;
+            console.log(m,n,t);
+            console.log(plazot+  " " +capitalizacion);
         }
-        if(pT==="Mensual"){
-            SetPlazot(30);
-        }
-        if(pT=="Bimestral"){
-            SetPlazot(60);
-        }
-        if(pT=="Trimestral"){
-            SetPlazot(90);
-        }
-        if(pT=="Cuatrimestral"){
-            SetPlazot(120)
-        }
-        if(pT=="Semestral"){
-            SetPlazot(180)
-        }
-        if(pT=="Anual"){
-            SetPlazot(360)
-        }
-        if(TipoTasa=="Tasa Efectiva"){
+        // if(pT==="Mensual"){
+        //     SetPlazot(30);
+        // }
+        // if(pT==="Bimestral"){
+        //     SetPlazot(60);
+        // }
+        // if(pT==="Trimestral"){
+        //     SetPlazot(90);
+        // }
+        // if(pT==="Cuatrimestral"){
+        //     SetPlazot(120)
+        // }
+        // if(pT==="Semestral"){
+        //     SetPlazot(180)
+        // }
+        // if(pT==="Anual"){
+        //     SetPlazot(360)
+        // }
+        if(TipoTasa==="Tasa Efectiva"){
             t = Math.pow((1+tasa),periodo/plazot)-1;
             t = parseFloat(t.toPrecision(7));
         }
@@ -302,12 +311,14 @@ const EditProductScreen = props =>{
         valorNeto = parseFloat(valorNeto.toFixed(2))
         //Valor a Recibir
         valorRecibido=valorNeto-gastoInicial-retencion;
-        valorRecibido = parseFloat(valorRecibido.toFixed(2))
+        valorRecibido = parseFloat(valorRecibido.toFixed(2));
+        console.log(valorNominal + " - "+ descuento);
         //Valor a Entregar
         valorEntregado=valorNominal+gastoFinal-retencion;
         valorEntregado = parseFloat(valorEntregado.toFixed(2))
         //tcea
         tcea=Math.pow(( valorEntregado/valorRecibido), 360/periodo) - 1;
+        console.log("asdas"+tcea+"asdasd"+tcea);
         SetRes({
             periodo:periodo,
             valorRecibido:valorRecibido,
@@ -354,7 +365,7 @@ const EditProductScreen = props =>{
       }
     const submitHandler = useCallback(async () =>
     {   
-       
+        
         let arrayGastosI = []
         let sumArrayI = 0
         arrayGastosI = GastoArrayInicial.map(item=>item.valor);
@@ -459,6 +470,7 @@ const EditProductScreen = props =>{
         SetTasa(Tasa)
     }
     const onChangePlazoTasa = () =>{
+
         if(pT==="Mensual"){
             SetPlazot(30);
         }
@@ -477,6 +489,7 @@ const EditProductScreen = props =>{
         if(pT==="Anual"){
             SetPlazot(360)
         }
+        console.log(plazot)        
 
     }
     // useEffect(()=>
@@ -650,7 +663,7 @@ const EditProductScreen = props =>{
                     items = {valorUnidad}
                     />             
              </ScrollView>
-             <Button color={Colors.primary} title="VER RESULTADOS" onPress={submitHandler}/>   
+             <Button color={'black'} title="VER RESULTADOS" onPress={submitHandler}/>   
              </KeyboardAvoidingView>)
     }
     if(IsNexted)
@@ -727,7 +740,7 @@ const EditProductScreen = props =>{
                 items = {valorUnidad}
                 />             
          </ScrollView>
-         <Button color={Colors.primary} title="Continuar" onPress={validacionFinal}/>   
+         <Button color={'black'} title="Continuar" onPress={validacionFinal}/>   
          </KeyboardAvoidingView>)
     }
      return (
@@ -805,7 +818,7 @@ const EditProductScreen = props =>{
                             // onSubmitEditing={}
                             onChangeHandler ={onChangeTasa}
                             maxLength={8}
-                            value = {tasa}
+                            value = {plazot}
                             required
                             />
                             {TipoTasa==='Tasa Nominal'?  
@@ -830,9 +843,10 @@ const EditProductScreen = props =>{
                 />
                 <Card style={styles.card}>
                     <ScrollView>
-                    <MyButton value={pT} HandlerOnPress={()=>setModalOpenPT(!modalOpenPT)}>Seleccione Plazo de Tasa
-                        </MyButton>
-                            
+                    <MyButton 
+                    value={pT} HandlerOnPress={()=>setModalOpenPT(!modalOpenPT)}>Seleccione Plazo de Tasa
+                    </MyButton>
+                           
                              {pT==='Especial'?  
                              <TextInput
                             label="Periodo Especial"
@@ -845,7 +859,7 @@ const EditProductScreen = props =>{
                 </Card> 
                
          </ScrollView>
-         <Button color={Colors.primary} title="Continuar" onPress={validateInitialData}/>  
+         <Button color={'black'} title="Continuar" onPress={validateInitialData}/>  
          </KeyboardAvoidingView>
      )
 }

@@ -80,7 +80,7 @@ const DetalleLetraScreen = props =>{
                 <Text style={styles.desc}>{selectedLetras.valorNominal}</Text>
                 <Text style={styles.desc}>{selectedLetras.capitalizacion}</Text> */}
 
-                <Button title="Ver Resultados" onPress={()=>{LlevameAListaResultados()}}/>
+                <Button title="Ver Resultados" color="black" onPress={()=>{LlevameAListaResultados()}}/>
             </View>
     )
 

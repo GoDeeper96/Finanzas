@@ -71,14 +71,14 @@ const UserLetrasScreen = props =>{
         SetIsRefreshing(false);
         await dispatch(ResultadosActions.deleteResultados(id));      
     },[dispatch,setIsLoading,SetErr])
-    if(err){
-        return (
-        <View style={styles.ct}>
-            <Text>An error ocurred!</Text>
-            <Button title='Try again' onPress={loadProducts} color={Colors.primary}/>
-        </View>
-        );
-    }
+    // if(err){
+    //     return (
+    //     <View style={styles.ct}>
+    //         <Text>An error ocurred!</Text>
+    //         <Button title='Try again' onPress={loadProducts} color={Colors.primary}/>
+    //     </View>
+    //     );
+    // }
     if(isLoading)
     {
         return (<View style={styles.ct}>
@@ -92,12 +92,14 @@ const UserLetrasScreen = props =>{
         </View>)
     }
     return (<FlatList data={userLetras} keyExtractor={item=>item.idLetra} 
-    renderItem={itemData => <LetraItem image={itemData.item.SelectedImage} 
+    renderItem={itemData => 
+    <LetraItem image={itemData.item.SelectedImage} 
+    onSelect={()=>{selectItemHandler(itemData.item.idLetra,itemData.item.titulo)}}
     titulo={itemData.item.titulo}
     valorNominal={itemData.item.valorNominal}>
-         <Button color={Colors.primary} title="Detalles" onPress={()=>{selectItemHandler(itemData.item.idLetra,itemData.item.titulo)}}/>
-        <Button color={Colors.primary} title="Agregar" onPress={()=>{editLetrasHandler(itemData.item.idLetra)}}/>
-        <Button color={Colors.primary} title="Eliminar cartera" onPress={deleteHandler.bind(this,itemData.item.idLetra)}/>
+         <Button color={'black'}  title="Detalles" onPress={()=>{selectItemHandler(itemData.item.idLetra,itemData.item.titulo)}}/>
+        <Button color={'black'} title="Agregar" onPress={()=>{editLetrasHandler(itemData.item.idLetra)}}/>
+        <Button color={'black'} title="Eliminar cartera" onPress={deleteHandler.bind(this,itemData.item.idLetra)}/>
     </LetraItem>}/>);                                 
 };
 export const screenOptions = navData => {

@@ -33,7 +33,7 @@ const FadeInView = (props) => {
     return (
       <View style={styles.container} >
           <Animated.View style={{opacity:fadeAnim,width:300,height:50}}>    
-              <Text style={styles.name}>Bievenido, {props.children}</Text> 
+              <Text style={styles.name}>Bievenido</Text> 
           </Animated.View>
       </View>
     );

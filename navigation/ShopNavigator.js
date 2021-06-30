@@ -19,7 +19,7 @@ import AuthScreen,{screenOptions as AuthScreenOptions} from '../screens/user/Aut
 import * as authActions from '../store/actions/auth'
 const defaultNav = {
     headerStyle:{
-        backgroundColor: Platform.OS ==='android' ? Colors.primary : Colors.accent,
+        backgroundColor: Platform.OS ==='android' ? Colors.upc : Colors.accent,
     },
     headerTitleStyle:{
         fontFamily:'open-sans-bold'
@@ -27,7 +27,7 @@ const defaultNav = {
     headerBackTitleStyle:{
         fontFamily:'open-sans' //IOS
     },
-    headerTintColor: Platform.OS ==='android' ? 'white' : Colors.primary
+    headerTintColor: Platform.OS ==='android' ? 'white' : Colors.upc
 }
 
 
@@ -65,13 +65,13 @@ const ShopDrawer = createDrawerNavigator();
 export const ShopNavigator = () =>{
     const dispatch = useDispatch();
     return (<ShopDrawer.Navigator 
-        drawerContentOptions={{activeTintColor:Colors.primary}}
+        drawerContentOptions={{activeTintColor:Colors.upc}}
         drawerContent={props=>{
             return (<View style={{flex:1,paddingTop:20}}>
                 <SafeAreaView forceInset={{top:'always',horizontal:'never'}}>
                     <DrawerItemList {...props}/>
                     <View style={{marginHorizontal:70,borderRadius:20,radius:20,marginTop:20}}>
-                        <Button title='Cerrar Sesión' color={Colors.primary}onPress={()=>
+                        <Button title='Cerrar Sesión' color={Colors.upc}onPress={()=>
                         {
                         dispatch(authActions.logout());
                         // props.navigation.navigate('Auth');

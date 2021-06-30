@@ -30,11 +30,11 @@ const WelcomeScreen = props => {
     style={styles.container}
     visible={true}>
         <WelcomeFade>
-            :v
+            Bienvenido
         </WelcomeFade>
         <View style={styles.btn}>
             { FadeIsGone?(
-            <MainButton onPress={startLoading}> Continua xd</MainButton>
+            <MainButton onPress={startLoading}> Continuar</MainButton>
         ):null}
         </View>
     </LinearGradient>
@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
     },
     btn:
     {
-      marginVertical:0,
-      top:200,
+      marginVertical:200,
+      top:300,
       left:120
     }
     });

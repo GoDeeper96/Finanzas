@@ -52,7 +52,7 @@ const ImgPicker = props=>{
             source={{uri:pickedImage}}/>)}
         </View>
         <Button title="Cargar Imagen"
-        color={Colors.Primary}
+        color={Colors.accent}
         onPress={takeImageHandler}/>
     </View>)
 };
