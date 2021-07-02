@@ -27,6 +27,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Fancy from '../../UI/fancyAlert'
 import FancyResultados from '../../UI/fancyResultados'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { pow } from 'react-native-reanimated';
 const DiasAño =[
     '360',
     '365'
@@ -72,6 +73,10 @@ const motivosFinales = [
     'Otros Gastos',
 
 ]
+const UnidadesGeneral = [
+    'Soles',
+    'Dolares'
+]
 const EditProductScreen = props =>{
     // const letrId = props.navigation.getParam('productId');
 
@@ -97,6 +102,7 @@ const EditProductScreen = props =>{
     const [TipoTasa,setTipoTasa] = useState('');
     const [modalOpenValorE,setModalOpenValorE] = useState(false);
 
+    const [modalOpenUnidadGeneral,setmodalOpenUnidadGeneral]=useState(false);
 
     const [UnidadInicialValor,setUnidadInicialValor] = useState('');
     const [UnidadFinalValor,setUnidadFinalValor] = useState('');
@@ -139,8 +145,31 @@ const EditProductScreen = props =>{
     }, [visibleForResultados]);
       
 
-    //VALIDACIONES PARA TECLADO
-    const [editable,SetEditable]=useState(true);
+    //VALIDACIONES PARA teclado Y TOCAMIENTO
+    // const [editable,SetEditable]=useState(true);
+    const [UnidadGeneral,SetUnidadGeneral] = useState('Soles');
+
+
+
+    const [gastoInicialValido,SetgastoInicialValido]=useState(true);
+    const [gastoFinalValido,SetgastoFinalValido]=useState(true);
+    const [tituloValido,SetTituloValido]=useState(true);
+    const [DescripcionValido,SetDescripcionValido]=useState(true);
+    const [TasaValida,SetTasaValida]=useState(true);
+    const [CapitalizacionValido,SetCapitalizacionValido]=useState(true);
+    const [RetencionValida,SetRetencionValida]=useState(true);
+    const [ValorNominalValido,SetValorNominalValido]=useState(true);
+    const [PlazoEspecialValido,SetPlazoEspecialValido]=useState(true);
+
+    const [GastoInicialTocado,SetGastoInicialTocado]=useState(false);
+    const [GastoFinalTocado,SetGastoFinalTocado]=useState(false);
+    const [TituloTocado,SetTituloTocado]=useState(false);
+    const [DescripcionTocado,SetDescripcionTocado]=useState(false);
+    const [TasaTocado,SetTasaTocado]=useState(false);
+    const [CapitalizacionTocado,SetCapitalizacionTocado]=useState(false);
+    const [RetencionTocado,SetRetencionTocado]=useState(false);
+    const [ValorNominalTocado,SetValorNominalTocado]=useState(false);
+    const [PlazoEspecialTocado,SetPlazoEspecialTocado]=useState(false);
     // DATOS DE CLASE RESULTADO
     const [res,SetRes]=useState({
             periodo:0,
@@ -161,7 +190,7 @@ const EditProductScreen = props =>{
     const [FechaVen,       setFechaVen] = useState(new Date("03/25/2015"));
     const [plazot,         SetPlazot]= useState(0)
     const [tasa,           SetTasa]= useState(0)
-
+   
     const [gastoInicial,   SetGastoInicial]= useState(0)
     const [gastoFinal,     SetGastoFinal]= useState(0)
 
@@ -173,22 +202,43 @@ const EditProductScreen = props =>{
 
     const [GastoArrayInicial,SetGastoArrayInicial] = useState([]);
     const [GastoArrayFinal,SetGastoArrayFinal] = useState([]);
+
+
+
     const addGastoInicial = ()=>{
         SetGastoArrayInicial([...GastoArrayInicial,{
             MotivoGastoInicial:MotivoGastoInicial,
             TipoValor:UnidadInicialValor,
-            valor:parseInt(isNaN(gastoInicial)?0:gastoInicial)
+            valor:AlTipoValor(gastoInicial,UnidadInicialValor)
+            // parseInt(isNaN(gastoInicial)?0:gastoInicial)
         }])
         
         setVisibleForInicial(true);
         // console.log(GastoArrayInicial);
     }
-
+    const AlTipoValor =  (valor,unidad)=>{
+        if(UnidadGeneral==="Soles"&&unidad==="Dolares") // DE DOLARES A SOLES
+        {
+            valor = parseFloat(valor);
+            valor = 4*valor;
+        }
+        if(UnidadGeneral==="Dolares"&&unidad==="Soles") //DE SOLES A DOLARES
+        {
+            valor = parseFloat(valor)
+            valor = valor/4;
+        }
+        if(unidad==="Porcentaje") //DE SOLES A DOLARES
+        {
+            valor = parseFloat(valor);
+            valor = valorNominal*(valor/100);
+        }
+        return parseFloat(valor);
+    }
     const addGastoFinal = ()=>{
         SetGastoArrayFinal([...GastoArrayFinal,{
             MotivoGastoInicial:MotivoGastoFinal,
             TipoValor:UnidadFinalValor,
-            valor:parseInt(isNaN(gastoFinal)?0:gastoFinal)
+            valor:AlTipoValor(gastoFinal,UnidadFinalValor)
         }])
         
         setVisibleForFinal(true);
@@ -258,47 +308,51 @@ const EditProductScreen = props =>{
         }
         return x;
       }
+
     const Algoritmo = () =>{
          //Calcular periodo
         //  console.log(pT);
         // 
         let otherplazo=0;
+        let diasPorAño=0;
         console.log(pT);
         if(pT==="Mensual"){
-            SetPlazot(30);
             otherplazo=30;
             console.log("plazo:"+plazot)
             console.log("plazo:"+otherplazo)
         }
         if(pT==="Bimestral"){
-            SetPlazot(60);
             otherplazo=60;
             console.log("plazo:"+plazot)
             console.log("plazo:"+otherplazo)
         }
         if(pT==="Trimestral"){
-            SetPlazot(90);
             otherplazo=90;
             console.log("plazo:"+plazot)
             console.log("plazo:"+otherplazo)
         }
         if(pT==="Cuatrimestral"){
-            SetPlazot(120)
             otherplazo=120;
             console.log("plazo:"+plazot)
             console.log("plazo:"+otherplazo)
         }
         if(pT==="Semestral"){
-            SetPlazot(180)
             otherplazo=180;
             console.log("plazo:"+plazot)
             console.log("plazo:"+otherplazo)
         }
         if(pT==="Anual"){
-            SetPlazot(360)
             otherplazo=360;
             console.log("plazo:"+plazot)
             console.log("plazo:"+otherplazo)
+        }
+        if(Daños ==="360")
+        {
+            diasPorAño = 360;
+        }
+        if(Daños ==="365")
+        {
+            diasPorAño = 365;
         }
         let periodo=0;
         let t=0;
@@ -313,6 +367,7 @@ const EditProductScreen = props =>{
         let arrayGastosI = []
         let sumArrayI = 0
         arrayGastosI = GastoArrayInicial.map(item=>item.valor);
+        console.log("arrayGastosI:"+arrayGastosI)
         for(let x   in arrayGastosI){
             sumArrayI = sumArrayI + arrayGastosI[x]   
         }
@@ -320,44 +375,56 @@ const EditProductScreen = props =>{
         let arrayGastosF = []
         let sumArrayF = 0
         arrayGastosF = GastoArrayFinal.map(item=>item.valor);
+        console.log("arrayGastosF:"+arrayGastosF)
         for(let x   in arrayGastosF){
             sumArrayF = sumArrayF + arrayGastosF[x]   
         }
         periodo = Math.round((FechaVen-FechaGiro) / (1000 * 60 * 60 * 24));
         //Calcular tasa
         
-        if(TipoTasa=="Tasa Nominal"){
+        if(TipoTasa==="Tasa Nominal"){
             m = otherplazo/capitalizacion;
             n = periodo/capitalizacion;
             t = Math.pow(1+(tasa/m),n)-1;
             t = toFixed(t);
+            t = parseFloat(t.toPrecision(7));
             console.log(m,n,t);
             console.log(otherplazo+  " " +capitalizacion);
         }
         if(TipoTasa==="Tasa Efectiva"){
             t = Math.pow((1+tasa),periodo/otherplazo)-1;
-            t = toFixed(t);
+            t = toFixed(t);         
             t = parseFloat(t.toPrecision(7));
+            console.log(t);
         }
         //Calcular Tasa descuento
         tasadescuento = t/(t+1.00);
         tasadescuento = parseFloat(tasadescuento.toFixed(7));
+        console.log("Tasa correcta?:"+tasadescuento);
+        
+        
         //Calcular Descuento
         descuento = valorNominal*(tasadescuento);
         descuento = parseFloat(descuento.toFixed(2));
+        console.log("Descuento correcto?:"+descuento);
         //Valor Neto
-        valorNeto=valorNominal-descuento;
+        valorNeto = valorNominal-descuento;
         valorNeto = parseFloat(valorNeto.toFixed(2))
+        console.log("Valor Neto correcto?:"+valorNeto);
         //Valor a Recibir
-        valorRecibido=valorNeto-gastoInicial-retencion;
+        sumArrayI=parseFloat(sumArrayI.toFixed(2));
+        valorRecibido= valorNeto-sumArrayI-retencion;
         valorRecibido = parseFloat(valorRecibido.toFixed(2));
-        console.log(valorNominal + " - "+ descuento);
+        console.log("Valor Recibido correcto?:"+valorRecibido);
         //Valor a Entregar
-        valorEntregado=valorNominal+gastoFinal-retencion;
+        sumArrayF=parseFloat(sumArrayF.toFixed(2));
+        valorEntregado=valorNominal+sumArrayF-retencion;
         valorEntregado = parseFloat(valorEntregado.toFixed(2))
+        console.log("Valor Entregado?:"+valorEntregado);
         //tcea
-        tcea=Math.pow(( valorEntregado/valorRecibido), 360/periodo) - 1;
-        console.log("asdas"+tcea+"asdasd"+tcea);
+        tcea=Math.pow(( valorEntregado/valorRecibido), diasPorAño/periodo) - 1;
+        tcea = parseFloat(tcea.toFixed(7));
+        console.log("Valor entregado:"+valorEntregado+"Valor Recibido:"+valorRecibido);
         SetRes({
             periodo:periodo,
             valorRecibido:valorRecibido,
@@ -485,70 +552,200 @@ const EditProductScreen = props =>{
         SetIsFinal(true);
     //    console.log(IsFinal);
     }
-
-
+    const InputGastoFinalTocado = () =>{
+        SetGastoFinalTocado(true);
+    }
+    const InputGastoInicialTocado = () =>{
+        console.log("works?")
+        SetGastoInicialTocado(true);
+    }
+    const InputTitulo = () =>{
+        SetTituloTocado(true);
+    }
+    const InputDescripcion = () =>{
+        SetDescripcionTocado(true);
+    }
+    const InputTasa = () =>{
+        SetTasaTocado(true);
+    }
+    const InputCapitalizacion = () =>{
+        SetCapitalizacionTocado(true);
+    }
+    const InputRetencion = () =>{
+        SetRetencionTocado(true);
+    }
+    const InputValorNominalTocado = () =>{
+        SetValorNominalTocado(true);
+    }
+    const InputPlazoEspecialTocado = () =>{
+        SetPlazoEspecialTocado(true);
+    }
     const onChangeValorNominal = (vnominal) =>{
-        SetValorNominal(vnominal)
+        var regex =/^\d*\.?\d*$/; //NO ACEPTA COMAS NI ;
+        var decPart = (vnominal+"").split(".")[0]; //POR EJEMPLO SI ES 0.5000 , OBTEN EL EL DIGITO ANTERIOR AL PUNTO DECIMAL // NINGUN VALOR NOMINAL DEBE EMPEZAR CON 0.5000 
+        var valorString = vnominal.toString() //CONVIERTE VALOR NUMERICO A STRING
+        var regExp = /^0[0-9].*$/ // NO ACEPTA 000.0005 
+        
+        if((regex.test(vnominal)&&decPart!=='0'&&!regExp.test(valorString)))
+        {
+            
+            vnominal = parseFloat(vnominal);
+            console.log("valor Nominal ingresado:"+vnominal)
+            SetValorNominal(vnominal)
+        }
+        else
+        {
+
+            console.log(decPart);
+            SetValorNominalValido(false);
+            Alert.alert("Error, valor nominal es invalido");
+        }
+        
     }
-    const onChangeRetencion = (retencion) =>{
-        SetRetencion(retencion)
+    const onChangeRetencion = (retencion) =>{ //VALOR ENTERO CON DECIMALES 
+        var regex =/^\d*\.?\d*$/; //NO ACEPTA COMAS NI ;
+        var valorString = retencion.toString() //CONVIERTE VALOR NUMERICO A STRING
+        var regExp = /^0[0-9].*$/ // NO ACEPTA 000.0005 
+        if((regex.test(retencion)&&!regExp.test(valorString)))
+        {
+            // retencion = retencion===null?retencion=0:null;
+            retencion = parseFloat(retencion);
+            console.log("Retencion ingresada:"+retencion)
+            SetRetencion(retencion)
+        }
+        else
+        {
+            SetRetencionValida(false);
+            Alert.alert("No use comas porfavor, use punto decimal.");
+        }
+        
     }
-    const onChangeGastoInic = (gastoInic) =>{
-        SetGastoInicial(gastoInic)
+    const onChangeGastoInic = (gastoInic) =>{ //VALOR ENTERO CON DECIMALES 
+        var regex =/^\d*\.?\d*$/; //NO COMAS NI ;
+        var valorString = gastoInic.toString() //CONVIERTE VALOR NUMERICO A STRING
+        var regExp = /^0[0-9].*$/ // NO ACEPTA 000.0005 
+        var decPart = (gastoInic+"").split(".")[0];
+        if(UnidadInicialValor==="Porcentaje")
+        {
+            if((regex.test(gastoInic)&&!regExp.test(valorString))&&decPart.length<=2)
+            {
+                SetGastoInicial(gastoInic)
+            }
+            else
+            {
+                SetgastoInicialValido(false);
+            Alert.alert("Error","Use punto decimal, " + gastoInic +" no es permitido");
+            }
+        }
+        if((regex.test(gastoInic)&&!regExp.test(valorString)))
+        {
+            SetGastoInicial(gastoInic)
+        }
+        else
+        {
+            SetgastoInicialValido(false);
+            Alert.alert("No use comas porfavor, use punto decimal.");
+        }
+        
+        
     }
-    const onChangeGastoFinal = (gastoFinal) =>{
-        SetGastoFinal(gastoFinal)
+    const onChangeGastoFinal = (gastoFinal) =>{ //VALOR ENTERO CON DECIMALES 
+        var regex =/^\d*\.?\d*$/; //NO COMAS NI ;
+        var valorString = gastoFinal.toString() //CONVIERTE VALOR NUMERICO A STRING
+        var regExp = /^0[0-9].*$/ // NO ACEPTA 000.0005 
+        if((regex.test(gastoFinal)&&!regExp.test(valorString)))
+        {
+            SetGastoFinal(gastoFinal)
+        }
+        else
+        {
+            SetgastoFinalValido(false);
+            Alert.alert("No use comas porfavor, use punto decimal.");
+        }
+        
     }
     const onChangeTitulo = (titulo) =>{
-        SetTitulo(titulo)
+        var regex = /^[a-zA-Z]*$/
+        if(regex.test(titulo))
+        {
+            console.log("Titulo ingresado" + titulo)
+            SetTitulo(titulo)         
+        }
+        else
+        {
+            SetTituloValido(false);
+            // SetTitulo(null);  
+            Alert.alert("Solo letras porfavor");
+        }
+        
     }
     const onChangeDescripcionLetra = (DescLetra) =>{
-        SetDescripcion(DescLetra)
+        var regex =/^[a-zA-Z]*$/
+        if(regex.test(DescLetra))
+        {
+            console.log("Descripcion ingresada :" +DescLetra)
+            SetDescripcion(DescLetra)          
+        }
+        else
+        {
+            SetDescripcionValido(false);
+            Alert.alert("Solo letras porfavor");
+        }
+        
     }
-    const onChangeTasa = (Tasa) =>{
-        SetTasa(Tasa)
+    const onChangeTasa = (Tasa) =>{ //VALOR ENTERO CON DECIMALES 
+        var regex =/^\d*\.?\d*$/; //NO COMAS NI ;
+        var valorString = Tasa.toString() //CONVIERTE VALOR NUMERICO A STRING
+        var regExp = /^0[0-9].*$/ // NO ACEPTA 000.0005 
+        var decPart = (Tasa+"").split(".")[0];
+        if((regex.test(Tasa)&&!regExp.test(valorString))&&decPart.length<=2)
+        {
+            Tasa = parseFloat(Tasa);
+            Tasa = Tasa/100;
+            console.log("Tasa ingresada:"+Tasa)
+            SetTasa(Tasa)
+        }
+        else
+        {
+            SetTasaValida(false);
+            Alert.alert("Error","Use punto decimal, " + Tasa +" no es permitido");
+        }
     }
-    const onChangePlazoTasa = () =>{
-
-        if(pT==="Mensual"){
-            SetPlazot(30);
+    const onChangeCapitalizacion = (capitalizacion) => //VALOR ENTERO SIN DECIMALES
+    { 
+        var regex =/^\d*\.?\d*$/; //NO COMAS NI . ni ;
+        var valorString = capitalizacion.toString() //CONVIERTE VALOR NUMERICO A STRING
+        var regExp = /^0[0-9].*$/ // NO ACEPTA 000.0005 
+        if((regex.test(capitalizacion)&&!regExp.test(valorString)))
+        {
+            capitalizacion = parseInt(capitalizacion);
+            console.log("capitalizacion ingresada:"+capitalizacion)
+            SetCapitalizacion(capitalizacion)
         }
-        if(pT==="Bimestral"){
-            SetPlazot(60);
+        else
+        {
+            SetCapitalizacionValido(false);
+            Alert.alert("No use comas porfavor, use punto decimal."+ "\nLa capitalizacion es entera ✓ 500 , 200, 20"+"\nX 0.200, 0.300");
         }
-        if(pT==="Trimestral"){
-            SetPlazot(90);
-        }
-        if(pT==="Cuatrimestral"){
-            SetPlazot(120)
-        }
-        if(pT==="Semestral"){
-            SetPlazot(180)
-        }
-        if(pT==="Anual"){
-            SetPlazot(360)
-        }
-        console.log(plazot)        
-
     }
-    // useEffect(()=>
-    // {
-    //     console.log("WHAT THE FUCK IS HAPPENING"+id);
-    //     if(IdLetra)
-    //     {
-    //         dispatch(ResultadosActions.createResultado(
-    //             IdLetra,
-    //             SelectedImage,
-    //             res.periodo,
-    //             res.valorRecibido,
-    //             res.TotalGastoInicial,
-    //             res.TotalGastoFinal,
-    //             res.tcea,
-    //             res.valorNeto,
-    //             res.descuento,            
-    //             ))
-    //     }
-    // },[SetIdLetra])
+    const onChangePlazoTasaEspecial = (especial) => //VALOR ENTERO SIN DECIMALES
+    { 
+        var regex =/^\d*\.?\d*$/;  //NO COMAS NI . ni ;
+        var valorString = especial.toString() //CONVIERTE VALOR NUMERICO A STRING
+        var regExp = /^0[0-9].*$/ // NO ACEPTA 000.0005 
+        if((regex.test(especial)&&!regExp.test(valorString)))
+        {
+            especial = parseInt(especial);
+            console.log("valor especial ingresado:"+especial)
+            SetPlazot(especial)
+        }
+        else
+        {
+            SetPlazoEspecialValido(false);
+            Alert.alert("No use comas porfavor, use punto decimal."+ "\nLa capitalizacion es entera ✓ 500 , 200, 20"+"\nX 0.200, 0.300");
+        }
+    }
+    
     if(HayResultados)
     { 
         
@@ -614,34 +811,8 @@ const EditProductScreen = props =>{
             )}
             
              
-                <Input
-                id='Vnominal'
-                label='Valor Nominal:'
-                editable={true}
-                keyboardType='decimal-pad'
-                // onEndEditing={}
-                // onSubmitEditing={}
-                autoCapitalize='sentences'
-                autoCorrect
-                returnKeyType='next'
-                value = {valorNominal}
-                onChangeHandler={onChangeValorNominal}
-                required
-                />
-                <Input
-                id='Retencion'
-                label='Retencion:'
-                editable={true}
-                keyboardType='decimal-pad'
-                // onEndEditing={}
-                // onSubmitEditing={}
-                autoCapitalize='sentences'
-                autoCorrect
-                returnKeyType='next' 
-                value = {retencion}
-                onChangeHandler ={onChangeRetencion}
-                required
-                />
+                
+                
                 <Card style={styles.card}>
                 <MyButton value={FechaVen.toLocaleDateString()} HandlerOnPress={showDatepickerFV}>Fecha de Vencimiento
                 </MyButton>
@@ -667,11 +838,12 @@ const EditProductScreen = props =>{
                                     color:'black',
                                 }}
                                 id='VNumerico'
+                                touched = {GastoFinalTocado}
                                 editable={true}
                                 label ='Valor Numerico:'
                                 TipoV={UnidadFinalValor}
-                                // onEndEditing={}
-                                // onSubmitEditing={}
+                                FueTocado={InputGastoFinalTocado}
+                                isValid={gastoFinalValido}
                                 keyboardType='decimal-pad'
                                 returnKeyType='next'   
                                 value={gastoFinal}
@@ -743,9 +915,12 @@ const EditProductScreen = props =>{
                             Visible={true}
                             editable={true}
                             id='VNumerico'
+                            FueTocado={InputGastoInicialTocado}
+                            touched = {GastoInicialTocado}
                             // onEndEditing={}
                             // onSubmitEditing={}
                             TipoV={UnidadInicialValor}
+                            isValid={gastoInicialValido}
                             maxLength={8}
                             label = 'Valor Numerico:'
                             keyboardType='decimal-pad'
@@ -788,21 +963,37 @@ const EditProductScreen = props =>{
          <View style={{justifyContent:'center',alignItems:'center'}}>
             <Text style={styles.HeaderInicial}>Datos iniciales</Text>
          </View>    
-                
+         
+         <MyCustomPicker
+                setModalOpen={setmodalOpenUnidadGeneral}
+                modalOpen={modalOpenUnidadGeneral} 
+                value={UnidadGeneral} 
+                setValue={SetUnidadGeneral}
+                items = {UnidadesGeneral}
+                />        
+                <MyButtonSpecial style={{
+                            flexDirection:'row',
+                            justifyContent:'space-between',
+
+                        }} value={UnidadGeneral} HandlerOnPress={()=>setmodalOpenUnidadGeneral(!modalOpenUnidadGeneral)}>Unidad de cambio:
+                </MyButtonSpecial>
                 <Input
-                //NO TOCAR
                 id='tituloLetra'
                 label='Titulo:'
+                // numberOfLines={1}
+                maxLength ={20}
+                isValid={tituloValido}
+                FueTocado={InputTitulo}
                 keyboardType='default'
+                editable={true}
+                touched = {TituloTocado}
                 autoCapitalize='sentences'
                 autoCorrect
-                // editable={editable}
                 returnKeyType='next' 
-                maxLength ={20}
-                onChangeHandler ={onChangeTitulo}
+                onChangeHandler = {onChangeTitulo}
+                value={titulo}
                 // onEndEditing={}
                 // onSubmitEditing={}
-                value={titulo}
                 required
                 />
                 <Input
@@ -810,18 +1001,54 @@ const EditProductScreen = props =>{
                 label='Descripción:'
                 // numberOfLines={1}
                 maxLength ={30}
+                isValid={DescripcionValido}
+                FueTocado={InputDescripcion}
                 keyboardType='default'
                 editable={true}
+                touched = {DescripcionTocado}
                 autoCapitalize='sentences'
                 autoCorrect
                 returnKeyType='next' 
-                onChangeHandler ={onChangeDescripcionLetra}
+                onChangeHandler = {onChangeDescripcionLetra}
                 value={descripcion}
                 // onEndEditing={}
                 // onSubmitEditing={}
                 required
                 />
-                
+                <Input
+                id='Vnominal'
+                label='Valor Nominal:'
+                editable={true}
+                keyboardType='decimal-pad'
+                // onEndEditing={}
+                // onSubmitEditing={}
+                isValid={ValorNominalValido}
+                touched = {ValorNominalTocado}
+                FueTocado={InputValorNominalTocado}
+                autoCapitalize='sentences'
+                autoCorrect
+                returnKeyType='next'
+                value = {valorNominal}
+                onChangeHandler={onChangeValorNominal}
+                required
+                />
+                <Input
+                id='Retencion'
+                label='Retencion:'
+                editable={true}
+                keyboardType='decimal-pad'
+                // onEndEditing={}
+                // onSubmitEditing={}
+                touched = {RetencionTocado}
+                FueTocado={InputRetencion}
+                autoCapitalize='sentences'
+                autoCorrect
+                returnKeyType='next' 
+                isValid={RetencionValida}
+                value = {retencion}
+                onChangeHandler ={onChangeRetencion}
+                required
+                />
                 <MyButton value={Daños} HandlerOnPress={()=>setModalOpenDaños(!modalOpenDaños)}>Seleccione Dias por año
                 </MyButton>
                 <MyCustomPicker
@@ -850,8 +1077,13 @@ const EditProductScreen = props =>{
                             autoCapitalize='sentences'
                             editable={true}
                             autoCorrect
+                            isValid={TasaValida}
+                            touched = {TasaTocado}
+                            FueTocado={InputTasa}
+                            TipoV="Porcentaje"
+                            StyleTipoV={{marginRight:50,fontSize:18}}
                             returnKeyType='next'
-                            placeholder ='23.4344444' 
+                            placeholder ='23.43 = 23.43% , 0.500=0.05% , 5%=0.5%' 
                             returnKeyType='next' 
                             // onEndEditing={}
                             // onSubmitEditing={}
@@ -861,12 +1093,15 @@ const EditProductScreen = props =>{
                             required
                             />
                             {TipoTasa==='Tasa Nominal'?  
-                             <TextInput
+                             <Input
                             label="Capitalizacion"
                             placeholder='35'
+                            FueTocado={InputCapitalizacion}
+                            touched = {CapitalizacionTocado}
+                            isValid={CapitalizacionValido}
                             value={capitalizacion}
                             keyboardType='decimal-pad'
-                            onChangeText={capitalizacion=>SetCapitalizacion(capitalizacion)}
+                            onChangeHandler={onChangeCapitalizacion}
                             
                             /> 
                              :null}
@@ -887,11 +1122,14 @@ const EditProductScreen = props =>{
                     </MyButton>
                            
                              {pT==='Especial'?  
-                             <TextInput
+                             <Input
                             label="Periodo Especial"
                             placeholder='35'
+                            touched = {PlazoEspecialTocado}
+                            FueTocado={InputPlazoEspecialTocado}
+                            isValid={PlazoEspecialValido}
                             value={plazot}
-                            onChangeText={plazodeTasa=>SetPlazot(plazodeTasa)}
+                            onChangeText={onChangePlazoTasaEspecial}
                             /> 
                              :null}
                     </ScrollView>
@@ -1078,3 +1316,44 @@ export default EditProductScreen;
         // }
         // SetIsError(null);
         // SetIsloading(true);
+         // const onChangePlazoTasa = () =>{
+
+    //     if(pT==="Mensual"){
+    //         SetPlazot(30);
+    //     }
+    //     if(pT==="Bimestral"){
+    //         SetPlazot(60);
+    //     }
+    //     if(pT==="Trimestral"){
+    //         SetPlazot(90);
+    //     }
+    //     if(pT==="Cuatrimestral"){
+    //         SetPlazot(120)
+    //     }
+    //     if(pT==="Semestral"){
+    //         SetPlazot(180)
+    //     }
+    //     if(pT==="Anual"){
+    //         SetPlazot(360)
+    //     }
+    //     console.log(plazot)        
+
+    // }
+    // useEffect(()=>
+    // {
+    //     console.log("WHAT THE FUCK IS HAPPENING"+id);
+    //     if(IdLetra)
+    //     {
+    //         dispatch(ResultadosActions.createResultado(
+    //             IdLetra,
+    //             SelectedImage,
+    //             res.periodo,
+    //             res.valorRecibido,
+    //             res.TotalGastoInicial,
+    //             res.TotalGastoFinal,
+    //             res.tcea,
+    //             res.valorNeto,
+    //             res.descuento,            
+    //             ))
+    //     }
+    // },[SetIdLetra])

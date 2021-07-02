@@ -29,16 +29,15 @@ const Input = props =>{
                 margin:5,
                 marginHorizontal:20,
                 backgroundColor:'#D3D5D7',
-                color:'black',
-                // !inputState.isValid&& inputState.touched ?'red':
-                borderColor:'#D3D5D7'
+                color:'black',   
+                borderColor:!props.isValid&&!props.touched?'red':'#D3D5D7'
             }}
             ButtonVisible={props.Visible}
             value={props.value} 
-            // onBlur={LostFocusHandler}
+            onBlur={props.FueTocado}
             onChangeText={props.onChangeHandler}/>
             {props.TipoV==='Porcentaje'?
-            <Text style={{color:'#FFC107',marginLeft:-18,marginTop:12,fontSize:14}}>%</Text>  
+            <Text style={{...{color:'#FFC107',marginLeft:-18,marginTop:12,fontSize:18},...props.StyleTipoV}}>%</Text>  
             :null}
             </View>
             {/* {props.Visible?
