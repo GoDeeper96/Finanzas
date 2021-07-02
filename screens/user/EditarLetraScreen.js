@@ -366,6 +366,7 @@ const EditProductScreen = props =>{
         let tcea=0;
         let arrayGastosI = []
         let sumArrayI = 0
+        let ret = 0;
         arrayGastosI = GastoArrayInicial.map(item=>item.valor);
         console.log("arrayGastosI:"+arrayGastosI)
         for(let x   in arrayGastosI){
@@ -401,7 +402,7 @@ const EditProductScreen = props =>{
         tasadescuento = t/(t+1.00);
         tasadescuento = parseFloat(tasadescuento.toFixed(7));
         console.log("Tasa correcta?:"+tasadescuento);
-        
+        // ret = sumArrayI+sumArrayF; // confio V:
         
         //Calcular Descuento
         descuento = valorNominal*(tasadescuento);
@@ -525,9 +526,9 @@ const EditProductScreen = props =>{
                     capitalizacion));
 
             }
-
-            loadData();
             Algoritmo();
+            loadData();
+            
             
             setVisibleForResultados(true);
             SetHayResultados(true);
