@@ -16,7 +16,7 @@ const ResultadosScreen = props =>{
     console.log(selectedResultados)
     const [isLoading,SetIsloading] = useState(false);
     const dispatch = useDispatch();
-
+    
     useEffect(()=>{
         SetIsloading(true);
         dispatch(ResultadosActions.fetchResultado()).then(

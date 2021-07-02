@@ -171,6 +171,7 @@ const EditProductScreen = props =>{
     const [ValorNominalTocado,SetValorNominalTocado]=useState(false);
     const [PlazoEspecialTocado,SetPlazoEspecialTocado]=useState(false);
     // DATOS DE CLASE RESULTADO
+    let dict = {};
     const [res,SetRes]=useState({
             periodo:0,
             valorRecibido:0,
@@ -426,6 +427,18 @@ const EditProductScreen = props =>{
         tcea=Math.pow(( valorEntregado/valorRecibido), diasPorAño/periodo) - 1;
         tcea = parseFloat(tcea.toFixed(7));
         console.log("Valor entregado:"+valorEntregado+"Valor Recibido:"+valorRecibido);
+        dict = {
+            periodo:periodo,
+            valorRecibido:valorRecibido,
+            TotalGastoInicial:sumArrayI,
+            TotalGastoFinal:sumArrayF,
+            tcea:tcea,
+            valorNeto:valorNeto,
+            descuento:descuento,
+            valorNominal:valorNominal,
+            capitalizacion:capitalizacion,
+        };
+        console.log(dict.periodo);
         SetRes({
             periodo:periodo,
             valorRecibido:valorRecibido,
@@ -437,6 +450,7 @@ const EditProductScreen = props =>{
             valorNominal:valorNominal,
             capitalizacion:capitalizacion,
         })
+
         // ResultadosLetra ={
         //     periodo:periodo,
         //     valorRecibido:valorRecibido,
@@ -456,13 +470,13 @@ const EditProductScreen = props =>{
             await dispatch(ResultadosActions.createResultado(
                 id?id:letrId,
                 SelectedImage,
-                res.periodo,
-                res.valorRecibido,
-                res.TotalGastoInicial,
-                res.TotalGastoFinal,
-                res.tcea,
-                res.valorNeto,
-                res.descuento,            
+                dict.periodo,
+                dict.valorRecibido,
+                dict.TotalGastoInicial,
+                dict.TotalGastoFinal,
+                dict.tcea,
+                dict.valorNeto,
+                dict.descuento,            
                 ))
           
         } catch (err) {
@@ -488,7 +502,8 @@ const EditProductScreen = props =>{
         }
         try {
             console.log(editedLetra);
-            if(editedLetra){
+            if(editedLetra)
+            {
 
                 await dispatch(letrasActions.updateLetra(
                     letrId,
@@ -505,7 +520,7 @@ const EditProductScreen = props =>{
                     valorNominal,  
                     capitalizacion))
                     // var1=var1+var2;
-
+                    Algoritmo();
             }
             else{
                 //     
@@ -524,12 +539,9 @@ const EditProductScreen = props =>{
                     retencion,     
                     valorNominal,  
                     capitalizacion));
-
-            }
-            Algoritmo();
-            loadData();
-            
-            
+                    Algoritmo();
+            }     
+            loadData();                     
             setVisibleForResultados(true);
             SetHayResultados(true);
            

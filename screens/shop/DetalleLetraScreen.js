@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect,useState} from 'react'
 import {ScrollView,View,Text,Image,Button,StyleSheet} from 'react-native'
 import {useSelector,useDispatch} from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -6,68 +6,63 @@ import Colors from '../../constants/Colors'
 import Card from '../../UI/Card';
 const DetalleLetraScreen = props =>{
     const letraId = props.route.params.letraId;
-    const selectedLetras = useSelector(state =>
-        state.letras.availableLetras.find(letr => letr.idLetra === letraId)
+
+    const [sumaRecibidoTotal,SetRecibidoTotal] = useState(0);
+    const [sumaTceaTotal,SetsumaTceaTotal] = useState(0);
+    const selectedResultados = useSelector(state =>
+        state.resultados.availableResultados.filter(res => res.idLetra === letraId)
       );
-     
-      
+    const CalculaDatos = () =>{
+        const valorRecibidoTotal = selectedResultados.map(x=>x.valorRecibido);
+        console.log("asdasdsa");
+        const TceaTotal = selectedResultados.map(x=>x.tcea);
+        var srb = 0;
+        var stc = 0;
+        for(let x in valorRecibidoTotal){
+            srb = srb + valorRecibidoTotal[x]   
+        }
+        for(let x in TceaTotal){
+            stc = stc + TceaTotal[x]   
+        }
+        console.log(srb);
+        console.log(stc);
+        SetRecibidoTotal(srb)
+        SetsumaTceaTotal(stc)
+    }
+    const algoritmo = ()=>{
+        
+    }
+    useEffect(()=>
+    {
+        // console.log("asdas"+selectedResultados.map(valor=>valor.tcea));
+        algoritmo();
+        CalculaDatos();
+    },[sumaRecibidoTotal,sumaTceaTotal])
+    // const selectedLetras = useSelector(state =>
+    //     state.letras.availableLetras.find(letr => letr.idLetra === letraId)
+    //   );
+    //   console.log("valor Recibido" + selectedResultados.map(valor=>valor.valorRecibido));
+    //   console.log("tcea");
       const LlevameAListaResultados = ()=>{
           //LLEVA A RESULTADOS FIND SEGUN ID DE LETRA
           props.navigation.navigate('Resultados',{
             letraId: letraId
         })
       }
-      console.log("here"+selectedLetras)
+    //   {selectedResultados.map(valor=>valor+ valor.valorRecibido)}
+    //   console.log("here"+selectedLetras)
     return (
             <View style={styles.rw}>
                 <View style={{ flexDirection:'row'}}>
-                <Text style={styles.title}>Titulo:</Text>
-                <Text style={styles.val}>{selectedLetras.titulo}</Text>
+                <Text style={styles.title}>Valor total a recibir:{sumaRecibidoTotal}</Text>
+                
+                <Text style={styles.val}></Text>
                 </View>
                 <View style={{ flexDirection:'row'}}>
-                <Text style={styles.title}>Descripcion:</Text>
-                <Text style={styles.val}>{selectedLetras.descripcion}</Text>
+                <Text style={styles.title}>Tcea:{sumaTceaTotal}</Text>
+                <Text style={styles.val}>{}</Text>
                 </View>
-                <View style={{ flexDirection:'row'}}>
-                <Text style={styles.title}>Retencion:</Text>
-                <Text style={styles.val}>{selectedLetras.retencion}</Text>
-                </View>
-                <View style={{ flexDirection:'row'}}>
-                <Text style={styles.title}>Plazo tasa:</Text>
-                <Text style={styles.val}>{selectedLetras.plazot}</Text>
-                </View>
-                <View style={{ flexDirection:'row'}}>
-                <Text style={styles.title}>Tasa:</Text>
-                <Text style={styles.val}>{selectedLetras.tasa}</Text>
-                </View>
-                <View style={{ flexDirection:'row'}}>
-                <Text style={styles.title}>Fecha Descuento:</Text>
-                <Text style={styles.val}>{selectedLetras.fechaDescuento}</Text>
-                </View>
-                <View style={{ flexDirection:'row'}}>
-                <Text style={styles.title}>Gastos Iniciales:</Text>
-                <Text style={styles.val}>{selectedLetras.gastoInicial}</Text>
-                </View>
-                <View style={{ flexDirection:'row'}}>
-                <Text style={styles.title}>Gastos Finales:</Text>
-                <Text style={styles.val}>{selectedLetras.gastoFinal}</Text>
-                </View>
-                <View style={{ flexDirection:'row'}}>
-                <Text style={styles.title}>Fecha Emision:</Text>
-                <Text style={styles.val}>{selectedLetras.fechaEmision}</Text>
-                </View>
-                <View style={{ flexDirection:'row'}}>
-                <Text style={styles.title}>retencion:</Text>
-                <Text style={styles.val}>{selectedLetras.retencion}</Text>
-                </View>
-                <View style={{ flexDirection:'row'}}>
-                <Text style={styles.title}>Valor nominal:</Text>
-                <Text style={styles.val}>{selectedLetras.valorNominal}</Text>
-                </View>
-                <View style={{ flexDirection:'row'}}>
-                <Text style={styles.title}>Capitalizacion:</Text>
-                <Text style={styles.val}>{selectedLetras.capitalizacion}</Text>
-                </View>
+               
                 {/* <Text style={styles.desc}>{selectedLetras.descripcion}</Text>
                 <Text style={styles.prc}>{selectedLetras.retencion}</Text>
                 <Text style={styles.desc}>{selectedLetras.plazot}</Text>
@@ -133,3 +128,44 @@ export default DetalleLetraScreen
             // </View>
             // <Text style={styles.prc}>${selectedLetras.price.toFixed(2)}</Text>
             // <Text style={styles.desc}>{selectedLetras.description}</Text> */}
+
+            // <View style={{ flexDirection:'row'}}>
+            // <Text style={styles.title}>Retencion:</Text>
+            // <Text style={styles.val}>{selectedLetras.retencion}</Text>
+            // </View>
+            // <View style={{ flexDirection:'row'}}>
+            // <Text style={styles.title}>Plazo tasa:</Text>
+            // <Text style={styles.val}>{selectedLetras.plazot}</Text>
+            // </View>
+            // <View style={{ flexDirection:'row'}}>
+            // <Text style={styles.title}>Tasa:</Text>
+            // <Text style={styles.val}>{selectedLetras.tasa}</Text>
+            // </View>
+            // <View style={{ flexDirection:'row'}}>
+            // <Text style={styles.title}>Fecha Descuento:</Text>
+            // <Text style={styles.val}>{selectedLetras.fechaDescuento}</Text>
+            // </View>
+            // <View style={{ flexDirection:'row'}}>
+            // <Text style={styles.title}>Gastos Iniciales:</Text>
+            // <Text style={styles.val}>{selectedLetras.gastoInicial}</Text>
+            // </View>
+            // <View style={{ flexDirection:'row'}}>
+            // <Text style={styles.title}>Gastos Finales:</Text>
+            // <Text style={styles.val}>{selectedLetras.gastoFinal}</Text>
+            // </View>
+            // <View style={{ flexDirection:'row'}}>
+            // <Text style={styles.title}>Fecha Emision:</Text>
+            // <Text style={styles.val}>{selectedLetras.fechaEmision}</Text>
+            // </View>
+            // <View style={{ flexDirection:'row'}}>
+            // <Text style={styles.title}>retencion:</Text>
+            // <Text style={styles.val}>{selectedLetras.retencion}</Text>
+            // </View>
+            // <View style={{ flexDirection:'row'}}>
+            // <Text style={styles.title}>Valor nominal:</Text>
+            // <Text style={styles.val}>{selectedLetras.valorNominal}</Text>
+            // </View>
+            // <View style={{ flexDirection:'row'}}>
+            // <Text style={styles.title}>Capitalizacion:</Text>
+            // <Text style={styles.val}>{selectedLetras.capitalizacion}</Text>
+            // </View>
