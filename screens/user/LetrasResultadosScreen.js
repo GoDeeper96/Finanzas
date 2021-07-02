@@ -13,7 +13,7 @@ const ResultadosScreen = props =>{
     const selectedResultados = useSelector(state =>
         state.resultados.availableResultados.filter(res => res.idLetra === letraId)
       );
-    console.log(selectedResultados)
+
     const [isLoading,SetIsloading] = useState(false);
     const dispatch = useDispatch();
     
