@@ -53,7 +53,7 @@ const ResultadosScreen = props =>{
         <ResultadosItem imagen={itemData.item.LetraImageUrL} 
         valorRecibido={itemData.item.valorRecibido}    
         tcea={itemData.item.tcea}
-        onSelect={()=>{DetalleResultado(itemData.item.idResultado,itemData.item.title)}}>                                                         
+        onSelect={()=>{DetalleResultado(itemData.item.idResultado)}}>                                                         
            <Button color={Colors.primary} title="Ver detalles" onPress={()=>{ DetalleResultado(itemData.item.idResultado)}}/>
            {/* <Button color={Colors.primary} title="To Cart" onPress={ ()=>{ dispatch(cartActions.addToCart(itemData.item))}}/> */}
         </ResultadosItem>}/>
