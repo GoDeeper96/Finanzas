@@ -45,6 +45,10 @@ const App = (props) => {
           <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.valorRecibido}</Text>
         </View>
         <View style={{ flexDirection:'row'}}>
+          <Text style={{ marginTop: -16, marginBottom: 32 }}>Valor entregado:</Text>
+          <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.valorEntregado}</Text>
+        </View>
+        <View style={{ flexDirection:'row'}}>
           <Text style={{ marginTop: -16, marginBottom: 32 }}>Gastos Iniciales:</Text>
           <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.sumArrayI}</Text>
         </View>

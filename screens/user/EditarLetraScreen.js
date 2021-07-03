@@ -175,6 +175,7 @@ const EditProductScreen = props =>{
     const [res,SetRes]=useState({
             periodo:0,
             valorRecibido:0,
+            valorEntregado:0,
             TotalGastoInicial:0,
             TotalGastoFinal:0,
             tcea:0,
@@ -402,34 +403,35 @@ const EditProductScreen = props =>{
         //Calcular Tasa descuento
         tasadescuento = t/(t+1.00);
         tasadescuento = parseFloat(tasadescuento.toFixed(7));
-        console.log("Tasa correcta?:"+tasadescuento);
+        // console.log("Tasa correcta?:"+tasadescuento);
         // ret = sumArrayI+sumArrayF; // confio V:
         
         //Calcular Descuento
         descuento = valorNominal*(tasadescuento);
         descuento = parseFloat(descuento.toFixed(2));
-        console.log("Descuento correcto?:"+descuento);
+        // console.log("Descuento correcto?:"+descuento);
         //Valor Neto
         valorNeto = valorNominal-descuento;
         valorNeto = parseFloat(valorNeto.toFixed(2))
-        console.log("Valor Neto correcto?:"+valorNeto);
+        // console.log("Valor Neto correcto?:"+valorNeto);
         //Valor a Recibir
         sumArrayI=parseFloat(sumArrayI.toFixed(2));
         valorRecibido= valorNeto-sumArrayI-retencion;
         valorRecibido = parseFloat(valorRecibido.toFixed(2));
-        console.log("Valor Recibido correcto?:"+valorRecibido);
+        // console.log("Valor Recibido correcto?:"+valorRecibido);
         //Valor a Entregar
         sumArrayF=parseFloat(sumArrayF.toFixed(2));
         valorEntregado=valorNominal+sumArrayF-retencion;
         valorEntregado = parseFloat(valorEntregado.toFixed(2))
-        console.log("Valor Entregado?:"+valorEntregado);
+        // console.log("Valor Entregado?:"+valorEntregado);
         //tcea
         tcea=Math.pow(( valorEntregado/valorRecibido), diasPorAño/periodo) - 1;
         tcea = parseFloat(tcea.toFixed(7));
-        console.log("Valor entregado:"+valorEntregado+"Valor Recibido:"+valorRecibido);
+        // console.log("Valor entregado:"+valorEntregado+"Valor Recibido:"+valorRecibido);
         dict = {
             periodo:periodo,
             valorRecibido:valorRecibido,
+            valorEntregado:valorEntregado,
             TotalGastoInicial:sumArrayI,
             TotalGastoFinal:sumArrayF,
             tcea:tcea,
@@ -472,6 +474,7 @@ const EditProductScreen = props =>{
                 SelectedImage,
                 dict.periodo,
                 dict.valorRecibido,
+                dict.valorEntregado,
                 dict.TotalGastoInicial,
                 dict.TotalGastoFinal,
                 dict.tcea,
@@ -569,7 +572,7 @@ const EditProductScreen = props =>{
         SetGastoFinalTocado(true);
     }
     const InputGastoInicialTocado = () =>{
-        console.log("works?")
+
         SetGastoInicialTocado(true);
     }
     const InputTitulo = () =>{
@@ -767,6 +770,7 @@ const EditProductScreen = props =>{
             visible={visibleForResultados}
             periodo={res.periodo}
             valorRecibido={res.valorRecibido}
+            valorEntregado={res.valorEntregado}
             sumArrayI={res.TotalGastoInicial}
             sumArrayF={res.TotalGastoFinal}
             tcea={res.tcea}

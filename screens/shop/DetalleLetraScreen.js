@@ -24,14 +24,14 @@ const DetalleLetraScreen = props =>{
     console.log(selectedResultados);
     const CalculaDatos = () =>{
         const valorRecibidoTotal = selectedResultados.map(x=>x.valorRecibido);
-        const TceaTotal = selectedResultados.map(x=>x.tcea);
+        const valorEntregadoTotal = selectedResultados.map(x=>x.valorEntregado);
         var srb = 0;
         var stc = 0;
         for(let x in valorRecibidoTotal){
             srb = srb + valorRecibidoTotal[x]   
         }
         for(let x in TceaTotal){
-            stc = stc + TceaTotal[x]   
+            stc = stc + valorEntregadoTotal[x]   
         }
         console.log(srb);
         console.log(stc);
@@ -61,9 +61,8 @@ const DetalleLetraScreen = props =>{
             }
         );
         // console.log("asdas"+selectedResultados.map(valor=>valor.tcea));
-        
-        
-    },[dispatch,loadResultados])
+
+    },[dispatch,loadResultados,SetErr])
     // const selectedLetras = useSelector(state =>
     //     state.letras.availableLetras.find(letr => letr.idLetra === letraId)
     //   );

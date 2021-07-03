@@ -21,6 +21,7 @@ export default (state = initialState,action) =>{
                 action.ResultadoData.idResultado,
                 action.ResultadoData.dias,
                 action.ResultadoData.valorRecibido,
+                action.ResultadoData.valorEntregado,
                 action.ResultadoData.costeInicial,
                 action.ResultadoData.costeFinal,
                 action.ResultadoData.tcea,

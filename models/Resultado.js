@@ -5,6 +5,7 @@ class Resultado {
         LetraImageUrL,
         dias,
         valorRecibido,
+        valorEntregado,
         costeInicial,
         costeFinal,
         tcea,
@@ -14,7 +15,8 @@ class Resultado {
         this.LetraImageUrL=LetraImageUrL;
         this.idLetra = idLetra;
         this.idResultado = idResultado;
-        this.valorRecibido = valorRecibido; //VALOR RECIBIDO TOTAL
+        this.valorRecibido = valorRecibido;
+        this.valorEntregado=valorEntregado; //VALOR RECIBIDO TOTAL
         this.costeInicial = costeInicial; //SUMA DE GASTOS INICIALES
         this.costeFinal = costeFinal; //SUMA DE GASTOS FINALES
         this.tcea = tcea;
