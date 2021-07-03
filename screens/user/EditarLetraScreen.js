@@ -211,8 +211,8 @@ const EditProductScreen = props =>{
     const [GastoArrayInicial,SetGastoArrayInicial] = useState([]);
     const [GastoArrayFinal,SetGastoArrayFinal] = useState([]);
 
-
-
+    const [fechitaInic,setfinic] = useState('')
+    const [fechitaFin,setffin] = useState('')
     const addGastoInicial = ()=>{
         SetGastoArrayInicial([...GastoArrayInicial,{
             MotivoGastoInicial:MotivoGastoInicial,
@@ -375,6 +375,8 @@ const EditProductScreen = props =>{
         let arrayGastosI = []
         let sumArrayI = 0
         let ret = 0;
+        let fechita='';
+        let fechota = '';
         arrayGastosI = GastoArrayInicial.map(item=>item.valor);
         console.log("arrayGastosI:"+arrayGastosI)
         for(let x   in arrayGastosI){
@@ -390,6 +392,8 @@ const EditProductScreen = props =>{
         }
         periodo = Math.round((FechaVen-FechaGiro) / (1000 * 60 * 60 * 24));
         //Calcular tasa
+        fechita = FechaGiro.toLocaleDateString('en-GB')
+        fechota = FechaVen.toLocaleDateString('en-GB')
         
         if(TipoTasa==="Tasa Nominal"){
             m = otherplazo/capitalizacion;
@@ -445,8 +449,8 @@ const EditProductScreen = props =>{
             descuento:descuento,
             valorNominal:valorNominal,
             capitalizacion:capitalizacion,
-            fechaInicio:FechaGiro,
-            fechaVencimiento:FechaVen,
+            fechaInicio:fechita,
+            fechaVencimiento:fechota,
             valorNominalLetra:valorNominal,
             tasa:tasa
         };
@@ -462,8 +466,8 @@ const EditProductScreen = props =>{
             descuento:descuento,
             valorNominal:valorNominal,
             capitalizacion:capitalizacion,
-            fechaInicio:FechaGiro,
-            fechaVencimiento:FechaVen,
+            fechaInicio:fechita,
+            fechaVencimiento:fechota,
             valorNominalLetra:valorNominal,
             tasa:tasa
         })
