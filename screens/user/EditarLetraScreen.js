@@ -57,7 +57,6 @@ const motivos = [
 
 ]
 const TipoTasas = [
-    'Tasa Simple',
     'Tasa Efectiva',
     'Tasa Nominal',
 
