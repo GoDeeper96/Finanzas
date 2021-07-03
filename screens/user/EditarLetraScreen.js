@@ -81,7 +81,9 @@ const EditProductScreen = props =>{
     // const letrId = props.navigation.getParam('productId');
 
     const letrId = props.route.params? props.route.params.letraId:null;
+    console.log("no hay id"+letrId);
     const editedLetra = useSelector(state=>state.letras.userLetras.find(letr=>letr.idLetra===letrId))
+    console.log("no hay"+editedLetra);
     const userLetras = useSelector(state=>state.letras.userLetras)
     // console.log("here"+userLetras.map(x=>x.idLetra))
     // console.log(letrId);
@@ -429,7 +431,7 @@ const EditProductScreen = props =>{
         valorEntregado = parseFloat(valorEntregado.toFixed(2))
         // console.log("Valor Entregado?:"+valorEntregado);
         //tcea
-        tcea=Math.pow(( valorEntregado/valorRecibido), diasPorAño/periodo) - 1;
+        tcea=(Math.pow(( valorEntregado/valorRecibido), diasPorAño/periodo) - 1)*100;
         tcea = parseFloat(tcea.toFixed(7));
         // console.log("Valor entregado:"+valorEntregado+"Valor Recibido:"+valorRecibido);
         dict = {
@@ -698,7 +700,7 @@ const EditProductScreen = props =>{
         
     }
     const onChangeTitulo = (titulo) =>{
-        var regex = /^[a-zA-Z]*$/
+        var regex = /^[a-zA-Z ]*$/
         if(regex.test(titulo))
         {
             console.log("Titulo ingresado" + titulo)
@@ -713,7 +715,7 @@ const EditProductScreen = props =>{
         
     }
     const onChangeDescripcionLetra = (DescLetra) =>{
-        var regex =/^[a-zA-Z]*$/
+        var regex =/^[a-zA-Z ]*$/
         if(regex.test(DescLetra))
         {
             console.log("Descripcion ingresada :" +DescLetra)
@@ -825,8 +827,9 @@ const EditProductScreen = props =>{
             />
             
              <View style={{justifyContent:'center',alignItems:'center',marginVertical:5}}>
-                <Text style={styles.HeaderFinales}>Datos Finales</Text>
+                <Text style={{textAlign:'center',marginTop:10,fontSize:16,fontWeight:'bold'}}>Datos Finales</Text>
              </View>
+
              {showFechaGiro && (
                 <DateTimePicker
                 testID="dateTimePicker"
@@ -854,9 +857,11 @@ const EditProductScreen = props =>{
                 <Card style={styles.card}>
                 <MyButton value={FechaVen.toLocaleDateString()} HandlerOnPress={showDatepickerFV}>Fecha de Vencimiento
                 </MyButton>
+                {editedLetra===undefined?
                 <MyButton value={FechaGiro.toLocaleDateString()} HandlerOnPress={showDatepickerFG}>Fecha de Giro
-                </MyButton>
+                </MyButton>:null}
             </Card>
+            {editedLetra===undefined?
                     <Card style={styles.card}>
                         <ScrollView>
                             <MyButton value={MotivoGastoFinal} HandlerOnPress={()=>setModalOpenMotivoF(!modalOpenMotivoF)}>Gastos Finales
@@ -895,6 +900,7 @@ const EditProductScreen = props =>{
                         </ScrollView>
                         
                     </Card>
+                    :null}
                     <View>    
                     <MyCustomPicker
                     setModalOpen={setModalOpenMotivoF}
@@ -930,6 +936,7 @@ const EditProductScreen = props =>{
          {/* <View style={{justifyContent:'center',alignItems:'center',marginVertical:5}}>
             <Text style={styles.HeaderFinales}>Datos Iniciales</Text>
          </View>    */}
+         {editedLetra===undefined?
                 <Card style={styles.card}>
                     <ScrollView>
                         <MyButton value={MotivoGastoInicial} HandlerOnPress={()=>setModalOpenMotivo(!modalOpenMotivo)}>Gastos Iniciales
@@ -974,6 +981,8 @@ const EditProductScreen = props =>{
                             </View>                            
                     </ScrollView>
                 </Card>
+                :null}
+                <Text style={{textAlign:'center',marginTop:10,fontSize:16,fontWeight:'bold'}}>Seleccione una imagen de referencia</Text>
                 <ImageSelector onImageTaken={imageTakenHandler}/> 
                 <View>    
                 <MyCustomPicker
@@ -999,7 +1008,7 @@ const EditProductScreen = props =>{
          <KeyboardAvoidingView style={{flex:1}} behavior="padding" keyboardVerticalOffset={-180}>
          <ScrollView style={{margin:10}} >
          <View style={{justifyContent:'center',alignItems:'center'}}>
-            <Text style={styles.HeaderInicial}>Datos iniciales</Text>
+            <Text style={{textAlign:'center',marginTop:10,fontSize:16,fontWeight:'bold'}}>Datos iniciales</Text>
          </View>    
          
          <MyCustomPicker

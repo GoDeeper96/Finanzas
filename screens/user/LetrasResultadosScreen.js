@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from 'react'
+import React,{useEffect,useState,useCallback} from 'react'
 import {FlatList,Text,Platform,ActivityIndicator,StyleSheet,View,Button} from 'react-native'
 import {useSelector,useDispatch }from 'react-redux';
 import {HeaderButtons,Item}from 'react-navigation-header-buttons'
@@ -7,17 +7,37 @@ import ResultadosItem from '../../components/shop/ResultadoLetra'
 import * as ResultadosActions from '../../store/actions/ResultadosActions'
 import Colors from '../../constants/Colors';
 import FancyResultados from '../../UI/fancyCartera';
+import FancyResultado from '../../UI/FancyResultado';
 const ResultadosScreen = props =>{
     // const orders= useSelector(state=>state.ordersa.orders);
     const letraId = props.route.params.letraId;
     const [tir,SetTir] = useState(0);
     const [vr,Setvr] = useState(0);
+    const [HayUnResultado,SetHayUnResultado]= useState(false)
+    const [visibleForUnResultado, setVisibleForUnResultado] = useState(false);
     const [HayResultados,SetHayResultados]= useState(false)
-    const [visibleForResultados, setVisibleForResultados] = React.useState(false);
-    const toggleAlertResultados = React.useCallback(() => {
+    const [visibleForResultados, setVisibleForResultados] =useState(false);
+    const toggleAlertResultados = useCallback(() => {
         SetHayResultados(false);
         setVisibleForResultados(false);    
     }, [visibleForResultados]);
+    const toggleAlertUnResultado = useCallback(() => {
+        SetHayUnResultado(false);
+        setVisibleForUnResultado(false);    
+    }, [visibleForUnResultado]);
+    const [res,setRes] = useState({
+            tcea:0,
+            valorRecibido:0,
+            valorEntregado:0,
+            valorRecibido:0,
+            descuento:0,
+            valorNeto:0,
+            dias:0,
+            fechaInicio:0,
+            fechaVencimiento:0,
+            valorNominalLetra:0,
+            tasa:0,
+    })
     const selectedResultados = useSelector(state =>
         state.resultados.availableResultados.filter(res => res.idLetra === letraId)
       );
@@ -69,7 +89,25 @@ const ResultadosScreen = props =>{
     }
 
     ////
-
+    const giveMeResultado = (idResultado)=>{
+        const selectedResultado = selectedResultados.find(res => res.idResultado === idResultado)
+          
+        setRes({
+            tcea:selectedResultado.tcea,
+            valorRecibido:selectedResultado.valorRecibido,
+            valorEntregado:selectedResultado.valorEntregado,
+            descuento:selectedResultado.descuento,
+            valorNeto:selectedResultado.valorNeto,
+            dias:selectedResultado.dias,
+            fechaInicio:selectedResultado.fechaInicio,
+            fechaVencimiento:selectedResultado.fechaVencimiento,
+            valorNominalLetra:selectedResultado.valorNominalLetra,
+            tasa:selectedResultado.tasa,
+        })
+        setVisibleForUnResultado(true);   
+        SetHayUnResultado(true);
+        
+    }
     const ResuelveAlgoritmo = () =>{
         //Aqui hace el algoritmo
         const valorRecibidoTotal = selectedResultados.map(x=>x.valorRecibido);
@@ -106,6 +144,23 @@ const ResultadosScreen = props =>{
             </View>
         )
     }
+    if(HayUnResultado){
+        return(
+        <FancyResultado
+            visible={visibleForUnResultado}
+            tcea={res.tcea}
+            valorRecibido={res.valorRecibido}    
+            valorEntregado={res.valorEntregado}
+            descuento={res.descuento}
+            valorNeto={res.valorNeto}
+            dias={res.dias}
+            fechaInicio={res.fechaInicio}
+            fechaVencimiento={res.fechaVencimiento}
+            valorNominalLetra={res.valorNominalLetra}
+            tasa={res.tasa}
+            toggle={toggleAlertUnResultado}
+            />)
+    }
     if(HayResultados)
     { 
         
@@ -129,7 +184,6 @@ const ResultadosScreen = props =>{
         tcea={itemData.item.tcea}
         valorRecibido={itemData.item.valorRecibido}    
         valorEntregado={itemData.item.valorEntregado}
-        valorRecibido={itemData.item.valorRecibido}
         descuento={itemData.item.descuento}
         valorNeto={itemData.item.valorNeto}
         dias={itemData.item.dias}
@@ -137,10 +191,8 @@ const ResultadosScreen = props =>{
         fechaVencimiento={itemData.item.fechaVencimiento}
         valorNominalLetra={itemData.item.valorNominalLetra}
         tasa={itemData.item.tasa}
-        onSelect={()=>{DetalleResultado(itemData.item.idResultado)}}>                                                         
-           {/* <Button color={Colors.primary} title="To Cart" onPress={ ()=>{ dispatch(cartActions.addToCart(itemData.item))}}/> */}
+        onSelect={()=>{giveMeResultado(itemData.item.idResultado)}}>                                                         
         </ResultadosItem>
-
             }/>
         <Button color={Colors.primary} title="Generar Cartera con resultados" onPress={()=>{ ResuelveAlgoritmo()}}/>
         </View>
@@ -156,13 +208,7 @@ export const screenOptions = navData => {
             <Item title='Resultados' iconName={Platform.OS==='android' ? 'md-arrow-back':'ios-arrow-back-outline'} onPress={()=>
             {navData.navigation.goBack()}
             }/>
-        </HeaderButtons>),
-         headerRight:()=>
-         (<HeaderButtons HeaderButtonComponent={HeaderButton}>
-             <Item title='hey' iconName={Platform.OS==='android' ? 'md-add':'ios-add'} onPress={()=>
-             {navData.navigation.navigate('CarteraResultadosScreen')}
-             }/>
-         </HeaderButtons>)
+        </HeaderButtons>)
     };
     
 }

@@ -26,12 +26,12 @@ const App = (props) => {
 
       >
         <View style={{ flexDirection:'row'}}>
-          <Text style={{ marginTop: -16, marginBottom: 32 }}>Valor total a recibir por cartera:</Text>
-          <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.vr}</Text>
+          <Text style={{ marginTop: -16, marginBottom: 32,fontSize:20 }}>Valor total a recibir por cartera:</Text>
+          <Text style={{ marginTop: -16, marginBottom: 32,fontSize:20 }}>{props.vr}</Text>
         </View>
         <View style={{ flexDirection:'row'}}>
-          <Text style={{ marginTop: -16, marginBottom: 32 }}>Tasa de costo efectiva anual:</Text>
-          <Text style={{ marginTop: -16, marginBottom: 32 }}>{props.tir}</Text>
+          <Text style={{ marginTop: -16, marginBottom: 32,fontSize:20 }}>Tasa de costo efectiva anual:</Text>
+          <Text style={{ marginTop: -16, marginBottom: 32,fontSize:20 }}>{props.tir}</Text>
         </View>
 
       </FancyAlert>

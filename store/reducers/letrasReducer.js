@@ -1,4 +1,4 @@
-import Letra from '../../models/Letra';
+import Letra from '../../models/Carteras';
 import { CREATE_LETRA, DELETE_LETRA, SET_LETRA, UPDATE_LETRA } from '../actions/letrasActions';
 
 const initialState= {

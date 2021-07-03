@@ -1,4 +1,4 @@
-import Letra from "../../models/Letra";
+import Letra from "../../models/Carteras";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export const DELETE_LETRA = 'DELETE_LETRA';
 export const CREATE_LETRA = 'CREATE_LETRA';

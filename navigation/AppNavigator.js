@@ -1,7 +1,7 @@
-import React ,{useState} from 'react'
+import React ,{useState,useEffect} from 'react'
 import {useSelector} from 'react-redux'
 import {NavigationContainer} from '@react-navigation/native'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // import ShopNavigator from './ShopNavigator'
 // import ProductOverviewScreen from '../screens/shop/ProductsOverviewScreen'
@@ -13,7 +13,8 @@ const AppNavigator = props => {
 
     const isAuth = useSelector(state=>!!state.auth.token);
     const didTryAutoLogin = useSelector(state=>!!state.auth.didTryAutoLogin);
-    const loadingOver = useSelector(state=>!!state.auth.isLoading);    
+    const loadingOver = useSelector(state=>!!state.auth.isLoading); 
+
     // const loading = useSelector(state=>!!state.auth.)
 
 
@@ -21,7 +22,7 @@ const AppNavigator = props => {
     return (
     <NavigationContainer>
         {isAuth && loadingOver && <ShopNavigator/>}
-        {isAuth && !loadingOver && <WelcomeScreen/> }
+        {isAuth && !loadingOver && <WelcomeScreen /> }
         {!isAuth && didTryAutoLogin  && <AuthNavigator/>}
         {!isAuth && !didTryAutoLogin &&  <StartupScreen/>}
     </NavigationContainer>);

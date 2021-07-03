@@ -7,18 +7,30 @@ import {useDispatch} from 'react-redux'
 import * as authActions from '../store/actions/auth';
 import Colors from '../constants/Colors'
 import MainButton from '../components/animations/Buttons'
-
+import {NavigationContainer} from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const WelcomeScreen = props => {
     // const [Loading,SetLoading] = useState(false);
     const dispatch = useDispatch();
     // const loadingOver = useSelector(state=>!!state.auth.isLoading);
     const [FadeIsGone,SetFadeIsGone] = useState(false);
+    const [ Email,SetEmail] = useState('');
     const startLoading = () =>
     {
     //   props.onBTCready(true)
     dispatch(authActions.isLoading());
     }
+    const giveEmail = async ()=>
+    {
+        const userEmail = await AsyncStorage.getItem('userEmail');
+        console.log(userEmail);
+        SetEmail(userEmail)
+    }
     useEffect(() => {
+        giveEmail();
+    })
+    useEffect(() => {
+        
         setTimeout(() => {
             // SetLoading(true);
             SetFadeIsGone(true);
@@ -29,9 +41,7 @@ const WelcomeScreen = props => {
     colors={Colors.flare}
     style={styles.container}
     visible={true}>
-        <WelcomeFade>
-            Bienvenido
-        </WelcomeFade>
+        <WelcomeFade Email={Email}/>
         <View style={styles.btn}>
             { FadeIsGone?(
             <MainButton onPress={startLoading}> Continuar</MainButton>

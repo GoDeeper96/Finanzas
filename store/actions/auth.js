@@ -17,7 +17,7 @@ export const authenticate = (userId,token,expiryDate) =>{
         dispatch({
             type:AUTHENTICATE,
             userId:userId,
-            token:token
+            token:token,
         })
     }
 }
@@ -53,7 +53,11 @@ export const signUp = (email,password) =>
         }
         const resData = await response.json();
         console.log(resData);
-        dispatch(authenticate(resData.localId,resData.idToken,parseInt(resData.expiresIn)*1000)
+        dispatch(authenticate(
+            resData.localId,
+            resData.idToken,
+            parseInt(resData.expiresIn)*1000,
+            )
             // {
             // type:SIGN_UP,
             // token:resData.idToken,
@@ -61,6 +65,7 @@ export const signUp = (email,password) =>
             // }
         )
         const expirationDate =new Date(new Date().getTime()+parseInt(resData.expiresIn)*1000);
+        saveEmail(email);
         saveDataToStorage(resData.idToken,resData.localId,expirationDate);
     }
 }
@@ -94,7 +99,12 @@ export const login = (email,password) =>
         }
         const resData = await response.json();
         console.log(resData);
-        dispatch(authenticate(resData.localId,resData.idToken,parseInt(resData.expiresIn)*1000)
+        dispatch(
+            authenticate(
+                resData.localId,
+                resData.idToken,
+                parseInt(resData.expiresIn)*1000
+                )
         //     {
         //     type:LOGIN,
         //     token:resData.idToken,
@@ -102,6 +112,7 @@ export const login = (email,password) =>
         // }
         )
         const expirationDate =new Date(new Date().getTime()+parseInt(resData.expiresIn)*1000);
+        saveEmail(email);
         saveDataToStorage(resData.idToken,resData.localId,expirationDate);
     }
 }
@@ -123,11 +134,14 @@ const SetLogoutTimer = expirationTime =>{
     return dispatch=>{
         timer = setTimeout(()=>{
             dispatch(logout());
-        },expirationTime/3) //EXPIRATION TIME /1000
+        },expirationTime/2) //EXPIRATION TIME /1000
     }
     
 }
-const saveDataToStorage = (token,userId,expirationDate) =>{
+const saveEmail = (email) => {
+    AsyncStorage.setItem('userEmail',email);
+}
+const saveDataToStorage = (token,userId,expirationDate) => {
     AsyncStorage.setItem('userData',JSON.stringify({
         token:token,
         userId:userId,

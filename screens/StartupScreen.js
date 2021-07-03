@@ -38,6 +38,7 @@ const StartupScreen = props =>{
                 dispatch(authActions.setDidTryAl());
                 return;
             }
+           
             const expirationTime = expirationDate.getTime()- new Date().getTime();
             // props.navigation.navigate('Shop');
             // dispatch(authActions.setDidTryAl())
