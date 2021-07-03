@@ -6,7 +6,6 @@ import {useDispatch} from 'react-redux'
 import {Ionicons} from '@expo/vector-icons'
 import React from 'react'
 //SCREENS
-import DetalleLetraScreen,{screenOptions as DetalleLetraScreenOptions} from '../screens/shop/DetalleLetraScreen'
 import ResultadoDetalleScreen, {screenOptions as ResultadoDetalleScreenOptions} from '../screens/shop/ResultadoDetalleScreen'
 import UserLetrasScreen,{screenOptions as UserLetrasScreenOptions} from '../screens/user/UserLetrasScreen'
 import EditarLetraScreen ,{screenOptions as EditarLetraScreenOptions} from '../screens/user/EditarLetraScreen'
@@ -44,10 +43,6 @@ export const AdminNavigator = () =>{
         component={EditarLetraScreen}
         options={EditarLetraScreenOptions}
         />
-         <AdminStackNavigator.Screen 
-         name="DetalleLetra" 
-        component={DetalleLetraScreen}
-        options={DetalleLetraScreenOptions}/>
         <AdminStackNavigator.Screen 
           name="Resultados"
           component={LetrasResultadosScreen}

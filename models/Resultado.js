@@ -10,7 +10,12 @@ class Resultado {
         costeFinal,
         tcea,
         valorNeto,
-        descuento)
+        descuento,
+        fechaInicio,
+        fechaVencimiento,
+        valorNominalLetra,
+        tasa,
+        )
     {
         this.LetraImageUrL=LetraImageUrL;
         this.idLetra = idLetra;
@@ -23,6 +28,11 @@ class Resultado {
         this.valorNeto = valorNeto;
         this.descuento = descuento;
         this.dias = dias;
+        //NUEVO
+        this.fechaInicio=fechaInicio;
+        this.fechaVencimiento=fechaVencimiento;
+        this.valorNominalLetra=valorNominalLetra;
+        this.tasa=tasa;
     }
 }
 

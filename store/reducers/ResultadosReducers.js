@@ -26,7 +26,11 @@ export default (state = initialState,action) =>{
                 action.ResultadoData.costeFinal,
                 action.ResultadoData.tcea,
                 action.ResultadoData.valorNeto,
-                action.ResultadoData.descuento);
+                action.ResultadoData.descuento,
+                action.ResultadoData.fechaInicio,
+                action.ResultadoData.fechaVencimiento,
+                action.ResultadoData.valorNominalLetra,
+                action.ResultadoData.tasa);
             return{
                 ...state,
                 availableResultados: state.availableResultados.concat(newResultado),

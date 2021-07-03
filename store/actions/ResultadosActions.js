@@ -28,7 +28,12 @@ export const fetchResultado = () =>
                 resData[resultado].costeFinal,
                 resData[resultado].tcea,
                 resData[resultado].valorNeto,
-                resData[resultado].descuento,   
+                resData[resultado].descuento,
+
+                resData[resultado].fechaInicio,
+                resData[resultado].fechaVencimiento,
+                resData[resultado].valorNominalLetra,
+                resData[resultado].tasa,
                 )
             );
         }
@@ -72,7 +77,12 @@ export const createResultado =
     costeFinal,
     tcea,
     valorNeto,
-    descuento) =>
+    descuento,
+    fechaInicio,
+    fechaVencimiento,
+    valorNominalLetra,
+    tasa,
+    ) =>
 {
     //https://mealsapp-d838a-default-rtdb.firebaseio.com/products.json?auth=${token}
     return async (dispatch,getState)=>{
@@ -95,6 +105,10 @@ export const createResultado =
             tcea,
             valorNeto,
             descuento,
+            fechaInicio,
+            fechaVencimiento,
+            valorNominalLetra,
+            tasa,
          })
      });
      const resData = await response.json();
@@ -113,6 +127,10 @@ export const createResultado =
         tcea,
         valorNeto,
         descuento,
+        fechaInicio,
+        fechaVencimiento,
+        valorNominalLetra,
+        tasa,
       }
     }
     ); 

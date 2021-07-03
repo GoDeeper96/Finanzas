@@ -183,6 +183,10 @@ const EditProductScreen = props =>{
             descuento:0,
             valorNominal:0,
             capitalizacion:0,
+            fechaInicio:0,
+            fechaVencimiento:0,
+            valorNominalLetra:0,
+            tasa:0,
     });
     const [IdLetra,SetIdLetra]=useState('');
     // DATOS DE CLASE LETRA
@@ -439,11 +443,16 @@ const EditProductScreen = props =>{
             descuento:descuento,
             valorNominal:valorNominal,
             capitalizacion:capitalizacion,
+            fechaInicio:FechaGiro,
+            fechaVencimiento:FechaVen,
+            valorNominalLetra:valorNominal,
+            tasa:tasa
         };
         console.log(dict.periodo);
         SetRes({
             periodo:periodo,
             valorRecibido:valorRecibido,
+            valorEntregado:valorEntregado,
             TotalGastoInicial:sumArrayI,
             TotalGastoFinal:sumArrayF,
             tcea:tcea,
@@ -451,6 +460,10 @@ const EditProductScreen = props =>{
             descuento:descuento,
             valorNominal:valorNominal,
             capitalizacion:capitalizacion,
+            fechaInicio:FechaGiro,
+            fechaVencimiento:FechaVen,
+            valorNominalLetra:valorNominal,
+            tasa:tasa
         })
 
         // ResultadosLetra ={
@@ -479,7 +492,11 @@ const EditProductScreen = props =>{
                 dict.TotalGastoFinal,
                 dict.tcea,
                 dict.valorNeto,
-                dict.descuento,            
+                dict.descuento,
+                dict.fechaInicio,
+                dict.fechaVencimiento,
+                dict.valorNominalLetra,
+                dict.tasa           
                 ))
           
         } catch (err) {
@@ -778,6 +795,10 @@ const EditProductScreen = props =>{
             descuento={res.descuento}
             valorNominal={res.valorNominal}
             capitalizacion={res.capitalizacion}
+            fechaInicio={res.fechaInicio}
+            fechaVencimiento={res.fechaVencimiento}
+            valorNominalLetra={res.valorNominalLetra}
+            tasa={res.tasa}
             toggle={toggleAlertResultados}
             />
         )

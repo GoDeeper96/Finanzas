@@ -14,22 +14,20 @@ const ResultadosItems = props =>
     return (
         <Card style={styles.product}>
             <View style={styles.touchable}>
-        <Touch onPress={props.onSelect} useForeground>
-        <View>
-            <View style={styles.imageSt}>
-                <Image style={styles.img} source={{uri:props.imagen}}/>
-            </View>
+            <Touch onPress={props.onSelect} useForeground>       
             <View style={styles.detailsInfo}>
-                <Text style={styles.titlest}>{props.valorRecibido}</Text>
-                <Text style={styles.pricest}>${props.tcea}</Text>
-            </View>     
-            <View style={styles.actions}> 
-            {props.children}
-                {/* <Button color={Colors.primary} title="View Details" onPress={props.onViewDetail}/>
-                <Button color={Colors.primary} title="To Cart" onPress={props.onAddToCart}/> */}
+                <Text style={styles.titlest}>TCEA: {props.tcea}</Text>
+                <Text style={styles.pricest}>Valor Entregado: {props.valorEntregado}</Text>
+                <Text style={styles.pricest}>Valor Recibido: {props.valorRecibido}</Text>
+                <Text style={styles.pricest}>Descuento: {props.descuento}</Text>
+                <Text style={styles.pricest}>Valor Neto: {props.valorNeto}</Text>
+                <Text style={styles.pricest}>dias: {props.dias}</Text>
+                <Text style={styles.pricest}>Fecha de inicio de letra: {props.fechaInicio}</Text>
+                <Text style={styles.pricest}>Fecha vencimiento: {props.fechaVencimiento}</Text>
+                <Text style={styles.pricest}>Valor Nominal: {props.valorNominalLetra}</Text>
+                <Text style={styles.pricest}>Tasa: {props.tasa}</Text>
             </View>
-        </View>
-        </Touch>
+            </Touch>
         </View>
         </Card>
     );
@@ -40,16 +38,9 @@ const styles = StyleSheet.create({
         borderRadius:10,
         overflow:'hidden'
     },
-    imageSt:{
-        width:'100%',
-        height:'60%',
-        borderTopLeftRadius:10,
-        borderTopRightRadius:10,
-        overflow:'hidden'
-    },  
     detailsInfo:{
         alignItems:'center',
-        height:'15%',
+        height:'100%',
         padding:10
     },
     titlest:{
@@ -66,7 +57,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center',
-        height:'22%',
+        height:'100%',
         paddingHorizontal:20,
     },
     product:
@@ -75,11 +66,6 @@ const styles = StyleSheet.create({
         margin:20,
 
     },
-    img:
-    {
-        width:'100%',
-        height:'100%',
-    }
 })
 export default ResultadosItems;
 

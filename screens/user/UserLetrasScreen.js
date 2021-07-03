@@ -42,7 +42,7 @@ const UserLetrasScreen = props =>{
     },[dispatch,loadLetras])
     const selectItemHandler = (id) =>{
         console.log("manda id de letra:"+id);
-        props.navigation.navigate('DetalleLetra',{
+        props.navigation.navigate('Resultados',{
             letraId: id,
         })
     }

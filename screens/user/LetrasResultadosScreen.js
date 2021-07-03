@@ -6,17 +6,25 @@ import HeaderButton from '../../UI/HeaderButton'
 import ResultadosItem from '../../components/shop/ResultadoLetra'
 import * as ResultadosActions from '../../store/actions/ResultadosActions'
 import Colors from '../../constants/Colors';
+import FancyResultados from '../../UI/fancyCartera';
 const ResultadosScreen = props =>{
     // const orders= useSelector(state=>state.ordersa.orders);
     const letraId = props.route.params.letraId;
-    console.log("que paasdasdassoasdsaasdasdsaasdasdasdasdasds:"+letraId);
+    const [tir,SetTir] = useState(0);
+    const [vr,Setvr] = useState(0);
+    const [HayResultados,SetHayResultados]= useState(false)
+    const [visibleForResultados, setVisibleForResultados] = React.useState(false);
+    const toggleAlertResultados = React.useCallback(() => {
+        SetHayResultados(false);
+        setVisibleForResultados(false);    
+    }, [visibleForResultados]);
     const selectedResultados = useSelector(state =>
         state.resultados.availableResultados.filter(res => res.idLetra === letraId)
       );
 
     const [isLoading,SetIsloading] = useState(false);
     const dispatch = useDispatch();
-    
+
     useEffect(()=>{
         SetIsloading(true);
         dispatch(ResultadosActions.fetchResultado()).then(
@@ -25,11 +33,23 @@ const ResultadosScreen = props =>{
             }
         );
         
-    },[dispatch])
-    const DetalleResultado = (id) =>{
-        props.navigation.navigate('ResultadoDetalleScreen',{
-            ResultadoId: id,
-        })
+    },[dispatch,toggleAlertResultados])
+    const ResuelveAlgoritmo = () =>{
+        //Aqui hace el algoritmo
+        const valorRecibidoTotal = selectedResultados.map(x=>x.valorRecibido);
+        const TceaTotal = selectedResultados.map(x=>x.tcea);
+        var srb = 0;
+        var stc = 0;
+        for(let x in valorRecibidoTotal){
+            srb = srb + valorRecibidoTotal[x]   
+        }
+        for(let x in TceaTotal){
+            stc = stc + TceaTotal[x]   
+        }
+        setVisibleForResultados(true);
+        SetHayResultados(true);
+        // console.log(srb);
+        // console.log(stc);
     }
     if(selectedResultados.length===0){
         return(<View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
@@ -44,20 +64,43 @@ const ResultadosScreen = props =>{
             </View>
         )
     }
+    if(HayResultados)
+    { 
+        
+        return(
+            <FancyResultados
+            visible={visibleForResultados}
+            vr={tir}
+            tir={vr}
+            toggle={toggleAlertResultados}
+            />
+        )
+
+    }
     return (
         <View style={{flex: 1}}>
         <FlatList 
         data={selectedResultados} 
         keyExtractor={item=>item.idResultado} 
         renderItem={itemData=>
-        <ResultadosItem imagen={itemData.item.LetraImageUrL} 
-        valorRecibido={itemData.item.valorRecibido}    
+        <ResultadosItem 
         tcea={itemData.item.tcea}
+        valorRecibido={itemData.item.valorRecibido}    
+        valorEntregado={itemData.item.valorEntregado}
+        valorRecibido={itemData.item.valorRecibido}
+        descuento={itemData.item.descuento}
+        valorNeto={itemData.item.valorNeto}
+        dias={itemData.item.dias}
+        fechaInicio={itemData.item.fechaInicio}
+        fechaVencimiento={itemData.item.fechaVencimiento}
+        valorNominalLetra={itemData.item.valorNominalLetra}
+        tasa={itemData.item.tasa}
         onSelect={()=>{DetalleResultado(itemData.item.idResultado)}}>                                                         
-           <Button color={Colors.primary} title="Ver detalles" onPress={()=>{ DetalleResultado(itemData.item.idResultado)}}/>
            {/* <Button color={Colors.primary} title="To Cart" onPress={ ()=>{ dispatch(cartActions.addToCart(itemData.item))}}/> */}
-        </ResultadosItem>}/>
-        <Button color={Colors.primary} title="Generar Cartera con resultados" onPress={()=>{ DetalleResultado(itemData.item.idResultado)}}/>
+        </ResultadosItem>
+
+            }/>
+        <Button color={Colors.primary} title="Generar Cartera con resultados" onPress={()=>{ ResuelveAlgoritmo()}}/>
         </View>
     )
 }
