@@ -34,18 +34,60 @@ const ResultadosScreen = props =>{
         );
         
     },[dispatch,toggleAlertResultados])
+
+     //// calc tcea
+     function va(cartera, tasa) {
+        var tempa = 0;
+        for (var i = 0; i<cartera.length; i++){
+            var letra = cartera[i];
+            tempa = tempa - letra[1];
+            tempa = tempa + (letra[0]/(Math.pow(1+tasa,letra[2]/360)));
+        }
+        return tempa;
+    }
+    
+    
+    function calc_tcea(cartera){
+        var superior = 100
+        var inferior = 0
+        var pivote = (superior + inferior)/2
+        var diff = 1
+        while (diff>= 0.000000001){
+            if (va(cartera,inferior)*va(cartera,pivote)<=0){
+                superior = pivote;
+                
+            }
+            else {
+                inferior = pivote;
+            }
+    
+            pivote = (superior + inferior)/2
+            diff = superior - inferior
+        }
+    
+        return pivote.toFixed(7)
+    }
+
+    ////
+
     const ResuelveAlgoritmo = () =>{
         //Aqui hace el algoritmo
         const valorRecibidoTotal = selectedResultados.map(x=>x.valorRecibido);
-        const TceaTotal = selectedResultados.map(x=>x.tcea);
+        const valorEntregadoTotal = selectedResultados.map(x=>x.valorEntregado);
+        const dias= selectedResultados.map(x=>x.dias);
         var srb = 0;
-        var stc = 0;
+        var tcc = 0;
+        var stc = [];
         for(let x in valorRecibidoTotal){
             srb = srb + valorRecibidoTotal[x]   
         }
-        for(let x in TceaTotal){
-            stc = stc + TceaTotal[x]   
+        for(let x in valorRecibidoTotal){
+            var temp = [valorEntregadoTotal[x],valorRecibidoTotal[x],dias[x]];
+            stc.push(temp)
         }
+        tcc = calc_tcea(stc);
+        SetTir(tcc);
+        Setvr(srb)
         setVisibleForResultados(true);
         SetHayResultados(true);
         // console.log(srb);
@@ -70,8 +112,8 @@ const ResultadosScreen = props =>{
         return(
             <FancyResultados
             visible={visibleForResultados}
-            vr={tir}
-            tir={vr}
+            vr={vr}
+            tir={tir}
             toggle={toggleAlertResultados}
             />
         )
