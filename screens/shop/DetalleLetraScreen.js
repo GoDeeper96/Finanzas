@@ -12,6 +12,7 @@ const DetalleLetraScreen = props =>{
 
     const [sumaRecibidoTotal,SetRecibidoTotal] = useState(0);
     const [sumaTceaTotal,SetsumaTceaTotal] = useState(0);
+    const [tir,SetTir] = useState(0);
     const dispatch = useDispatch();
     const [isLoading,setIsLoading] = useState(false);
     const [isRefreshing,SetIsRefreshing] = useState(false);
