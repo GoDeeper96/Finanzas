@@ -20,15 +20,10 @@ const LetraItem = props =>
             <View style={styles.detailsInfo}>
                 <Text style={styles.titlest}>{props.titulo}</Text>
                 <Text style={styles.pricest}>{props.valorNominal}</Text>
-                <Text style={styles.titlest}>{props.titulo}</Text>
-                <Text style={styles.pricest}>{props.valorNominal}</Text>
+                <Text style={styles.titlest}>{props.tasa}</Text>
+                <Text style={styles.pricest}>{props.descripcion}</Text>
             </View>   
-            <View style={styles.detailsInfo}>
-                <Text style={styles.titlest}>{props.titulo}</Text>
-                <Text style={styles.pricest}>{props.valorNominal}</Text>
-                <Text style={styles.titlest}>{props.titulo}</Text>
-                <Text style={styles.pricest}>{props.valorNominal}</Text>
-            </View> 
+
             <View style={styles.actions}> 
             {props.children}
                 {/* <Button color={Colors.primary} title="View Details" onPress={props.onViewDetail}/>
@@ -48,7 +43,7 @@ const styles = StyleSheet.create({
     },
     imageSt:{
         width:'100%',
-        height:'60%',
+        height:'70%',
         borderTopLeftRadius:10,
         borderTopRightRadius:10,
         overflow:'hidden'
@@ -75,7 +70,7 @@ const styles = StyleSheet.create({
         justifyContent:'space-between',
         alignItems:'center',
         height:'22%',
-        paddingHorizontal:20,
+        paddingHorizontal:10,
     },
     product:
     {

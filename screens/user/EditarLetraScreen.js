@@ -436,6 +436,7 @@ const EditProductScreen = props =>{
         // console.log("Valor Entregado?:"+valorEntregado);
         //tcea
         tcea=(Math.pow(( valorEntregado/valorRecibido), diasPorAño/periodo) - 1)*100;
+        console.log(tcea);
         tcea = parseFloat(tcea.toFixed(7));
         // console.log("Valor entregado:"+valorEntregado+"Valor Recibido:"+valorRecibido);
         dict = {

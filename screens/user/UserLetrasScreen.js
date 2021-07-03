@@ -97,7 +97,9 @@ const UserLetrasScreen = props =>{
     image={itemData.item.SelectedImage} 
     onSelect={()=>{selectItemHandler(itemData.item.idLetra)}}
     titulo={itemData.item.titulo}
-    valorNominal={itemData.item.valorNominal}>
+    valorNominal={itemData.item.valorNominal}
+    tasa={itemData.item.tasa}
+    descripcion={itemData.item.descripcion}>
          <Button color={'black'}  title="Detalles" onPress={()=>{selectItemHandler(itemData.item.idLetra)}}/>
         <Button color={'black'} title="Agregar" onPress={()=>{editLetrasHandler(itemData.item.idLetra)}}/>
         <Button color={'black'} title="Eliminar cartera" onPress={deleteHandler.bind(this,itemData.item.idLetra)}/>
