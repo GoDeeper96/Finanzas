@@ -5,6 +5,7 @@ import Card from '../../UI/Card'
 import Colors from '../../constants/Colors';
 import {useDispatch} from 'react-redux';
 import {LinearGradient} from 'expo-linear-gradient';
+
 import * as authActions from '../../store/actions/auth'
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE'
 const formReducer = (state,action)=>
@@ -96,39 +97,40 @@ const authScreen = props =>{
         behavior="height"
         keyboardVerticalOffset={10}
         style={styles.screen}>
-        <Card style={styles.authContainer}>
+        <Card style={!isSignUp?styles.authContainer:styles.RegContainer}>
             <ScrollView>
-                <Input 
-                id='email' 
-                label='E-Mail' 
-                keyboardType='email-address' 
-                required 
-                email 
-                autoCapitalize='none' 
-                errorText='please enter a valid address'
-                onInputChange={InputChangeHandler}
-                initialValue =""
-                />
-                 <Input 
-                id='password' 
-                label='Password' 
-                keyboardType='default'
-                secureTextEntry
-                required 
-                minLength={5} 
-                autoCapitalize='none' 
-                errorText='please enter a valid password'
-                onInputChange={InputChangeHandler}
-                initialValue =""
-                />
+                <View>
+                    <Input 
+                    id='email' 
+                    label='E-Mail' 
+                    keyboardType='email-address' 
+                    required 
+                    email 
+                    autoCapitalize='none' 
+                    errorText='please enter a valid address'
+                    onInputChange={InputChangeHandler}
+                    initialValue =""
+                    />
+                    <Input 
+                    id='password' 
+                    label='Password' 
+                    keyboardType='default'
+                    secureTextEntry
+                    required 
+                    minLength={5} 
+                    autoCapitalize='none' 
+                    errorText='please enter a valid password'
+                    onInputChange={InputChangeHandler}
+                    initialValue =""
+                    />
+                </View>           
                 <View style={styles.btncontainer}>
                     {isLoading?<ActivityIndicator size='small' color={Colors.primary}/>:
                     <Button title={isSignUp?'Sign Up':'Login'} color={Colors.fifth} onPress={authHandler}/>}
                 </View>
                 <View style={styles.btncontainer}>
-                    <Button title={`Switch to ${isSignUp?'Login':'Sign Up'}`} color={Colors.accent} onPress={()=>{
-                    SetIsSignup(prevState=>!prevState)
-                }}/>
+                    <Button title={"Registrate"} color={Colors.accent} onPress={()=>{props.navigation.navigate('Registrar')}}/>
+                    {/* <Button title={`Switch to ${isSignUp?'Login':'Sign Up'}`} color={Colors.accent} onPress={()=>{SetIsSignup(prevState=>!prevState)}}/> */}
                 </View>
             </ScrollView>
         </Card>
@@ -138,7 +140,8 @@ const authScreen = props =>{
     )
 }
 export const screenOptions = {
-    headerTitle:'Please authenticate'
+    headerTitle:'Please authenticate',
+    
 }
 
 const styles = StyleSheet.create({
@@ -158,8 +161,15 @@ const styles = StyleSheet.create({
     },
     authContainer:{
         width:'80%',
-        maxWidth:400,
-        maxHeight:400,
+        // maxWidth:400,
+        maxHeight:400,    
+        padding:20
+
+    },
+    RegContainer:{
+        width:'80%',
+        // maxWidth:400,
+        maxHeight:600,    
         padding:20
 
     }

@@ -14,7 +14,7 @@ import LetrasResultadosScreen ,{screenOptions as LetrasResultadosScreenOptions} 
 
 
 import AuthScreen,{screenOptions as AuthScreenOptions} from '../screens/user/AuthScreen'
-
+import RegScreen,{screenOptions as RegScreenOptions} from '../screens/user/RegisterScreen'
 import * as authActions from '../store/actions/auth'
 const defaultNav = {
     headerStyle:{
@@ -62,7 +62,7 @@ export const ShopNavigator = () =>{
     return (<ShopDrawer.Navigator 
         drawerContentOptions={{activeTintColor:Colors.upc}}
         drawerContent={props=>{
-            return (<View style={{flex:1,paddingTop:20}}>
+            return (<View style={{flex:1,paddingTop:40}}>
                 <SafeAreaView forceInset={{top:'always',horizontal:'never'}}>
                     <DrawerItemList {...props}/>
                     <View style={{marginHorizontal:70,borderRadius:20,radius:20,marginTop:20}}>
@@ -100,6 +100,11 @@ export const AuthNavigator = () =>{
             name="Auth"
             component={AuthScreen}
             options={AuthScreenOptions}
+            />
+            <AuthStackNavigator.Screen
+            name="Registrar"
+            component={RegScreen}
+            options={RegScreenOptions}
             />
         </AuthStackNavigator.Navigator>
     )

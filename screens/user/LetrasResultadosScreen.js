@@ -61,7 +61,7 @@ const ResultadosScreen = props =>{
         for (var i = 0; i<cartera.length; i++){
             var letra = cartera[i];
             tempa = tempa - letra[1];
-            tempa = tempa + (letra[0]/(Math.pow(1+tasa,letra[2]/360)));
+            tempa = tempa + (letra[0]/(Math.pow(1+(tasa/100),letra[2]/360)));
         }
         return tempa;
     }
@@ -148,16 +148,16 @@ const ResultadosScreen = props =>{
         return(
         <FancyResultado
             visible={visibleForUnResultado}
-            tcea={res.tcea}
-            valorRecibido={res.valorRecibido}    
-            valorEntregado={res.valorEntregado}
-            descuento={res.descuento}
-            valorNeto={res.valorNeto}
-            dias={res.dias}
+            tcea={res.tcea*100+"%"}
+            valorRecibido={"S/."+res.valorRecibido}    
+            valorEntregado={"S/."+res.valorEntregado}
+            descuento={"S/."+res.descuento}
+            valorNeto={"S/."+res.valorNeto}
+            dias={res.dias+" dias"}
             fechaInicio={res.fechaInicio}
             fechaVencimiento={res.fechaVencimiento}
-            valorNominalLetra={res.valorNominalLetra}
-            tasa={res.tasa}
+            valorNominalLetra={"S/."+res.valorNominalLetra}
+            tasa={res.tasa+"%"}
             toggle={toggleAlertUnResultado}
             />)
     }

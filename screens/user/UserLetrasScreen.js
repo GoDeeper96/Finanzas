@@ -1,9 +1,10 @@
 import React,{useState,useEffect,useCallback} from 'react';
-import { FlatList,Text,Platform,Button, ActivityIndicator,View,StyleSheet,Alert }from 'react-native'
+import { FlatList,Text,Platform,Button,TouchableOpacity, ActivityIndicator,View,StyleSheet,Alert }from 'react-native'
 import {useSelector,useDispatch}from 'react-redux'
 import LetraItem  from '../../components/shop/LetraItem'
 import {HeaderButtons,Item}from 'react-navigation-header-buttons'
 import HeaderButton from '../../UI/HeaderButton'
+import NewButton from '../../UI/ButtonVariant'
 import Colors from '../../constants/Colors'
 import * as LetrasActions from '../../store/actions/letrasActions'
 import * as ResultadosActions from '../../store/actions/ResultadosActions'
@@ -15,7 +16,7 @@ const UserLetrasScreen = props =>{
     // const products = useSelector(state=>state.products.availableProducts);
     const dispatch = useDispatch();
     const userLetras = useSelector(state=>state.letras.userLetras);
-    const loadLetras =useCallback (async () =>{
+    const loadLetras = useCallback (async () =>{
         SetErr(null);
         SetIsRefreshing(true);
         try {
@@ -55,6 +56,7 @@ const UserLetrasScreen = props =>{
 
     const deleteHandler = useCallback(async(id)=>
     {
+        console.log("que pajo?")
         SetErr(null);
         SetIsRefreshing(true);
         try {
@@ -100,9 +102,8 @@ const UserLetrasScreen = props =>{
     valorNominal={itemData.item.valorNominal}
     tasa={itemData.item.tasa}
     descripcion={itemData.item.descripcion}>
-         <Button color={'black'}  title="Detalles" onPress={()=>{selectItemHandler(itemData.item.idLetra)}}/>
-        <Button color={'black'} title="Agregar" onPress={()=>{editLetrasHandler(itemData.item.idLetra)}}/>
-        <Button color={'black'} title="Eliminar cartera" onPress={deleteHandler.bind(this,itemData.item.idLetra)}/>
+        <NewButton HandlerOnPress={()=>{deleteHandler(itemData.item.idLetra)}} value="Eliminar Cartera"/>
+        <NewButton HandlerOnPress={()=>{editLetrasHandler(itemData.item.idLetra)}} value="Agregar Letra"/>
     </LetraItem>}/>);                                 
 };
 export const screenOptions = navData => {
@@ -113,7 +114,7 @@ export const screenOptions = navData => {
     navData.navigation.toggleDrawer()}}/>
     </HeaderButtons>),
     headerRight:()=>(<HeaderButtons HeaderButtonComponent={HeaderButton}>
-    <Item title='Add' iconName={Platform.OS==='android' ? 'md-create':'ios-create'} onPress={()=>{
+    <Item title='Add' iconName={Platform.OS==='android' ? 'add':'ios-create'} onPress={()=>{
     navData.navigation.navigate('EditarLetras')}}/>
     </HeaderButtons>)
     }
@@ -127,3 +128,7 @@ const styles = StyleSheet.create({
 })
 
 export default UserLetrasScreen;
+
+{/* <NewButton color={'black'}  title="Detalles" onPress={()=>{selectItemHandler(itemData.item.idLetra)}}/>
+        <NewButton color={'black'} title="Agregar" onPress={()=>{editLetrasHandler(itemData.item.idLetra)}}/>
+        <NewButton color={'black'} title="Eliminar cartera" onPress={deleteHandler.bind(this,itemData.item.idLetra)}/> */}

@@ -13,6 +13,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import Card from '../../UI/Card'
 import { TextInput } from 'react-native-paper';
 import {HeaderButtons,Item}from 'react-navigation-header-buttons'
+import Big from 'big.js';
 import HeaderButton from '../../UI/HeaderButton'
 import {useSelector,useDispatch} from 'react-redux'
 import * as letrasActions from '../../store/actions/letrasActions'
@@ -67,6 +68,7 @@ const valorUnidad = [
     'Porcentaje',
 ]
 const motivosFinales = [
+    
     'Portes',
     'Gastos de administración',
     'Otros Gastos',
@@ -95,23 +97,23 @@ const EditProductScreen = props =>{
     const [error,SetIsError] = useState();
 
     const [modalOpenPT,setModalOpenPT] = useState(false);
-    const [pT,setpT] = useState('');
+    const [pT,setpT] = useState('Diario');
     const [modalOpenDaños,setModalOpenDaños] = useState(false);
-    const [Daños,setDaños] = useState('');
+    const [Daños,setDaños] = useState('360');
     const [modalOpenMotivo,setModalOpenMotivo] = useState(false);
     const [modalOpenTipoTasa,setmodalOpenTipoTasa] = useState(false);
-    const [TipoTasa,setTipoTasa] = useState('');
+    const [TipoTasa,setTipoTasa] = useState('Tasa Efectiva');
     const [modalOpenValorE,setModalOpenValorE] = useState(false);
 
     const [modalOpenUnidadGeneral,setmodalOpenUnidadGeneral]=useState(false);
 
-    const [UnidadInicialValor,setUnidadInicialValor] = useState('');
-    const [UnidadFinalValor,setUnidadFinalValor] = useState('');
+    const [UnidadInicialValor,setUnidadInicialValor] = useState('Soles');
+    const [UnidadFinalValor,setUnidadFinalValor] = useState('Soles');
 
     const [modalOpenMotivoF,setModalOpenMotivoF] = useState(false);
 
-    const [MotivoGastoFinal,setMotivoFinal] = useState('');
-    const [MotivoGastoInicial,setMotivoInicial] = useState('');
+    const [MotivoGastoFinal,setMotivoFinal] = useState('Portes');
+    const [MotivoGastoInicial,setMotivoInicial] = useState('Portes');
 
     const [GoToPrincipal,SetGoToPrincipal] = useState(false);
 
@@ -320,38 +322,37 @@ const EditProductScreen = props =>{
          //Calcular periodo
         //  console.log(pT);
         // 
+
         let otherplazo=0;
         let diasPorAño=0;
-        console.log(pT);
+
+        if(pT==="Diario"){
+            otherplazo=1;
+
+        }
         if(pT==="Mensual"){
             otherplazo=30;
-            console.log("plazo:"+plazot)
-            console.log("plazo:"+otherplazo)
+
         }
         if(pT==="Bimestral"){
             otherplazo=60;
-            console.log("plazo:"+plazot)
-            console.log("plazo:"+otherplazo)
+
         }
         if(pT==="Trimestral"){
             otherplazo=90;
-            console.log("plazo:"+plazot)
-            console.log("plazo:"+otherplazo)
+
         }
         if(pT==="Cuatrimestral"){
             otherplazo=120;
-            console.log("plazo:"+plazot)
-            console.log("plazo:"+otherplazo)
+
         }
         if(pT==="Semestral"){
             otherplazo=180;
-            console.log("plazo:"+plazot)
-            console.log("plazo:"+otherplazo)
+
         }
         if(pT==="Anual"){
             otherplazo=360;
-            console.log("plazo:"+plazot)
-            console.log("plazo:"+otherplazo)
+
         }
         if(Daños ==="360")
         {
@@ -365,6 +366,7 @@ const EditProductScreen = props =>{
         let t=0;
         let m=0;
         let n=0;
+    
         let tasadescuento=0;
         let descuento=0;
         let valorNeto=0;
@@ -377,7 +379,7 @@ const EditProductScreen = props =>{
         let fechita='';
         let fechota = '';
         arrayGastosI = GastoArrayInicial.map(item=>item.valor);
-        console.log("arrayGastosI:"+arrayGastosI)
+
         for(let x   in arrayGastosI){
             sumArrayI = sumArrayI + arrayGastosI[x]   
         }
@@ -385,7 +387,7 @@ const EditProductScreen = props =>{
         let arrayGastosF = []
         let sumArrayF = 0
         arrayGastosF = GastoArrayFinal.map(item=>item.valor);
-        console.log("arrayGastosF:"+arrayGastosF)
+
         for(let x   in arrayGastosF){
             sumArrayF = sumArrayF + arrayGastosF[x]   
         }
@@ -397,17 +399,26 @@ const EditProductScreen = props =>{
         if(TipoTasa==="Tasa Nominal"){
             m = otherplazo/capitalizacion;
             n = periodo/capitalizacion;
-            t = Math.pow(1+(tasa/m),n)-1;
-            t = toFixed(t);
-            t = parseFloat(t.toPrecision(7));
-            console.log(m,n,t);
-            console.log(otherplazo+  " " +capitalizacion);
+            t = Math.pow(1+((tasa/100)/m),n)-1;
+            t = t.toFixed(7)
+
+            // t = toFixed(t);
+            // t = parseFloat(t.toPrecision(7));
+
         }
         if(TipoTasa==="Tasa Efectiva"){
-            t = Math.pow((1+tasa),periodo/otherplazo)-1;
-            t = toFixed(t);         
-            t = parseFloat(t.toPrecision(7));
-            console.log(t);
+            console.log(TipoTasa,periodo,otherplazo);
+            
+            t = Math.pow((1+(tasa/100)),periodo/otherplazo)-1;
+            t = t.toFixed(7);
+            // t = new Big(t);
+        
+            // t = toFixed(t);
+
+            // // console.log(t);         
+            // t = parseFloat(t.toPrecision(7));
+            // console.log(tasa);
+            // console.log(t);
         }
         //Calcular Tasa descuento
         tasadescuento = t/(t+1.00);
@@ -454,7 +465,7 @@ const EditProductScreen = props =>{
             valorNominalLetra:valorNominal,
             tasa:tasa
         };
-        console.log(dict.periodo);
+
         SetRes({
             periodo:periodo,
             valorRecibido:valorRecibido,
@@ -504,7 +515,7 @@ const EditProductScreen = props =>{
                 dict.valorNominalLetra,
                 dict.tasa           
                 ))
-          
+                
         } catch (err) {
           Alert.alert('OOPS','something went wrong');
         }
@@ -552,6 +563,7 @@ const EditProductScreen = props =>{
                 //     
                  
                 // AQUI :V
+
                 await dispatch(letrasActions.createLetra(
                     titulo,
                     SelectedImage,
@@ -739,8 +751,6 @@ const EditProductScreen = props =>{
         var decPart = (Tasa+"").split(".")[0];
         if((regex.test(Tasa)&&!regExp.test(valorString))&&decPart.length<=2)
         {
-            Tasa = parseFloat(Tasa);
-            Tasa = Tasa/100;
             console.log("Tasa ingresada:"+Tasa)
             SetTasa(Tasa)
         }

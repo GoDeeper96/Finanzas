@@ -16,16 +16,16 @@ const ResultadosItems = props =>
             <View style={styles.touchable}>
             <Touch onPress={props.onSelect} useForeground>       
             <View style={styles.detailsInfo}>
-                <Text style={styles.titlest}>TCEA: {props.tcea}</Text>
-                <Text style={styles.pricest}>Valor Entregado: {props.valorEntregado}</Text>
-                <Text style={styles.pricest}>Valor Recibido: {props.valorRecibido}</Text>
+                <Text style={styles.titlest}>TCEA: {props.tcea*100}%</Text>
+                <Text style={styles.pricest}>Valor Entregado: S/.{props.valorEntregado}</Text>
+                <Text style={styles.pricest}>Valor Recibido: S/.{props.valorRecibido}</Text>
                 <Text style={styles.pricest}>Descuento: {props.descuento}</Text>
-                <Text style={styles.pricest}>Valor Neto: {props.valorNeto}</Text>
+                <Text style={styles.pricest}>Valor Neto: S/.{props.valorNeto}</Text>
                 <Text style={styles.pricest}>dias: {props.dias}</Text>
                 <Text style={styles.pricest}>Fecha de inicio de letra: {props.fechaInicio}</Text>
                 <Text style={styles.pricest}>Fecha vencimiento: {props.fechaVencimiento}</Text>
-                <Text style={styles.pricest}>Valor Nominal: {props.valorNominalLetra}</Text>
-                <Text style={styles.pricest}>Tasa: {props.tasa}</Text>
+                <Text style={styles.pricest}>Valor Nominal: S/.{props.valorNominalLetra}</Text>
+                <Text style={styles.pricest}>Tasa: {props.tasa}%</Text>
             </View>
             </Touch>
         </View>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     },
     product:
     {
-        height:300,
+        height:240,
         margin:20,
 
     },

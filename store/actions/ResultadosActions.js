@@ -29,7 +29,6 @@ export const fetchResultado = () =>
                 resData[resultado].tcea,
                 resData[resultado].valorNeto,
                 resData[resultado].descuento,
-
                 resData[resultado].fechaInicio,
                 resData[resultado].fechaVencimiento,
                 resData[resultado].valorNominalLetra,
